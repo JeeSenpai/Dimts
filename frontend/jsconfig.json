@@ -4,10 +4,14 @@
     "module": "esnext",
     "baseUrl": "./",
     "moduleResolution": "node",
+    "jsx": "preserve",
     "paths": {
       "@/*": [
         "src/*"
-      ]
+      ],
+      "crypto": [
+        "./node_modules/crypto-js"
+      ] 
     },
     "lib": [
       "esnext",

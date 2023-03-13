@@ -1,0 +1,40 @@
+<style>
+  .content {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .header{
+     font-weight: bold;
+  }
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+</style>
+<div class="content">
+{{#each this}}
+<div style="margin-bottom: 10px;">
+   <span style="font-weight: bold; font-size: 13px">Institute:</span> <span style="font-size: 13px">{{institute}}</span>
+</div>
+<table>
+  <thead>
+    <th style="font-size: 10px; text-align: center; white-space: nowrap; padding-left: 30px; padding-right: 30px; padding-top: 15px; padding-bottom: 15px">Area Of Concern</th>
+    <th style="font-size: 10px; text-align: center; white-space: nowrap; padding-left: 30px; padding-right: 30px">Due Date</th>
+    <th style="font-size: 8px; text-align: center; padding-left: 10px; padding-right: 10px">% Submitted Before Deadline</th>
+    <th style="font-size: 8px; text-align: center; padding-left: 10px; padding-right: 10px">% Submitted After Deadline</th>
+    <th style="font-size: 8px; text-align: center; padding-left: 10px; padding-right: 10px">% Not Submitted</th>
+    <th style="font-size: 8px; text-align: center; padding-left: 10px; padding-right: 10px">Total percentage of submitted</th>
+  </thead>
+{{#report}}
+  <tbody>
+    <td style="font-size: 10px; text-align: left; padding-left: 5px; padding-top: 20px; padding-bottom: 20px">{{areaOfConcern}}</td>
+    <td style="font-size: 9px; text-align: center; white-space: nowrap;">{{dateFormat dueDate}}</td>
+    <td style="font-size: 9px; text-align: center;">{{beforeDeadline}}</td>
+    <td style="font-size: 9px; text-align: center">{{afterDeadline}}</td>
+    <td style="font-size: 9px; text-align: center">{{notSubmitted}}</td>
+    <td style="font-size: 9px; text-align: center">{{totalSubmitted}}</td>
+  </tbody>
+ {{/report}}   
+</table>   
+
+{{/each}}
+</div>

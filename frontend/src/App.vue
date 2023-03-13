@@ -1,28 +1,124 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+ <div class="w-auto h-auto">
+    <router-view/>
+ </div>  
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #050708;
+  margin: 0;
 }
+
+/* tr:nth-child(even) {
+   background-color: #dcdcdc;
+} */
+
+body{
+  background: #efefefe5;
+  overflow-y: hidden;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #efefeff6;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #c341af ;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #c341af ;
+}
+
+
+@keyframes fadeIn {
+    0%{
+       opacity: 0;
+       transform: translateZ(0);
+    }
+    100%{
+       opacity: 1;
+       transform: translateZ(100%)
+    }
+}
+
+@keyframes fadeOut {
+    0%{
+       opacity: 1;
+       transform: translateZ(100%);
+    }
+    100%{
+       opacity: 0;
+       transform: translateZ(0)
+    }
+}
+
+@keyframes viewUp {
+    0%{
+       opacity: 0;
+       transform: translateY(0);
+    }
+    50%{
+       opacity: 0.5;
+       transform: translateY(12px)
+    }
+    100%{
+       opacity: 1;
+       transform: translateY(0)
+    }
+}
+
+@keyframes viewSwipe {
+    0%{
+       opacity: 0;
+       transform: translateX(10px);
+    }
+    100%{
+       opacity: 1;
+       transform: translateX(0px)
+    }
+}
+
+.toggleMenu{
+    -webkit-animation-name: viewSwipe;
+    animation-name: viewSwipe;
+}
+
+.toggleRouter{
+    -webkit-animation-name: viewUp;
+    animation-name: viewUp;
+}
+
+.checkFade {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+
+.animated{
+  -webkit-animation-duration: 0.6s;
+  animation-duration: 0.6s;
+}
+
+select{
+    display: block
+ }
+
 </style>
