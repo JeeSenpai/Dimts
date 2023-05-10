@@ -2,8 +2,18 @@
     <div>
         <div v-show="viewPage == false" class="checkFade animated">
         <div class="flex flex-row justify-between">
-            <div>
-                <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+            <div class="flex">
+                <div>
+                    <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+                </div>
+                <div>
+                    <select v-model="selectedProceeding" id="files" @change="sortProceeding()" class=" text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 ml-2 px-2 py-2.5 w-[13rem]">
+                        <option value="1" selected>All Court Proceedings</option>
+                        <option value="2">New Cases</option>
+                        <option value="3">Reopened Cases</option> 
+                        <option value="4">DocketCase</option>
+                    </select> 
+                </div>
             </div>
             <div>
                 <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
@@ -34,6 +44,9 @@
                         <th scope="col" class="px-5 py-3">
                             Recieved Date
                         </th>
+                        <th scope="col" class="px-5 py-3">
+                            Case Status
+                        </th>
                         <th scope="col" class="px-6 py-3 text-right">
                             Action  
                         </th>
@@ -52,6 +65,11 @@
                         </td>
                         <td class="px-5 py-3 ">
                             {{ formatDate(data.date_recieved) }}
+                        </td>
+                        <td class="px-5 py-3 ">
+                            <span v-if="data.caseStatus == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded-md">Docket Case</span>
+                            <span v-if="data.caseStatus == 1 && data.reopenCount == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">New Case</span>
+                            <span v-if="data.caseStatus == 1 && data.reopenCount > 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Reopened Case</span>
                         </td>
                         <td class="py-3 px-2 text-right">
                             <button @click="openViewPage(data.id);" type="button" class="bg-transparent mr-4 py-1.5">
@@ -72,8 +90,8 @@
                 </tbody>
             </table> 
             <div class="flex justify-between bg-white">
-                                <div class="text-xs mt-3 ml-4 text-gray-700 dark:text-gray-400">
-                                    Page <span class="font-base text-gray-900 dark:text-white">{{page}}</span> <span v-if="pages.length > 0" class="font-base text-gray-900 dark:text-white">of {{pages.length}}</span>
+                                <div class="text-xs mt-3 ml-4 text-gray-700">
+                                    Page <span class="font-base text-gray-900">{{page}}</span> <span v-if="pages.length > 0" class="font-base text-gray-900">of {{pages.length}}</span>
                                 </div>
                                 <div class="flex mt-2 mb-2 mr-2 xs:mt-0 ">
                                     <div> 
@@ -128,6 +146,7 @@ export default {
             savedData: [],
             viewPage: false,
             details: [],
+            selectedProceeding: 1,
 
             page: 1,
             perPage: 10,
@@ -143,7 +162,7 @@ export default {
     methods: {
         init(){
             axios.get(this.$store.state.serverUrl + '/cases/proceedings', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
-                this.data = res.data
+                this.data = res.data 
                 this.savedData = res.data
                 this.page = 1
                 this.pages = []
@@ -152,6 +171,44 @@ export default {
                     this.pages.push(index);
                 }
             });
+        },
+        sortProceeding(){
+            if(this.selectedProceeding == 1){
+                this.init()
+            }
+            else if(this.selectedProceeding == 2){
+                this.data = this.savedData.filter(
+                (data) => data.caseStatus == 1 && data.reopenCount == 0
+                );
+                this.page = 1
+                this.pages = []
+                let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                        this.pages.push(index);
+                }
+            }
+            else if (this.selectedProceeding == 3){
+                this.data = this.savedData.filter(
+                (data) => data.caseStatus == 1 && data.reopenCount > 0
+                );
+                this.page = 1
+                this.pages = []
+                let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                        this.pages.push(index);
+                }
+            }
+            else if (this.selectedProceeding == 4){
+                this.data = this.savedData.filter(
+                (data) => data.caseStatus == 0
+                );
+                this.page = 1
+                this.pages = []
+                let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                        this.pages.push(index);
+                }
+            }
         },
         handleSearching() {
         if (this.searchText == "" || !this.searchText) {

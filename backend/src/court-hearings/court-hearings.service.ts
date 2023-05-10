@@ -28,15 +28,17 @@ export class CourtHearingsService {
     .select([
         'court_hearing',
         'case',
+        'case_type',
         'hearing_type',
         'raffled_court',
         'judge'
     ])
     .leftJoin('court_hearing.case', 'case')
+    .leftJoin('case.caseType', 'case_type')
     .leftJoin('court_hearing.raffledCourt', 'raffled_court')
     .leftJoin('court_hearing.judgeAssigned', 'judge')
     .leftJoin('court_hearing.hearingType', 'hearing_type')
-    .orderBy('court_hearing.id', 'DESC')
+    .orderBy('court_hearing.updated_at', 'DESC')
     .getMany();
   }
 

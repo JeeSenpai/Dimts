@@ -8,8 +8,8 @@ export class HearingTypesController {
   constructor(private readonly hearingTypesService: HearingTypesService) {}
 
   @Post()
-  create(@Body() createHearingTypeDto: CreateHearingTypeDto) {
-    return this.hearingTypesService.create(createHearingTypeDto);
+  create(@Body() data: any) {
+    return this.hearingTypesService.create(data);
   }
 
   @Get()
@@ -17,14 +17,19 @@ export class HearingTypesController {
     return this.hearingTypesService.findAll();
   }
 
+  @Get()
+  findAllActive() {
+    return this.hearingTypesService.findAllActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.hearingTypesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHearingTypeDto: UpdateHearingTypeDto) {
-    return this.hearingTypesService.update(+id, updateHearingTypeDto);
+  @Post('update')
+  update(@Body() data: any) {
+    return this.hearingTypesService.update(data);
   }
 
   @Delete(':id')

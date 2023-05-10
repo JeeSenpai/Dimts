@@ -17,6 +17,21 @@ export class CasesController {
     return this.casesService.findAll();
   }
 
+  @Get('findAllActiveCasesClusters')
+  findAllActiveCasesClusters(){
+    return this.casesService.findAllActiveCasesClusters();
+  }
+
+  @Get('findAllDocketCasesClusters')
+  findAllDocketCasesClusters(){
+    return this.casesService.findAllDocketCasesClusters();
+  }
+
+  @Get('findAllDocket')
+  findAllDocket() {
+    return this.casesService.findAllDocket();
+  }
+
   @Get('getProceedings/:id')
   findOneCaseWithProceedings( @Param('id') id: number ){
     return this.casesService.findOneCaseWithProceedings(id)
@@ -35,6 +50,16 @@ export class CasesController {
   @Patch()
   update(@Body() data: any) {
     return this.casesService.update(data);
+  }
+
+  @Post('updateCaseStatusToTrue')
+  updateCaseStatusToTrue(@Body() data: any ){
+     return this.casesService.updateCaseStatusToTrue(data)
+  }
+
+  @Post('updateCaseStatusToFalse')
+  updateCaseStatusToFalse(@Body() data: any ){
+     return this.casesService.updateCaseStatusToFalse(data)
   }
 
   @Delete(':id')

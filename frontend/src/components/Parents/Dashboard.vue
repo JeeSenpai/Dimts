@@ -14,7 +14,7 @@
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
             <div class="p-3 flex flex-row h-60">
                   <div class="block p-2 mr-2 w-full bg-white rounded-lg border border-gray-200 shadow-md">
-                      <h5 class="mb-2 text-sm text-left font-bold tracking-tight text-gray-900 dark:text-white"></h5>
+                      <h5 class="mb-2 text-sm text-left font-bold tracking-tight text-gray-900"></h5>
                       <div class="text-sm text-left text-gray-700">
                         <p></p>
                       </div>

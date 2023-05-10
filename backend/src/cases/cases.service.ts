@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CaseDecision } from 'src/case-decision/entities/case-decision.entity';
 import { CourtHearing } from 'src/court-hearings/entities/court-hearing.entity';
 import { HearingType } from 'src/hearing-types/entities/hearing-type.entity';
 import { Judge } from 'src/judges/entities/judge.entity';
+import { Proceeding } from 'src/proceedings/entities/proceeding.entity';
 import { RaffledCourt } from 'src/raffled-court/entities/raffled-court.entity';
 import { Repository } from 'typeorm';
 import { CreateCaseDto } from './dto/create-case.dto';
@@ -12,8 +14,7 @@ import { Case } from './entities/case.entity';
 @Injectable()
 export class CasesService {
   constructor(@InjectRepository(Case) private readonly caseRepository: Repository<Case>, 
-              @InjectRepository(CourtHearing) private readonly courtHearingRepository: Repository<CourtHearing>
-  ){}
+              @InjectRepository(CourtHearing) private readonly courtHearingRepository: Repository<CourtHearing>){}
 
   async create(data: any) {
     const save = this.caseRepository.create({
@@ -21,7 +22,10 @@ export class CasesService {
         case_title: data.case_title,
         case_description: data.case_description,
         date_recieved: data.date_recieved,
+        case_tag: data.case_tag,
+        case_checklist: data.case_checklist,
         caseType: data.case_type,
+        caseStatus: true
     })
     return await this.caseRepository.save(save)
   }
@@ -35,7 +39,24 @@ export class CasesService {
     .leftJoin('case.caseType', 'case_type')
     .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
     .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
-    .orderBy('case.id', 'DESC')
+    .where('case.caseStatus = true')
+    .orderBy('case.updated_at', 'DESC')
+    .getMany();
+  }
+
+  async findAllDocket() {
+    return await this.caseRepository.createQueryBuilder('case')
+    .select([
+        'case',
+        'case_type',
+    ])
+    .leftJoin('case.caseType', 'case_type')
+    .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
+    .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
+    .leftJoinAndMapMany('case.proceedings', Proceeding, 'proceedings', 'case.id = proceedings.case' )
+    .leftJoinAndMapOne('proceedings.caseDecision', CaseDecision, 'case_decision', 'proceedings.caseDecision = case_decision.id')
+    .where('case.caseStatus = false')
+    .orderBy('case.updated_at', 'DESC')
     .getMany();
   }
 
@@ -67,7 +88,7 @@ export class CasesService {
           'case_type',
       ])
       .leftJoin('case.caseType', 'case_type')
-      .orderBy('case.id', 'DESC')
+      .orderBy('case.updated_at', 'DESC')
       .getMany()
 
       for (let i = 0; i < cases.length; i++) {
@@ -93,11 +114,53 @@ export class CasesService {
       case_title: data.case_title,
       case_description: data.case_description,
       date_recieved: data.date_recieved,
+      case_tag: data.case_tag,
+      case_checklist: data.case_checklist,
       caseType: data.case_type,
     })
+  }
+
+  async updateCaseStatusToTrue( data:any ){
+    return await this.caseRepository.update(data.caseId, {
+       caseStatus: true,
+       reopenCount: data.reopenCount + 1
+    })
+  }
+
+  async updateCaseStatusToFalse( data:any ){
+     return await this.caseRepository.update(data.caseId, {
+        caseStatus: false
+     })
   }
 
   remove(id: number) {
     return `This action removes a #${id} case`;
   }
+
+
+  // For clustering
+  async findAllActiveCasesClusters() {
+    return await this.caseRepository.createQueryBuilder('case')
+    .select([
+        'case',
+        'case_type',
+    ])
+    .leftJoin('case.caseType', 'case_type')
+    .where('case.caseType = 1')
+    .andWhere('case.caseStatus = true')
+    .getMany();
+  }
+
+  async findAllDocketCasesClusters() {
+    return await this.caseRepository.createQueryBuilder('case')
+    .select([
+        'case',
+        'case_type',
+    ])
+    .leftJoin('case.caseType', 'case_type')
+    .where('case.caseType = 1')
+    .andWhere('case.caseStatus = false')
+    .getMany();
+  }
+
 }

@@ -1,23 +1,51 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateCaseDecisionDto } from './dto/create-case-decision.dto';
 import { UpdateCaseDecisionDto } from './dto/update-case-decision.dto';
+import { CaseDecision } from './entities/case-decision.entity';
 
 @Injectable()
 export class CaseDecisionService {
-  create(createCaseDecisionDto: CreateCaseDecisionDto) {
-    return 'This action adds a new caseDecision';
+  constructor(@InjectRepository(CaseDecision) private readonly caseDecisionRepository: Repository<CaseDecision>){}
+
+  async create(data:any) {
+     const toSave = this.caseDecisionRepository.create({
+          description: data.description,
+          caseType: data.caseType,
+          status: data.status
+     })
+
+     return await this.caseDecisionRepository.save(toSave)
   }
 
-  findAll() {
-    return `This action returns all caseDecision`;
+  async findAllCaseDecisionByCaseType(data: number) {
+    return await this.caseDecisionRepository.createQueryBuilder('case_decision')
+    .select([
+        'case_decision',
+        'case_type'
+    ])
+    .leftJoin('case_decision.caseType', 'case_type' )
+    .where('case_decision.caseType =:id', { id: data})
+    .getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} caseDecision`;
+  async findAll() {
+    return await this.caseDecisionRepository.createQueryBuilder('case_decision')
+    .select([
+      'case_decision',
+      'case_type'
+    ])
+    .leftJoin('case_decision.caseType', 'case_type' )
+    .getMany()
   }
 
-  update(id: number, updateCaseDecisionDto: UpdateCaseDecisionDto) {
-    return `This action updates a #${id} caseDecision`;
+  async update(data: any) {
+    return await this.caseDecisionRepository.update( data.decisionId ,{ 
+        description: data.description,
+        caseType: data.caseType,
+        status: data.status
+    })
   }
 
   remove(id: number) {

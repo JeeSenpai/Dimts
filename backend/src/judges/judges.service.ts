@@ -9,9 +9,14 @@ import { Judge } from './entities/judge.entity';
 export class JudgesService {
   constructor(@InjectRepository(Judge) private readonly judgeRepository: Repository<Judge>){}
   
-  create(createJudgeDto: CreateJudgeDto) {
-    return 'This action adds a new judge';
-  }
+  async create(data:any) {
+    const toSave = this.judgeRepository.create({
+         name: data.name,
+         status: data.status
+    })
+
+    return await this.judgeRepository.save(toSave)
+ }
 
   findAll() {
     return this.judgeRepository.find();
@@ -21,8 +26,11 @@ export class JudgesService {
     return `This action returns a #${id} judge`;
   }
 
-  update(id: number, updateJudgeDto: UpdateJudgeDto) {
-    return `This action updates a #${id} judge`;
+  async update(data: any) {
+    return await this.judgeRepository.update( data.judgeId ,{ 
+        name: data.name,
+        status: data.status
+    })
   }
 
   remove(id: number) {

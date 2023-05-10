@@ -12,10 +12,12 @@ export class UsersService {
             
   async create(User: any) {
      const password = encodePassword(User.password);
-     const newUserDetails = this.userDetailsRepository.create({
+     const newUserDetails = this.userDetailsRepository.create({ 
          fname: User.fname,
          mname: User.mname,
-         lname: User.lname    
+         lname: User.lname,
+         userType: User.userType,
+         office: User.office   
     });
     const user = await this.userDetailsRepository.save(newUserDetails);
 
@@ -40,10 +42,12 @@ export class UsersService {
     .select([
       'user',
       'user_details',
-      'user_type'
+      'user_type',
+      'office'
      ])
      .leftJoin('user.userDetails', 'user_details')
      .leftJoin('user_details.userType', 'user_type')
+     .leftJoin('user_details.office', 'office')
      .where('user.email = :email ', { email })
      .getOne();
   }
@@ -53,10 +57,12 @@ export class UsersService {
     .select([
       'user',
       'user_details',
-      'user_type'
+      'user_type',
+      'office'
      ])
      .leftJoin('user.userDetails', 'user_details')
      .leftJoin('user_details.userType', 'user_type')
+     .leftJoin('user_details.office', 'office')
      .where('user.id = :id ', { id })
      .getOne();
   }

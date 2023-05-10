@@ -1,16 +1,34 @@
 <template>
     <div class="checkFade animated">
+        <div class="text-left">
+            <div class="text-sm font-semibold text-center text-gray-500 border-gray-200">
+                <ul class="flex flex-wrap mb-2">
+                    <li v-for="tab in tabs" :key="tab.id">
+                        <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block p-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <div class="flex flex-row justify-between">
-            <div>
-                <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+            <div class="flex">
+                <div>
+                    <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+                </div>
+                <div>
+                    <select v-model="selectedCaseType" id="files" @change="sortHearingCaseType()" class=" text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 ml-2 px-2 py-2.5 w-[13rem]">
+                        <option value="1" selected>All Cases</option>
+                        <option value="2">Criminal Cases</option>
+                        <option value="3">Civil</option> 
+                    </select> 
+                </div>
             </div>
             <div>
                 <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5 mr-1 mb-0.5">
-                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                    </svg>Export
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                    </svg>Filter
                 </button>
-                <button @click="showAddDialog()" class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCase">
+                <button v-if="comply == 1" @click="showAddDialog()" class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCase">
                     <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 mr-1 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                     </svg> Add New Court Hearing
@@ -76,8 +94,8 @@
                 </tbody>
             </table> 
             <div class="flex justify-between bg-white">
-                                <div class="text-xs mt-3 ml-4 text-gray-700 dark:text-gray-400">
-                                    Page <span class="font-base text-gray-900 dark:text-white">{{page}}</span> <span v-if="pages.length > 0" class="font-base text-gray-900 dark:text-white">of {{pages.length}}</span>
+                                <div class="text-xs mt-3 ml-4 text-gray-700">
+                                    Page <span class="font-base text-gray-900">{{page}}</span> <span v-if="pages.length > 0" class="font-base text-gray-900">of {{pages.length}}</span>
                                 </div>
                                 <div class="flex mt-2 mb-2 mr-2 xs:mt-0 ">
                                     <div> 
@@ -98,7 +116,8 @@
             </div>
         <div>
             <CourtHearing
-            ref="CaseDialog"
+            ref="CourtHearing"
+            :date_action="action"
             v-on:refresh="init()"
             />
         </div>
@@ -107,6 +126,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 import CourtHearing from '../Modals/CourtHearingDialog.vue'
 
 export default {
@@ -117,12 +137,23 @@ export default {
         return{
             token: localStorage.getItem("access_token"),
             searchText: null,
+            action: null,
+            selectedCaseType: 1,
             data: [],
             savedData: [],
             page: 1,
             perPage: 10,
             pages: [],
             changePerPage: 10,
+
+            comply: 1,
+            tabs: [
+                { id: 1, description: 'Upcoming Court Hearings'},
+                { id: 2, description: 'Todays Court Hearings' },
+                { id: 3, description: 'Done Court Hearings' },
+                { id: 4, description: 'Docket Cases Court Hearings' },
+            ],
+            tab: { id: 1, description: 'Upcoming Court Hearings' }
         }
     },
     computed: {
@@ -134,14 +165,87 @@ export default {
         init(){
             axios.get(this.$store.state.serverUrl + '/court-hearings', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.data = res.data
-                this.savedData = res.data
+                  
+                if(this.comply == 1){
+                    this.data = this.data.filter(
+                    (data) => data.case.caseStatus == 1 && data.hearing_schedule > moment(new Date()).format('YYYY-MM-DD')
+                    );
+                    this.page = 1
+                    this.pages = []
+                    let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                    for (let index = 1; index <= numberOfPages; index++) {
+                            this.pages.push(index);
+                    }
+                    this.savedData = this.data
+                    this.action = 1
+                }
+                else if (this.comply == 2){
+                    this.data = this.data.filter(
+                    (data) =>data.case.caseStatus == 1 && data.hearing_schedule == moment(new Date()).format('YYYY-MM-DD')
+                    );
+                    this.page = 1
+                    this.pages = []
+                    let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                    for (let index = 1; index <= numberOfPages; index++) {
+                            this.pages.push(index);
+                    }
+                    this.savedData = this.data
+                    this.action = 2
+                }
+                else if (this.comply == 3){
+                    this.data = this.data.filter(
+                    (data) => data.case.caseStatus == 1 && data.hearing_schedule < moment(new Date()).format('YYYY-MM-DD')
+                    );
+                    this.page = 1
+                    this.pages = []
+                    let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                    for (let index = 1; index <= numberOfPages; index++) {
+                            this.pages.push(index);
+                    }
+                    this.savedData = this.data
+                    this.action = 3
+                }
+                else if (this.comply == 4){
+                    this.data = this.data.filter(
+                    (data) => data.case.caseStatus == 0
+                    );
+                    this.page = 1
+                    this.pages = []
+                    let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                    for (let index = 1; index <= numberOfPages; index++) {
+                            this.pages.push(index);
+                    }
+                    this.savedData = this.data
+                    this.action = 4
+                }
+            });
+        },
+        sortHearingCaseType(){
+            if(this.selectedCaseType == 1){
+                this.init()
+            }
+            else if (this.selectedCaseType == 2){
+                this.data = this.savedData.filter(
+                (data) => data.case.caseType.id == 1
+                );
                 this.page = 1
                 this.pages = []
                 let numberOfPages = Math.ceil(this.data.length / this.perPage);
                 for (let index = 1; index <= numberOfPages; index++) {
-                    this.pages.push(index);
+                        this.pages.push(index);
                 }
-            });
+            }
+            else if (this.selectedCaseType == 3){
+                this.data = this.savedData.filter(
+                (data) => data.case.caseType.id == 2
+                );
+                this.page = 1
+                this.pages = []
+                let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                        this.pages.push(index);
+                }
+            }
         },
         handleSearching() {
         if (this.searchText == "" || !this.searchText) {
@@ -172,10 +276,15 @@ export default {
           }
         },
         showAddDialog(){
-            this.$refs.CaseDialog.initializeAdd()
+            this.$refs.CourtHearing.initializeAdd()
         },
         showUpdateDialog(data){
-            this.$refs.CaseDialog.initializeUpdate(data)
+            this.$refs.CourtHearing.initializeUpdate(data)
+        },
+        changeTab(data){
+            this.tab = data;
+            this.comply = data.id
+            this.init()
         },
         paginate(data) {
             let page = this.page;

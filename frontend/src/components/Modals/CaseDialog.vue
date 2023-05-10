@@ -30,21 +30,98 @@
                         class=" ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
                     </div>
                     <div class="flex mt-4 justify-between">
-                        <div class="w-1/2 text-left ml-5 text-[13px] text-gray-800 font-bold">Case Type</div>
+                        <div class="w-1/2 text-left ml-6 text-[13px] text-gray-800 font-bold">Case Type</div>
                         <div class=" w-1/2 text-left ml-2 text-[13px] text-gray-800 font-bold">Recieved Date</div>
                     </div>
                     <div class="flex justify-between">
                         <div>
-                            <select v-model="caseType" :class="{ invalid: isSubmitting && caseType == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                            <select :disabled="toggleUpdate == false && action == 'update'" v-model="caseType" @change="getCaseTag()" :class="{ invalid: isSubmitting && caseType == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select case type</option>
                               <option v-for="casetypes in caseTypeData" :key="casetypes" :value="casetypes.id"> {{ casetypes.description }}</option>
                             </select>
+                            <div v-if="toggleUpdate == false && action == 'update'" class="font-medium text-left text-xs text-gray-600 ml-6 mt-1.5">
+                                Change case type and tags ? 
+                                <button @click="changeTags()" class="text-[#BF40BF] mr-2 underline">Yes</button>
+                            </div>
                         </div>
                         <div><input 
                             v-model="recievedDate" 
                             :class="{ invalid: isSubmitting && recievedDate == '' }"
                             type="date"
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
+                        </div>
+                    </div>
+                    <div v-if="action == 'add' ? toggleUpdate == false : toggleUpdate == true">
+                    <div class="text-left ml-6 mt-3 text-[13px] text-gray-800 font-bold">Case Tag</div>
+                    <div>
+                        <Multiselect
+                        class="ml-5 mr-5 w-[92%] text-sm rounded-lg bg-gray-200 border-0 shadow-lg multiselect-green"
+                        :classes="{container: 'relative mx-auto w-full flex items-center justify-end box-border cursor-pointer border border-gray-300 rounded-lg bg-white text-xs leading-snug outline-none',
+                        containerDisabled: 'cursor-default bg-gray-100',
+                        containerOpen: 'rounded-b-none',
+                        containerOpenTop: 'rounded-t-none',
+                        containerActive: 'ring-0 ring-green-500 ring-opacity-30',
+                        singleLabel: 'flex items-center h-full max-w-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 pr-16 box-border rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-3.5',
+                        singleLabelText: 'overflow-ellipsis overflow-hidden block whitespace-nowrap max-w-full',
+                        multipleLabel: 'flex items-center h-full absolute left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3.5 rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-3.5',
+                        search: 'w-full absolute inset-0 outline-none focus:ring-0 appearance-none box-border border-0 text-base font-sans bg-white rounded pl-3.5 rtl:pl-0 rtl:pr-3.5',
+                        tags: 'flex-grow flex-shrink flex flex-wrap items-center mt-1 pl-2 rtl:pl-0 rtl:pr-2',
+                        tag: 'bg-[#BF40BF] text-white text-xs font-semibold py-0.5 pl-2 rounded mr-1 mb-1 flex items-center whitespace-nowrap rtl:pl-0 rtl:pr-2 rtl:mr-0 rtl:ml-1',
+                        tagDisabled: 'pr-2 opacity-50 rtl:pl-2',
+                        tagsSearchWrapper: 'inline-block relative mx-1 mb-1 flex-grow flex-shrink h-full',
+                        tagsSearch: 'absolute inset-0 border-0 outline-none focus:ring-0 appearance-none p-0 text-xs font-sans box-border w-full bg-gray-200',
+                        tagsSearchCopy: 'invisible whitespace-pre-wrap inline-block h-px',
+                        placeholder: 'flex items-center h-full absolute text-xs left-0 top-0 pointer-events-none bg-transparent leading-snug pl-3 rtl:left-auto rtl:right-0 rtl:pl-0 rtl:pr-3.5',
+                        clear: 'pr-3.5 relative z-10 opacity-40 transition duration-300 flex-shrink-0 flex-grow-0 flex hover:opacity-80 rtl:pr-0 rtl:pl-3.5',
+                        clearIcon: 'bg-multiselect-remove bg-center bg-no-repeat w-2.5 h-4 py-px box-content inline-block',
+                        spinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 mr-3.5 animate-spin flex-shrink-0 flex-grow-0 rtl:mr-0 rtl:ml-3.5',
+                        inifite: 'flex items-center justify-center w-full',
+                        inifiteSpinner: 'bg-multiselect-spinner bg-center bg-no-repeat w-4 h-4 z-10 animate-spin flex-shrink-0 flex-grow-0 m-3.5',
+                        dropdown: 'max-h-60 absolute bg-gray-200 -left-px -right-px bottom-0 transform translate-y-full border-1 ring-[0.5px] ring-gray-900 border-gray-900 -mt-px overflow-y-auto z-50 bg-white flex flex-col rounded-b',
+                        dropdownTop: '-translate-y-full top-px bottom-auto rounded-b-none rounded-t',
+                        dropdownHidden: 'hidden',
+                        options: 'flex flex-col p-0 m-0 list-none',
+                        optionsTop: '',
+                        group: 'p-0 m-0',
+                        groupLabel: 'flex text-sm box-border items-center justify-start text-left py-1 px-3 font-semibold bg-gray-200 cursor-default leading-normal',
+                        groupLabelPointable: 'cursor-pointer',
+                        groupLabelPointed: 'bg-gray-300 text-gray-700',
+                        groupLabelSelected: 'bg-green-600 text-white',
+                        groupLabelDisabled: 'bg-gray-100 text-gray-300 cursor-not-allowed',
+                        groupLabelSelectedPointed: 'bg-green-600 text-white opacity-90',
+                        groupLabelSelectedDisabled: 'text-green-100 bg-green-600 bg-opacity-50 cursor-not-allowed',
+                        groupOptions: 'p-0 m-0',
+                        option: 'flex items-center justify-start box-border text-left cursor-pointer text-xs leading-snug py-2 px-3',
+                        optionPointed: 'text-gray-800 bg-gray-300',
+                        optionSelected: 'text-white bg-green-500',
+                        optionDisabled: 'text-gray-300 cursor-not-allowed',
+                        optionSelectedPointed: 'text-white bg-green-500 opacity-90',
+                        optionSelectedDisabled: 'text-green-100 bg-green-500 bg-opacity-50 cursor-not-allowed',
+                        noOptions: 'py-2 px-3 text-gray-600 bg-gray-200 text-xs text-left',
+                        noResults: 'py-2 px-3 text-gray-600 bg-gray-200 text-xs text-left',
+                        fakeInput: 'bg-transparent absolute left-0 right-0 -bottom-px w-full h-px border-0 p-0 appearance-none outline-none text-transparent',
+                        spacer: 'h-9 py-px box-content',}"
+                        v-model="value"
+                        :options="option"
+                        mode="tags"
+                        placeholder="Add case tags"
+                        @select="getChecklist()"
+                        @deselect="getChecklist()"
+                        :close-on-select="true"
+                        :searchable="true"
+                        :canClear="false"
+                        label="label"
+                        />
+                    </div>
+                    </div>
+                    <div v-if="value.length > 0">
+                        <div class="text-left ml-6 mt-4 text-[13px] text-gray-800 font-bold">Case Tag & Checklist</div>
+                        <div v-for="check in checklistData" :key="check" class="ml-3 mt-2">
+                            <div class="text-left ml-3.5 mt-1 mb-1 text-[13px] text-gray-800 font-bold underline">{{ check.label }}</div>
+                            <label v-for="list in check.checklist" :key="list" class="flex p-2.5 mx-5 ml-1 mt-1.5 rounded-lg bg-gray-200">
+                            <input v-model="checklist" @click="setChecklist(list.id)" :value="list.id" type="checkbox" class="text-[#BF40BF] focus:ring-0 rounded w-3.5 h-3.5">
+                            <p class="text-xs text-left ml-1.5 font-sans text-gray-900">{{ list.description }}</p> 
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -62,14 +139,20 @@
 <script>
 import axios from 'axios';
 import moment from 'moment';
+import { useToast } from "vue-toastification"
+import Multiselect from '@vueform/multiselect'
 
 export default {
+    components: {
+      Multiselect,
+    },
     data(){
         return {
             token: localStorage.getItem("access_token"),
             isSubmitting: false,
             action: null,
             title: null,
+            toggleUpdate: false,
 
             //form datas
             caseId: null,
@@ -79,10 +162,15 @@ export default {
             caseDesc: "",
             recievedDate: "",
 
+            value: [],
+            checklist: [],
+            option: [],
+
             //query datas
             caseTypeData: [],
             raffledCourtData: [],
             judgesData: [],
+            checklistData: [],
         }
     },
     methods: {
@@ -91,7 +179,67 @@ export default {
                 this.caseTypeData = res.data
             });
         },
+        getCaseTag(){
+            this.option = []
+            this.value = []
+            axios.get(this.$store.state.serverUrl + '/case-tags/findAllTagsByCaseType/' + this.caseType, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                for (let i = 0; i < res.data.length; i++) {
+                    let obj = {
+                        value: null,
+                        label: null
+                    }
+                    obj.value = res.data[i].id
+                    obj.label = res.data[i].description
+                    this.option.push(obj)
+                }
+            });
+        },
+        getChecklist(){
+            if(this.value.length > 0){
+                this.checklistData = []
+                for (let i = 0; i < this.value.length; i++) {
+                    axios.get(this.$store.state.serverUrl + '/case-checklist/findAllChecklistByCaseTag/' + this.value[i], {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                        let obj = {
+                            label: null,
+                            checklist: []
+                        }
+                        obj.label = res.data[0].caseTag.description
+                        obj.checklist = res.data
+                        this.checklistData.push(obj)
+                    });
+                }
+            }
+            else{
+                this.checklistData = []
+            }
+        },
+        setChecklist(id){
+            if(this.checklist.includes(id)){
+              for( var i = 0; i < this.checklist.length; i++){ 
+                                   
+                if ( this.checklist[i] === id) { 
+                    this.checklist.splice(i,1) 
+                    i--; 
+                }
+              }
+          }else{
+              this.checklist.push(id)
+          }
+        },
+        getOptionLabel(option) {
+            // Find the option with the matching ID
+            const match = this.option.find(o => o.id === option)
+            return match ? match.label : ''
+        },
+        changeTags(){
+            this.toggleUpdate = true
+            this.value = []
+            this.checklist = []
+            this.option = []
+            this.caseType = ""
+        },
         initializeAdd(){
+            this.toggleUpdate = false
             this.isSubmitting = false
             this.action = "add"
             this.title = "Add New Case Record"
@@ -100,17 +248,25 @@ export default {
             this.caseTitle = "",
             this.caseDesc = "",
             this.recievedDate =  moment(new Date()).format('YYYY-MM-DD');
+            this.value = []
+            this.checklist = []
+            this.option = []
         },
         initializeUpdate(data){
+            this.toggleUpdate = false
             this.isSubmitting = false
             this.action = "update"
             this.title = "Update Case Record"
             this.caseId = data.id
             this.caseNumber = data.case_no
             this.caseType = data.caseType.id
+            this.getCaseTag()
             this.caseTitle = data.case_title
             this.caseDesc = data.case_description
-            this.recievedDate = data.date_recieved
+            this.recievedDate = data.date_recieved    
+            this.value = JSON.parse(data.case_tag)
+            this.getChecklist()
+            this.checklist = JSON.parse(data.case_checklist)
         },
         checkForm(){
             this.isSubmitting = true
@@ -118,7 +274,7 @@ export default {
             .map((x) => x.trim())
             .every(Boolean);
 
-            if(formValid && this.caseType){
+            if(formValid && this.caseType && this.value.length > 0){
                 let formData = {
                     case_id: this.caseId,
                     case_no: this.caseNumber,
@@ -126,12 +282,22 @@ export default {
                     case_description: this.caseDesc,
                     date_recieved: this.recievedDate,
                     case_type: this.caseType,
+                    case_tag: JSON.stringify(this.value),
+                    case_checklist: JSON.stringify(this.checklist)
                 } 
                 if(this.action == "add"){
                     axios.post(this.$store.state.serverUrl + '/cases', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                         if(res){
                             this.$emit('refresh')
                             document.getElementById('close-btn').click();
+
+                            const toast = useToast();
+                            toast.success("Case Succesfully Saved", {
+                            timeout: 2000,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            showCloseButtonOnHover: true,
+                            });
                         }
                     });
                 }
@@ -140,6 +306,14 @@ export default {
                         if(res){
                             this.$emit('refresh')
                             document.getElementById('close-btn').click();
+
+                            const toast = useToast();
+                            toast.success("Case Succesfully Updated", {
+                            timeout: 2000,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            showCloseButtonOnHover: true,
+                            });
                         }
                     });
                 }
@@ -151,9 +325,13 @@ export default {
     }
 }
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>
 <style scoped>
      .invalid {
          border-width: 1px;
          border-color: red;
+    }
+    .multiselect-green {
+     --ms-border-width-active: 0px;
     }
 </style>

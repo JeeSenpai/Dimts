@@ -1,7 +1,7 @@
 <template>
     <div class="checkFade animated">
         <div class="text-left">
-            <div class="text-sm font-semibold text-center text-gray-500 border-gray-200 dark:text-gray-400 dark:border-gray-700">
+            <div class="text-sm font-semibold text-center text-gray-500 border-gray-200">
                 <ul class="flex flex-wrap mb-2">
                     <li v-for="tab in tabs" :key="tab.id">
                         <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block p-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
@@ -49,7 +49,7 @@
                             Recieved Date
                         </th>
                         <th scope="col" class="px-5 py-3">
-                            Latest Schedule
+                            Status & Recent Schedule
                         </th>
                         <th scope="col" class="px-6 py-3 text-right">
                             Action  
@@ -71,8 +71,12 @@
                             {{ formatDate(data.date_recieved) }}
                         </td>
                         <td class="px-5 py-3 whitespace-nowrap text-center">
+                            <span v-if="data.reopenCount == 0" class="text-xs inline-block py-1 px-2.5 mr-1 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">New Case</span>
+                            <span v-if="data.reopenCount > 0" class="text-xs inline-block py-1 px-2.5 mr-1 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Reopened Case</span>
+
+                            <span v-if="data.courtHearings.length > 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-yellow-200 text-yellow-700 rounded-lg">{{ data.courtHearings[0].hearingType.description }} - {{ formatDate(data.courtHearings[0].hearing_schedule) }}</span>
                             <span v-if="data.courtHearings.length == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded-md">Waiting for Schedule</span>
-                            <span v-else class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-yellow-200 text-yellow-700 rounded-lg">{{ data.courtHearings[0].hearingType.description }} - {{ formatDate(data.courtHearings[0].hearing_schedule) }}</span>
+  
                         </td>
                         <td class="py-3 px-2 text-right">
                             <button @click=" showCaseDetails(data)" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCaseDetails" class="bg-transparent mr-2.5 py-1.5">
@@ -99,8 +103,8 @@
                 </tbody>
             </table> 
             <div class="flex justify-between bg-white">
-                                <div class="text-xs mt-3 ml-4 text-gray-700 dark:text-gray-400">
-                                    Page <span class="font-base text-gray-900 dark:text-white">{{page}}</span> <span v-if="pages.length > 0" class="font-base text-gray-900 dark:text-white">of {{pages.length}}</span>
+                                <div class="text-xs mt-3 ml-4 text-gray-700">
+                                    Page <span class="font-base text-gray-900">{{page}}</span> <span v-if="pages.length > 0" class="font-base text-gray-900">of {{pages.length}}</span>
                                 </div>
                                 <div class="flex mt-2 mb-2 mr-2 xs:mt-0 ">
                                     <div> 
@@ -226,6 +230,7 @@ export default {
         changeTab(data){
             this.tab = data;
             this.comply = data.id
+            this.init()
         },
         paginate(data) {
             let page = this.page;

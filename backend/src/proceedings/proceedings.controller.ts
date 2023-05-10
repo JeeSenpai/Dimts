@@ -8,8 +8,8 @@ export class ProceedingsController {
   constructor(private readonly proceedingsService: ProceedingsService) {}
 
   @Post()
-  create(@Body() createProceedingDto: CreateProceedingDto) {
-    return this.proceedingsService.create(createProceedingDto);
+  create(@Body() data: any) {
+    return this.proceedingsService.create(data);
   }
 
   @Get()
@@ -18,13 +18,13 @@ export class ProceedingsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.proceedingsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.proceedingsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProceedingDto: UpdateProceedingDto) {
-    return this.proceedingsService.update(+id, updateProceedingDto);
+  @Patch()
+  update(@Body() data: any) {
+    return this.proceedingsService.update(data);
   }
 
   @Delete(':id')

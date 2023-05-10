@@ -9,9 +9,14 @@ import { RaffledCourt } from './entities/raffled-court.entity';
 export class RaffledCourtService {
   constructor(@InjectRepository(RaffledCourt) private readonly raffledCourtRepository: Repository<RaffledCourt>){}
   
-  create(createRaffledCourtDto: CreateRaffledCourtDto) {
-    return 'This action adds a new raffledCourt';
-  }
+  async create(data:any) {
+    const toSave = this.raffledCourtRepository.create({
+         description: data.description,
+         status: data.status
+    })
+
+    return await this.raffledCourtRepository.save(toSave)
+ }
 
   findAll() {
     return this.raffledCourtRepository.find()
@@ -21,8 +26,11 @@ export class RaffledCourtService {
     return `This action returns a #${id} raffledCourt`;
   }
 
-  update(id: number, updateRaffledCourtDto: UpdateRaffledCourtDto) {
-    return `This action updates a #${id} raffledCourt`;
+  async update(data: any) {
+    return await this.raffledCourtRepository.update( data.raffledCourtId ,{ 
+        description: data.description,
+        status: data.status
+    })
   }
 
   remove(id: number) {

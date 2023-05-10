@@ -8,6 +8,10 @@ import UserProfile from '@/components/Parents/UserProfile.vue'
 import CaseList from '@/components/Parents/CaseList.vue'
 import CourtHearings from '@/components/Parents/CourtHearings.vue'
 import Proceedings from '@/components/Parents/Proceedings.vue'
+import Documents from '@/components/Parents/Documents.vue'
+import Custodies from '@/components/Parents/Custodies.vue'
+import Clustering from '@/components/Parents/Clustering.vue'
+import SystemInfo from '@/components/Parents/SystemInfo.vue'
 
 const routes = [
 
@@ -41,7 +45,66 @@ const routes = [
         path: '/admin/proceedings',
         component: Proceedings,
         meta: { title: 'Proceedings'} 
+      },
+      {
+        path: '/admin/documents',
+        component: Documents,
+        meta: { title: 'Documents'} 
+      },
+      {
+        path: '/admin/custodies',
+        component: Custodies,
+        meta: { title: 'Custodies'} 
+      },
+      {
+        path: '/admin/clustering',
+        component: Clustering,
+        meta: { title: 'Clustering'} 
+      },
+      {
+        path: '/admin/systeminfo',
+        component: SystemInfo,
+        meta: { title: 'System Informations'} 
       }
+    ]
+  },
+
+  {
+    path: '/office',
+    name: 'office',
+    meta: { routeForOffice: true },
+    component: UserView,
+    children: [ 
+      {
+        path: '/office/dashboard',
+        component: Dashboard,
+        meta: { title: 'Dashboard'},
+      },
+      {
+        path: '/office/court-hearing',
+        component: CourtHearings,
+        meta: { title: 'Court Hearings'} 
+      },
+      {
+        path: '/office/documents',
+        component: Documents,
+        meta: { title: 'Documents'} 
+      },
+      {
+        path: '/office/case-list',
+        component: CaseList,
+        meta: { title: 'Case List'} 
+      },
+      {
+        path: '/office/proceedings',
+        component: Proceedings,
+        meta: { title: 'Proceedings'} 
+      },
+      {
+        path: '/office/custodies',
+        component: Custodies,
+        meta: { title: 'Custodies'} 
+      },
     ],
   },
 

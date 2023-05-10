@@ -1,91 +1,13 @@
 <template>
     <div class="toggleRouter animated ">
-      <div class="flex">
-          <div class="relative minheight bg-white w-full -ml-1 shadow-lg justify-center items-center overflow-hidden md:max-w-2x1 md:max-h-2x1 rounded-lg">
-              <div class="relative h-40 bg-gray-300">
-                </div>
-                <div class="relative shadow mx-auto h-32 w-32 -my-16 border-white rounded-full overflow-hidden border-4">
-                  <img src="../../assets/Profile.png" class="w-full h-full object-cover" alt="Dnsc Logo" />
-                </div>
-                <div class="mt-20">
-                  <h1 class="text-lg text-center font-semibold">
-                    {{fullname}}
-                  </h1>
-                </div>
-                  <div class="mt-6 pt-3 flex flex-wrap mx-6 border-t-2 border-gray-400"/>
-                      <div class="mt-3">
-                        <h1 class="text-sm ml-8 text-left font-semibold">
-                          Office/Institute
-                        </h1>
-                        <p class="text-xs text-gray-600 text-left ml-8">
-                          {{office}}
-                        </p>
-                      </div>
-                      <div class="mt-5">
-                        <h1 class="text-sm ml-8 text-left font-semibold">
-                          Designation
-                        </h1>
-                        <p class="text-xs text-gray-600 text-left ml-8">
-                          {{designation}}
-                        </p>
-                     </div>
-                     <div class="mt-5">
-                        <h1 class="text-sm ml-8 text-left font-semibold">
-                          Program
-                        </h1>
-                        <p class="text-xs text-gray-600 text-left ml-8">
-                          {{program}}
-                        </p>
-                     </div>
-                </div>
-
       <div class="flex flex-col">
-          <div class="relative mx-2 h-1/2 justify-center bg-white shadow-md sm:rounded-md">
+          <div class="relative minwidth mx-2 h-1/2 justify-center bg-white shadow-md sm:rounded-md">
                 <div class="w-full">
                     <div class="p-4">
                       <div class="flex flex-row justify-between">
                             <h1 class="text-lg text-left font-semibold ml-2">General Information</h1>
                       </div>
                         <div class="mt-3 flex flex-wrap mx-2 border-t-2 border-gray-400"/>
-                        <ul class="nav nav-tabs flex flex-col md:flex-row flex-wrap list-none border-b-0 pl-0 mb-4" id="tabs-tab"
-                          role="tablist">
-                          <li class="nav-item" role="presentation">
-                            <a href="#tabs-personal" class="
-                              nav-link
-                              text-green-500
-                              block
-                              font-medium
-                              text-xs
-                              leading-tight
-                              uppercase
-                              border-x-0 border-t-0 border-b-2 border-transparent
-                              px-6
-                              py-3
-                              my-2
-                              hover:border-transparent hover:bg-gray-100
-                              focus:border-transparent
-                              active
-                            " id="tabs-personal-tab" data-bs-toggle="pill" data-bs-target="#tabs-personal" role="tab" aria-controls="tabs-personal"
-                              aria-selected="true">Personal</a>
-                          </li>
-                          <li class="nav-item" role="presentation">
-                            <a href="#tabs-designation" class="
-                              nav-link
-                              block
-                              font-medium
-                              text-xs
-                              leading-tight
-                              uppercase
-                              border-x-0 border-t-0 border-b-2 border-transparent
-                              px-6
-                              py-3
-                              my-2
-                              hover:border-transparent hover:bg-gray-100
-                              focus:border-transparent
-                            " id="tabs-profile-tab" data-bs-toggle="pill" data-bs-target="#tabs-profile" role="tab"
-                              aria-controls="tabs-profile" aria-selected="false">Department</a>
-                          </li>
-                        </ul>
                         <div class="tab-content" id="tabs-tabContent">
                             <div class="tab-pane fade show active" id="tabs-personal" role="tabpanel" aria-labelledby="tabs-personal-tab">
                                 <div class="flex flex-row justify-start mt-6">
@@ -178,7 +100,6 @@
               </div>
           </div>
         </div>
-     </div>
 </template>
 
 <script>

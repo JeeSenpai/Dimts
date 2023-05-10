@@ -33,7 +33,7 @@ app.use(router)
 app.use(Toast, options)
 app.use(VueCsvImportPlugin)
 app.component(VueQrcode.name, VueQrcode);
-app.component('downloadCsv', JsonCSV)
+app.component('downloadCsv', JsonCSV);
 app.mount('#app');
 
 

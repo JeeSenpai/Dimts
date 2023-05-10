@@ -8,8 +8,8 @@ export class RaffledCourtController {
   constructor(private readonly raffledCourtService: RaffledCourtService) {}
 
   @Post()
-  create(@Body() createRaffledCourtDto: CreateRaffledCourtDto) {
-    return this.raffledCourtService.create(createRaffledCourtDto);
+  create(@Body() data: any) {
+    return this.raffledCourtService.create(data);
   }
 
   @Get()
@@ -22,9 +22,9 @@ export class RaffledCourtController {
     return this.raffledCourtService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRaffledCourtDto: UpdateRaffledCourtDto) {
-    return this.raffledCourtService.update(+id, updateRaffledCourtDto);
+  @Post('update')
+  update(@Body() data: any) {
+    return this.raffledCourtService.update(data);
   }
 
   @Delete(':id')
