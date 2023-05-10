@@ -8,8 +8,13 @@ export class CaseDecisionController {
   constructor(private readonly caseDecisionService: CaseDecisionService) {}
 
   @Post()
-  create(@Body() createCaseDecisionDto: CreateCaseDecisionDto) {
-    return this.caseDecisionService.create(createCaseDecisionDto);
+  create(@Body() data: any) {
+    return this.caseDecisionService.create(data);
+  }
+
+  @Get('findAllCaseDecisionByCaseType/:id')
+  findAllCaseDecisionByCaseType(@Param('id') caseType: number){
+    return this.caseDecisionService.findAllCaseDecisionByCaseType(caseType)
   }
 
   @Get()
@@ -17,14 +22,9 @@ export class CaseDecisionController {
     return this.caseDecisionService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.caseDecisionService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCaseDecisionDto: UpdateCaseDecisionDto) {
-    return this.caseDecisionService.update(+id, updateCaseDecisionDto);
+  @Post('update')
+  update(@Body() data: any) {
+    return this.caseDecisionService.update(data);
   }
 
   @Delete(':id')

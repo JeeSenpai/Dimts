@@ -7,22 +7,30 @@ import { DocumentType } from './entities/document-type.entity';
 
 @Injectable()
 export class DocumentTypeService {
-  constructor(@InjectRepository(DocumentType) private readonly documentRepository: Repository<DocumentType>){}
+  constructor(@InjectRepository(DocumentType) private readonly documentTypeRepository: Repository<DocumentType>){}
   
-  create(createDocumentTypeDto: CreateDocumentTypeDto) {
-    return 'This action adds a new documentType';
-  }
+  async create(data:any) {
+    const toSave = this.documentTypeRepository.create({
+         description: data.description,
+         status: data.status
+    })
+
+    return await this.documentTypeRepository.save(toSave)
+ }
 
   findAll() {
-    return this.documentRepository.find();
+    return this.documentTypeRepository.find();
   }
 
   findOne(id: number) {
     return `This action returns a #${id} documentType`;
   }
 
-  update(id: number, updateDocumentTypeDto: UpdateDocumentTypeDto) {
-    return `This action updates a #${id} documentType`;
+  async update(data: any) {
+    return await this.documentTypeRepository.update( data.documentTypeId ,{ 
+        description: data.description,
+        status: data.status
+    })
   }
 
   remove(id: number) {

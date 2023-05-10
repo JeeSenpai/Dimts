@@ -1,5 +1,5 @@
 
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { UserDetails } from "./user_detail.entity";
 
 @Entity()
@@ -30,6 +30,21 @@ export class User{
 
     @Column()
     status: boolean;
+
+    @CreateDateColumn({
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        nullable: false,
+        type: 'datetime',
+        name: "created_at",     
+     })
+     datecreated: Date
+
+    @UpdateDateColumn({
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        name: 'updated_at',
+        type: "datetime"
+     })
+     dateupdated: Date
 
 }
 

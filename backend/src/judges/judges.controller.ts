@@ -8,8 +8,8 @@ export class JudgesController {
   constructor(private readonly judgesService: JudgesService) {}
 
   @Post()
-  create(@Body() createJudgeDto: CreateJudgeDto) {
-    return this.judgesService.create(createJudgeDto);
+  create(@Body() data: any) {
+    return this.judgesService.create(data);
   }
 
   @Get()
@@ -22,9 +22,9 @@ export class JudgesController {
     return this.judgesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateJudgeDto: UpdateJudgeDto) {
-    return this.judgesService.update(+id, updateJudgeDto);
+  @Post('update')
+  update(@Body() data: any) {
+    return this.judgesService.update(data);
   }
 
   @Delete(':id')

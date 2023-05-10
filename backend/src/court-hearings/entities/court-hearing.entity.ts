@@ -2,7 +2,7 @@ import { Case } from "src/cases/entities/case.entity";
 import { HearingType } from "src/hearing-types/entities/hearing-type.entity";
 import { Judge } from "src/judges/entities/judge.entity";
 import { RaffledCourt } from "src/raffled-court/entities/raffled-court.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class CourtHearing {
@@ -44,4 +44,19 @@ export class CourtHearing {
         type: "text"
     })
     remarks: string
+
+    @CreateDateColumn({
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        nullable: false,
+        type: 'datetime',
+        name: "created_at",     
+     })
+     datecreated: Date
+
+    @UpdateDateColumn({
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        name: 'updated_at',
+        type: "datetime"
+     })
+     dateupdated: Date
 }

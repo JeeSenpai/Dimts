@@ -30,6 +30,18 @@ import { HearingTypesModule } from './hearing-types/hearing-types.module';
 import { HearingType } from './hearing-types/entities/hearing-type.entity';
 import { ProceedingsModule } from './proceedings/proceedings.module';
 import { Proceeding } from './proceedings/entities/proceeding.entity';
+import { DocumentsModule } from './documents/documents.module';
+import { Document } from './documents/entities/document.entity';
+import { OfficesModule } from './offices/offices.module';
+import { Office } from './offices/entities/office.entity';
+import { CustodiesModule } from './custodies/custodies.module';
+import { Custody } from './custodies/entities/custody.entity';
+import { NotificationsModule } from './notifications/notifications.module';
+import { Notification } from './notifications/entities/notification.entity';
+import { CaseTagsModule } from './case-tags/case-tags.module';
+import { CaseTag } from './case-tags/entities/case-tag.entity';
+import { CaseChecklistModule } from './case-checklist/case-checklist.module';
+import { CaseChecklist } from './case-checklist/entities/case-checklist.entity';
 
 @Module({
   imports: [UsersModule,ConfigModule.forRoot(), TypeOrmModule.forRoot({
@@ -39,10 +51,10 @@ import { Proceeding } from './proceedings/entities/proceeding.entity';
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding],
+    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist],
     synchronize: true,
   }),
-   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule
+   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule
 ],
   controllers: [AppController],
   providers: [AppService],

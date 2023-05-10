@@ -8,8 +8,8 @@ export class DocumentTypeController {
   constructor(private readonly documentTypeService: DocumentTypeService) {}
 
   @Post()
-  create(@Body() createDocumentTypeDto: CreateDocumentTypeDto) {
-    return this.documentTypeService.create(createDocumentTypeDto);
+  create(@Body() data: any) {
+    return this.documentTypeService.create(data);
   }
 
   @Get()
@@ -22,9 +22,9 @@ export class DocumentTypeController {
     return this.documentTypeService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDocumentTypeDto: UpdateDocumentTypeDto) {
-    return this.documentTypeService.update(+id, updateDocumentTypeDto);
+  @Post('update')
+  update(@Body() data: any) {
+    return this.documentTypeService.update(data);
   }
 
   @Delete(':id')

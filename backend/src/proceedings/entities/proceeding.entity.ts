@@ -1,6 +1,6 @@
 import { CaseDecision } from "src/case-decision/entities/case-decision.entity";
 import { Case } from "src/cases/entities/case.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Proceeding {
@@ -25,35 +25,56 @@ export class Proceeding {
         type: 'varchar',
         nullable: true
     })
+    minimum_duration: number
+
+    @Column({
+        type: 'varchar',
+        nullable: true
+    })
     maximum_sentence: number
 
     @Column({
         type: 'varchar',
         nullable: true
     })
-    sentence_duration: number
+    maximum_duration: number
 
     @Column({
         type: 'varchar',
         nullable: true
     })
-    minimum_fines: number
+    minimum_fines: string
 
     @Column({
         type: 'varchar',
         nullable: true
     })
-    maximum_fines: number
+    maximum_fines: string
 
     @Column({
-        type: 'varchar',
+        type: 'date',
         nullable: true
     })
-    fines_equivalent: number
+    last_court_action: string
 
     @Column({
         type: 'text',
         nullable: true
     })
     remarks: string
+
+    @CreateDateColumn({
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        nullable: false,
+        type: 'datetime',
+        name: "created_at",     
+     })
+     datecreated: Date
+
+    @UpdateDateColumn({
+        default: () => 'CURRENT_TIMESTAMP(6)',
+        name: 'updated_at',
+        type: "datetime"
+     })
+     dateupdated: Date
 }
