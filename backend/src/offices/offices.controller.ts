@@ -17,6 +17,11 @@ export class OfficesController {
     return this.officesService.findAll();
   }
 
+  @Get('active')
+  findAllActive() {
+    return this.officesService.findAllActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.officesService.findOne(+id);

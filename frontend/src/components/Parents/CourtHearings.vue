@@ -49,10 +49,10 @@
                             Hearing Schedule
                         </th>
                         <th scope="col" class="px-5 py-3">
-                            Raffled Court
+                            Judge Assigned
                         </th>
                         <th scope="col" class="px-5 py-3">
-                            Judge Assigned
+                            Status
                         </th>
                         <th scope="col" class="px-6 py-3 text-right">
                             Action  
@@ -71,10 +71,12 @@
                             {{ formatDate(data.hearing_schedule) }}
                         </td>
                         <td class="px-5 py-3 ">
-                            {{ data.raffledCourt.description }}
+                            {{ data.judgeAssigned.name }}
                         </td>
                         <td class="px-5 py-3 whitespace-nowrap text-center">
-                            {{ data.judgeAssigned.name }}
+                            <span v-if="data.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
+                            <span v-if="data.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
+                            <span v-if="data.status == 2" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>
                         </td>
                         <td class="py-3 px-2 text-right">
                             <button @click="showUpdateDialog(data)" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCase" class="bg-transparent mr-4 py-1.5">

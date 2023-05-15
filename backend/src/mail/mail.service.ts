@@ -6,16 +6,12 @@ import { User } from '../users/entities/user.entity';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserConfirmation(user: any) {
+  async sendUserConfirmation() {
     await this.mailerService.sendMail({
-      to: user.email,
+      to: 'frostbitz.gamingph@gmail.com',
       // from: '"Support Team" <support@example.com>', // override default from
-       subject: 'Welcome to AUMS! Confirm your Email',
+       subject: 'DIMTS Notifications',
        template: 'confirmation', // `.hbs` extension is appended automatically
-       context: { // ✏️ filling curly brackets with content
-          name: user.name,
-          OTP: user.OTP
-      },
     });
   }
 }

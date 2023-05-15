@@ -14,24 +14,33 @@
             ref="myChart">
             </canvas>
         </div>
-        
+        <button type="button" id="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCaseDetails" class="hidden bg-transparent mr-2.5 py-1.5"></button>
+        <div>
+            <CaseDetails
+            ref="CaseDetails"
+            />
+        </div>
     </div>
 </template>
 <script>
 import axios from 'axios';
 import Chart from 'chart.js';
+import CaseDetails from '../Modals/CaseDetailsDialog.vue';
+
 export default {
     components: {
-        Chart
+        Chart,
+        CaseDetails
     },
     data(){
         return {
             token: localStorage.getItem("access_token"),
+            data: null
         }
     },
     methods: {
         plotDBSCAN(dataPoints, dataPoints2) {
-            const ctx = this.$refs.myChart.getContext('2d');
+            
 
             const chartData = {
             datasets: [
@@ -40,26 +49,29 @@ export default {
                     data: dataPoints,
                     backgroundColor: 'rgb(191 64 191)',
                     borderColor: 'rgb(191 64 191)',
+                    hoverBackgroundColor: 'rgb(191 64 191)',
+                    hoverBorderColor: 'rgb(191 64 191)',
                     borderWidth: 1,
                     pointRadius: 5,
                     pointHoverRadius: 7,
-                    hitRadius: 1,
+                    hitRadius: 1
                 },
                 {
                     label: 'Docket Criminal Cases',
                     data: dataPoints2,
                     backgroundColor: 'rgb(156 163 175)',
                     borderColor: 'rgb(156 163 175)',
+                    hoverBackgroundColor: 'rgb(156 163 175)',
+                    hoverBorderColor: 'rgb(156 163 175)',
                     borderWidth: 1,
                     pointRadius: 5,
                     pointHoverRadius: 7,
                     hitRadius: 1,
                 },
-            ],
+               ],
             };
 
             const chartOptions = {
-
                 layout: {
                     padding: {
                         left: 10,
@@ -74,7 +86,7 @@ export default {
                         position: 'bottom',
                         ticks: {
                             beginAtZero: true,
-                            max: 30,
+                            max: 50,
                             stepSize: 10
                         },
                         gridLines: {
@@ -86,7 +98,7 @@ export default {
                         position: 'left',
                         ticks: {
                             beginAtZero: true,
-                            max: 40,
+                            max: 50,
                             stepSize: 10
                         },
                         gridLines: {
@@ -99,53 +111,87 @@ export default {
                         label: function(tooltipItem, data) {
                             var case_no = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].case_no;
                             var case_title = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].case_title;
-                            var label = case_no+ '\n' +case_title ;
+                            var level = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].level;
+                            var label = level < 6 ? case_no + " - " +  case_title +  ' ( Level ' + level + ' )' : case_no + " - " +  case_title + ' ( Life Imprisonment )' ;
                             return label
                         }
                     }
-        }
+                },
+                onClick: function(event, elements) {
+                    if (elements.length > 0) {
+                        var ref = this.$refs.CaseDetails;
+                        var datasetIndex = elements[0]._datasetIndex;
+                        var index = elements[0]._index;
+                        var dataset = myChart.data.datasets[datasetIndex];
+                        var data = dataset.data[index].id;
+                        // Add your onclick code here
+                        axios.get('http://localhost:9000' + '/cases/' + data, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                            ref.initializeView(res.data)
+                            document.getElementById('button').click()
+                        })
+                    }
+                }.bind(this)
             };
 
+            const ctx = this.$refs.myChart.getContext('2d');
             const myChart = new Chart(ctx, {
             type: 'scatter',
             data: chartData,
             options: chartOptions,
             });
         },
+        
+        setDataPointByCaseStatus(){
+            let dataPoints = [];
+            let dataPoints2 = [];
+            axios.get(this.$store.state.serverUrl + '/cases/findAllActiveCasesClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res1)=>{
+                    for (let i = 0; i < res1.data.length; i++) {
+                        let obj = {
+                            x: null,
+                            y: null,
+                            id: null,
+                            case_no: null,
+                            case_title: null,
+                            level: null
+                        }
+                        obj.x=res1.data[i].point_x
+                        obj.y=res1.data[i].point_y
+                        obj.id = res1.data[i].id
+                        obj.case_no = res1.data[i].case_no
+                        obj.case_title = res1.data[i].case_title
+                        obj.level = res1.data[i].level
+                        dataPoints.push(obj)
+                    }
+
+                    axios.get(this.$store.state.serverUrl + '/cases/findAllDocketCasesClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res2)=>{
+                                for (let i = 0; i < res2.data.length; i++) {
+                                let obj = {
+                                    x: null,
+                                    y: null,
+                                    id: null,
+                                    case_no: null,
+                                    case_title: null,
+                                    level: null,
+                                }
+                                obj.x=res2.data[i].point_x
+                                obj.y=res2.data[i].point_y
+                                obj.id = res2.data[i].id
+                                obj.case_no = res2.data[i].case_no
+                                obj.case_title = res2.data[i].case_title
+                                obj.level = res2.data[i].level
+                                dataPoints2.push(obj)
+                              }
+                            this.plotDBSCAN(dataPoints, dataPoints2);
+                    });
+            });
+        },
+        setDataPointByCluster(){
+
+        }
     },
     mounted() {
-        let dataPoints = [];
-        let dataPoints2 = [];
-        axios.get(this.$store.state.serverUrl + '/cases/findAllActiveCasesClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res1)=>{
-                for (let i = 0; i < res1.data.length; i++) {
-                    let obj = {
-                        x: null,
-                        y: null,
-                        case_no: null,
-                        case_title: null
-                    }
-                    obj.x=parseFloat(res1.data[i].point_x)
-                    obj.y=parseFloat(res1.data[i].point_y)
-                    obj.case_no = res1.data[i].case_no
-                    obj.case_title = res1.data[i].case_title
-                    dataPoints.push(obj)
-                }
-                console.log(dataPoints)
-
-                axios.get(this.$store.state.serverUrl + '/cases/findAllDocketCasesClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res2)=>{
-                        this.plotDBSCAN(dataPoints, dataPoints2);
-                });
-        });
-        
-  
-
-        // {  x: 12.2, y: 25.3 ,customLabel: 'Custom Label 2'},
-        //     { x: 5.1, y: 16.2 ,customLabel: 'Custom Label 2'}
-        //     // ... more data points ...
-
-  
-},
-    
+        this.setDataPointByCaseStatus()
+    },
 }
 </script>
 <style>

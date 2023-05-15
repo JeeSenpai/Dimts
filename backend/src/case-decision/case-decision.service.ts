@@ -27,6 +27,7 @@ export class CaseDecisionService {
     ])
     .leftJoin('case_decision.caseType', 'case_type' )
     .where('case_decision.caseType =:id', { id: data})
+    .andWhere('case_decision.status = true')
     .getMany();
   }
 

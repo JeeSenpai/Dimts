@@ -20,11 +20,6 @@ export class CaseTag {
     })
     status: boolean
 
-    @Column({
-        default: true
-    })
-    isForLife: boolean
-
     @CreateDateColumn({
         default: () => 'CURRENT_TIMESTAMP(6)',
         nullable: false,

@@ -22,6 +22,12 @@ export class JudgesService {
     return this.judgeRepository.find();
   }
 
+  async findAllActive() {
+    return this.judgeRepository.createQueryBuilder('judge')
+    .where('judge.status = true')
+    .getMany()
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} judge`;
   }

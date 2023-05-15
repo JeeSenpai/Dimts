@@ -43,11 +43,11 @@ export class CasesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.casesService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.casesService.findOne(id);
   }
 
-  @Patch()
+  @Post('update')
   update(@Body() data: any) {
     return this.casesService.update(data);
   }

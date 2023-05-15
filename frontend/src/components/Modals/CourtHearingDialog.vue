@@ -82,6 +82,18 @@
                         </div>
                     </div>
                     <div v-if="date_action != 1">
+                    <div class="text-left ml-6 mt-3.5 text-[13px] text-gray-800 font-bold">Status</div>
+                    <div>
+                        <div>
+                            <select :disabled="date_action == 4" v-model="status" class="ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                              <option disabled value="0">Pending</option>
+                              <option value="1">Canceled</option>
+                              <option value="2">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                    <div v-if="date_action != 1">
                     <div class="text-left ml-6 mt-6 text-[13px] text-gray-800 font-bold">Remarks</div>
                         <div><textarea
                             :disabled="date_action == 4"
@@ -128,6 +140,7 @@ export default {
             endTime: "",
             judgeAssigned: "",
             raffledCourt: "",
+            status: 0,
             remarks: "",
 
             //query datas
@@ -139,13 +152,13 @@ export default {
     },
     methods: {
         init(){
-            axios.get(this.$store.state.serverUrl + '/judges', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/judges/active', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.judgesData = res.data
             });
-            axios.get(this.$store.state.serverUrl + '/raffled-court', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/raffled-court/active', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.raffledCourtData = res.data
             });
-            axios.get(this.$store.state.serverUrl + '/hearing-types', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/hearing-types/active', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.hearingTypeData = res.data
             });
         },
@@ -156,7 +169,7 @@ export default {
             this.isSubmitting = false
             this.action = "add"
             this.title = "Court Hearing"
-            this.subTitle = "Control No."
+            this.subTitle = "Add new court hearing schedule and details"
             this.caseId = ""
             this.hearingType = ""
             this.hearingSched = moment(new Date()).format('YYYY-MM-DD'),
@@ -165,6 +178,7 @@ export default {
             this.judgeAssigned = "",
             this.raffledCourt = ""
             this.remarks = ""
+            this.status = 0
         },
         initializeUpdate(data){
             if(this.date_action == 4){
@@ -180,7 +194,7 @@ export default {
             this.isSubmitting = false
             this.action = "update"
             this.title = "Court Hearing"
-            this.subTitle = "Update court hearing"
+            this.subTitle = "Update court schedule and details"
             this.courtHearingId = data.id
             this.caseId = data.case.id
             this.hearingType = data.hearingType.id
@@ -190,6 +204,7 @@ export default {
             this.judgeAssigned = data.judgeAssigned.id,
             this.raffledCourt = data.raffledCourt.id,
             this.remarks = data.remarks
+            this.status = data.status
         },
         checkForm(){
             this.isSubmitting = true
@@ -204,6 +219,7 @@ export default {
                     end_time: this.endTime,
                     judge: this.judgeAssigned,
                     raffled_court: this.raffledCourt,
+                    status: this.status,
                     remarks: this.remarks
                 } 
                 if(this.action == "add"){

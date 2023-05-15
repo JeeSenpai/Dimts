@@ -120,13 +120,13 @@ export default {
     },
     methods: {
         init(){
-            axios.get(this.$store.state.serverUrl + '/cases/proceedings', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/cases', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.caseData = res.data
             });
-            axios.get(this.$store.state.serverUrl + '/document-type', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/document-type/active', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.documentTypeData = res.data
             });
-            axios.get(this.$store.state.serverUrl + '/offices', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/offices/active', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.officeData = res.data
             });
         },

@@ -32,19 +32,14 @@ export class AuthService {
        }
     }
 
-      async signUp(user: any) {
-        const cred = await this.usersService.create(user);
-        const token = Math.floor(100000 + Math.random() * 9000)
-        const emailUser = { email: cred.email, OTP: token, name: cred.userDetails.fname + " " + cred.userDetails.lname }
+      async signUp() {
+        // const cred = await this.usersService.create(user);
+        // const token = Math.floor(100000 + Math.random() * 9000)
+        // const emailUser = { email: cred.email, OTP: token, name: cred.userDetails.fname + " " + cred.userDetails.lname }
 
-         if(cred){
-            this.mailService.sendUserConfirmation(emailUser)
-            return {
-             id: cred.id,
-             otp: token
-            };
+            this.mailService.sendUserConfirmation()
          }
-      }
+      
 
       async otpVerified(id: number){
           const user = await this.usersService.findOne(id);
