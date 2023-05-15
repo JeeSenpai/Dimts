@@ -8,8 +8,8 @@ export class CaseChecklistController {
   constructor(private readonly caseChecklistService: CaseChecklistService) {}
 
   @Post()
-  create(@Body() createCaseChecklistDto: CreateCaseChecklistDto) {
-    return this.caseChecklistService.create(createCaseChecklistDto);
+  create(@Body() data: any ) {
+    return this.caseChecklistService.create(data);
   }
 
   @Get()
@@ -21,15 +21,19 @@ export class CaseChecklistController {
   findAllChecklistByCaseTag(@Param('id') id: number){
     return this.caseChecklistService.findAllChecklistByCaseTag(id)
   }
+  @Get('findAllActiveChecklistByCaseTag/:id')
+  findAllActiveChecklistByCaseTag(@Param('id') id: number){
+    return this.caseChecklistService.findAllActiveChecklistByCaseTag(id)
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.caseChecklistService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCaseChecklistDto: UpdateCaseChecklistDto) {
-    return this.caseChecklistService.update(+id, updateCaseChecklistDto);
+  @Post('update')
+  update(@Body() data: any) {
+    return this.caseChecklistService.update(data);
   }
 
   @Delete(':id')

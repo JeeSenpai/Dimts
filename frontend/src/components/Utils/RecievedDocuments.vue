@@ -52,7 +52,7 @@
                             {{ data.case.case_no }}
                         </td>
                         <td class="px-5 py-3 ">
-                            {{ data.documentType.description }}
+                           {{ data.documentType.description }}
                         </td>
                         <td class="px-5 py-3 ">
                             {{ data.fromOffice.description }}

@@ -25,6 +25,9 @@ export class CasesService {
         case_tag: data.case_tag,
         case_checklist: data.case_checklist,
         caseType: data.case_type,
+        point_x: data.point_x,
+        point_y: data.point_y,
+        level: data.level,
         caseStatus: true
     })
     return await this.caseRepository.save(save)
@@ -60,8 +63,17 @@ export class CasesService {
     .getMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} case`;
+  async findOne(id: number) {
+    return await this.caseRepository.createQueryBuilder('case')
+    .select([
+        'case',
+        'case_type',
+    ])
+    .leftJoin('case.caseType', 'case_type')
+    .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
+    .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
+    .where('case.id =:id', {id})
+    .getOne();
   }
 
   async findOneCaseWithProceedings( id: number){
@@ -117,6 +129,9 @@ export class CasesService {
       case_tag: data.case_tag,
       case_checklist: data.case_checklist,
       caseType: data.case_type,
+      point_x: data.point_x,
+      point_y: data.point_y,
+      level: data.level
     })
   }
 

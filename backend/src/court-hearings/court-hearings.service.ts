@@ -18,6 +18,7 @@ export class CourtHearingsService {
         end_time: data.end_time,
         judgeAssigned: data.judge,
         raffledCourt: data.raffled_court,
+        status: data.status,
         remarks: data.remarks
     })
     return await this.courtHearingRepository.save(save)
@@ -55,6 +56,7 @@ export class CourtHearingsService {
         end_time: data.end_time,
         judgeAssigned: data.judge,
         raffledCourt: data.raffled_court,
+        status: data.status,
         remarks: data.remarks
     })
   }

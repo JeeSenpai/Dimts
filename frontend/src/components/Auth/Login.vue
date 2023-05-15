@@ -8,8 +8,8 @@
         <div class="mb-3.5 w-full border-t-4 border-gray-500" />
         <form class="space-y-6" @submit.prevent>
             <div class="relative mt-6">
-              <input @keyup.enter="userLogin()" v-model="user.email" :class="{ invalid: isSubmitting && !user.email.trim() }" type="email" id="floating_outlined" class="block px-2.5 pb-2.5 pl-5 pt-3 w-full text-xs text-gray-900 bg-transparent rounded-3xl border-1 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
-              <label for="floating_outlined" class="absolute text-[13px] text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 ml-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 focus:border-purple-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Email</label>
+              <input @keyup.enter="userLogin()" v-model="user.email" :class="{ invalid: isSubmitting && !user.email.trim() }" type="text" id="floating_outlined" class="block px-2.5 pb-2.5 pl-5 pt-3 w-full text-xs text-gray-900 bg-transparent rounded-3xl border-1 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
+              <label for="floating_outlined" class="absolute text-[13px] text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 ml-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 focus:border-purple-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Username</label>
             </div>
 
             <div class="relative">
@@ -36,11 +36,11 @@
               <a href="#" class="font-medium text-xs text-blue-600 hover:text-blue-500"> Forgot your password? </a>
             </div>
           </div>
-          <div>
+          <div class="mt-8">
             <button @click="userLogin()" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white button-submit focus:outline-none focus:ring-2 focus:ring-offset-2 ">Sign in</button>
           </div>
         </form>
-        <div class="mt-4">
+        <!-- <div class="mt-4">
           <div class="relative">
             <div class="absolute inset-0 flex items-center">
               <div class="w-full border-t border-gray-300" />
@@ -52,7 +52,7 @@
             <div class="mt-4">
             <router-link to="/register" class="flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white button-signup focus:outline-none focus:ring-2 focus:ring-offset-2">Sign up</router-link>
           </div>
-        </div>
+        </div> -->
         </div>
       </div>
       <br><br><br>
@@ -126,7 +126,7 @@ export default {
                   else if(result && result.data.user.status == false){
                         
                         const toast = useToast();
-                        toast.error("Your account has been deactivated to access AUMS\nNote: Please contact the admin for activation", {
+                        toast.error("Your account has been deactivated to access DIMTS\nNote: Please contact the admin for activation", {
                         position: "top-left",
                         timeout: 6000,
                         closeOnClick: true,
@@ -137,7 +137,6 @@ export default {
 
                   else{
                       localStorage.setItem('access_token', result.data.access_token);
-                      let token = localStorage.getItem('access_token')
 
                       this.$store.commit('UPDATE_USER', result.data.user)
                       this.$store.commit('UPDATE_SERVERURL', process.env.VUE_APP_BASE_URL)

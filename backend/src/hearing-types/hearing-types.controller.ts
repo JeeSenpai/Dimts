@@ -17,7 +17,7 @@ export class HearingTypesController {
     return this.hearingTypesService.findAll();
   }
 
-  @Get()
+  @Get('active')
   findAllActive() {
     return this.hearingTypesService.findAllActive();
   }

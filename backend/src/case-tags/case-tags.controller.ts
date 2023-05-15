@@ -8,8 +8,8 @@ export class CaseTagsController {
   constructor(private readonly caseTagsService: CaseTagsService) {}
 
   @Post()
-  create(@Body() createCaseTagDto: CreateCaseTagDto) {
-    return this.caseTagsService.create(createCaseTagDto);
+  create(@Body() data: any) {
+    return this.caseTagsService.create(data);
   }
 
   @Get('findAllTagsByCaseType/:id')
@@ -27,9 +27,9 @@ export class CaseTagsController {
     return this.caseTagsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCaseTagDto: UpdateCaseTagDto) {
-    return this.caseTagsService.update(+id, updateCaseTagDto);
+  @Post('update')
+  update(@Body() data: any) {
+    return this.caseTagsService.update(data);
   }
 
   @Delete(':id')

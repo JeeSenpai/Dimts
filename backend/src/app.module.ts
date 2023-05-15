@@ -42,6 +42,10 @@ import { CaseTagsModule } from './case-tags/case-tags.module';
 import { CaseTag } from './case-tags/entities/case-tag.entity';
 import { CaseChecklistModule } from './case-checklist/case-checklist.module';
 import { CaseChecklist } from './case-checklist/entities/case-checklist.entity';
+import { CitizenModule } from './citizen/citizen.module';
+import { CitizenMonitorsModule } from './citizen_monitors/citizen_monitors.module';
+import { Citizen } from './citizen/entities/citizen.entity';
+import { CitizenMonitor } from './citizen_monitors/entities/citizen_monitor.entity';
 
 @Module({
   imports: [UsersModule,ConfigModule.forRoot(), TypeOrmModule.forRoot({
@@ -51,10 +55,10 @@ import { CaseChecklist } from './case-checklist/entities/case-checklist.entity';
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist],
+    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist, Citizen, CitizenMonitor],
     synchronize: true,
   }),
-   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule
+   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule, CitizenModule, CitizenMonitorsModule
 ],
   controllers: [AppController],
   providers: [AppService],

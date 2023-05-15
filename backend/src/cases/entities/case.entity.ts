@@ -54,16 +54,22 @@ export class Case {
     case_checklist: string
 
     @Column({
-        type: "varchar",
+        type: 'int',
         default: null
     })
-    point_x: string
+    level: number
 
     @Column({
-        type: "varchar",
+        type: "float",
         default: null
     })
-    point_y: string
+    point_x: number
+
+    @Column({
+        type: "float",
+        default: null
+    })
+    point_y: number
 
     @CreateDateColumn({
         default: () => 'CURRENT_TIMESTAMP(6)',

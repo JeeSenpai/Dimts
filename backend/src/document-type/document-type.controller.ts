@@ -17,6 +17,11 @@ export class DocumentTypeController {
     return this.documentTypeService.findAll();
   }
 
+  @Get('active')
+  findAllActive() {
+    return this.documentTypeService.findAllActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.documentTypeService.findOne(+id);

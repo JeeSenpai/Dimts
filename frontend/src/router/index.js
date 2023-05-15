@@ -12,6 +12,7 @@ import Documents from '@/components/Parents/Documents.vue'
 import Custodies from '@/components/Parents/Custodies.vue'
 import Clustering from '@/components/Parents/Clustering.vue'
 import SystemInfo from '@/components/Parents/SystemInfo.vue'
+import ManageAccounts from '@/components/Parents/ManageAccounts.vue'
 
 const routes = [
 
@@ -62,6 +63,11 @@ const routes = [
         meta: { title: 'Clustering'} 
       },
       {
+        path: '/admin/account',
+        component: ManageAccounts,
+        meta: { title: 'Manage Accounts'} 
+      },
+      {
         path: '/admin/systeminfo',
         component: SystemInfo,
         meta: { title: 'System Informations'} 
@@ -70,40 +76,45 @@ const routes = [
   },
 
   {
-    path: '/office',
-    name: 'office',
+    path: '/staff',
+    name: 'staff',
     meta: { routeForOffice: true },
     component: UserView,
     children: [ 
       {
-        path: '/office/dashboard',
+        path: '/staff/dashboard',
         component: Dashboard,
         meta: { title: 'Dashboard'},
       },
       {
-        path: '/office/court-hearing',
+        path: '/staff/court-hearing',
         component: CourtHearings,
         meta: { title: 'Court Hearings'} 
       },
       {
-        path: '/office/documents',
+        path: '/staff/documents',
         component: Documents,
         meta: { title: 'Documents'} 
       },
       {
-        path: '/office/case-list',
+        path: '/staff/case-list',
         component: CaseList,
         meta: { title: 'Case List'} 
       },
       {
-        path: '/office/proceedings',
+        path: '/staff/proceedings',
         component: Proceedings,
         meta: { title: 'Proceedings'} 
       },
       {
-        path: '/office/custodies',
+        path: '/staff/custodies',
         component: Custodies,
         meta: { title: 'Custodies'} 
+      },
+      {
+        path: '/staff/userprofile',
+        component: UserProfile,
+        meta: { title: 'Profile'} 
       },
     ],
   },
@@ -149,7 +160,7 @@ router.beforeEach((to, from, next) => {
        }
        else if(usertype.userDetails.userType.id == 2){
         next({
-          path: '/office/dashboard'
+          path: '/staff/dashboard'
         })
        }
     } else if (!user) {

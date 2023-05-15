@@ -22,6 +22,12 @@ export class DocumentTypeService {
     return this.documentTypeRepository.find();
   }
 
+  async findAllActive() {
+    return await this.documentTypeRepository.createQueryBuilder('document_type')
+    .where('document_type.status = true')
+    .getMany()
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} documentType`;
   }

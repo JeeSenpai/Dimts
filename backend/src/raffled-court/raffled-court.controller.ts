@@ -17,6 +17,11 @@ export class RaffledCourtController {
     return this.raffledCourtService.findAll();
   }
 
+  @Get('active')
+  findAllActive() {
+    return this.raffledCourtService.findAllActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.raffledCourtService.findOne(+id);

@@ -10,7 +10,7 @@
                         <option value="1" selected>All Documents</option>
                         <option value="2">Waiting to Send Documents</option>
                         <option value="3">Pending Documents</option>
-                        <option value="4">Approved Documents</option>
+                        <option value="4">Acknowledge Documents</option>
                     </select> 
                 </div>
             </div>
@@ -271,7 +271,6 @@ export default {
         showSendDialog(data){
             this.sendDocs = data
             this.showDialog = true
-            console.log(this.sendDocs)
         },
         sendDocument(){
             axios.post(this.$store.state.serverUrl + '/documents/sendDocument' , this.sendDocs, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{

@@ -22,6 +22,12 @@ export class RaffledCourtService {
     return this.raffledCourtRepository.find()
   }
 
+  async findAllActive() {
+    return this.raffledCourtRepository.createQueryBuilder('raffled_court')
+    .where('raffled_court.status = true')
+    .getMany()
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} raffledCourt`;
   }

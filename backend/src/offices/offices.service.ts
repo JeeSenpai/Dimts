@@ -22,6 +22,12 @@ export class OfficesService {
     return this.officeRepository.find();
   }
 
+  findAllActive() {
+    return this.officeRepository.createQueryBuilder('office')
+    .where('office.status = true')
+    .getMany()
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} office`;
   }

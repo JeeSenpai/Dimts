@@ -13,8 +13,8 @@ export class AuthController {
     }
 
     @Post('signUp')
-    async signUp(@Request() req) {
-      return this.authService.signUp(req.body);
+    async signUp() {
+      return this.authService.signUp();
     }
     
     @Post('updateOtp')

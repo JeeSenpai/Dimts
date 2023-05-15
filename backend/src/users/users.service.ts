@@ -10,31 +10,56 @@ export class UsersService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>,
               @InjectRepository(UserDetails) private readonly userDetailsRepository: Repository<UserDetails>){}
             
-  async create(User: any) {
-     const password = encodePassword(User.password);
+  async create(data: any) {
+     const password = encodePassword('dimts123');
      const newUserDetails = this.userDetailsRepository.create({ 
-         fname: User.fname,
-         mname: User.mname,
-         lname: User.lname,
-         userType: User.userType,
-         office: User.office   
+         fname: data.fname,
+         mname: data.mname,
+         lname: data.lname,
+         userType: data.usertype,
+         office: data.office   
     });
     const user = await this.userDetailsRepository.save(newUserDetails);
 
     const newUserSec = this.userRepository.create({
-          email: User.email,
+          email: data.username,
           password: password,
-          isValidated: User.isValidated,
-          otpVerified: User.otpVerified,
+          isValidated: true,
+          otpVerified: true,
           userDetails: user,
-          status: true
+          status: data.status
      });
      const newUser = await this.userRepository.save(newUserSec) 
      return newUser;
   }
 
-  findAll(){
+  async update(data: any){
+     await this.userDetailsRepository.update(data.accountDetailsId, {
+        fname: data.fname,
+        mname: data.mname,
+        lname: data.lname,
+        userType: data.usertype,
+        office: data.office 
+     })
 
+     return await this.userRepository.update(data.accountId, {
+          email: data.username,
+          status: data.status
+     });
+  }
+
+  findAll(){
+    return this.userRepository.createQueryBuilder('user')
+    .select([
+      'user',
+      'user_details',
+      'user_type',
+      'office'
+     ])
+     .leftJoin('user.userDetails', 'user_details')
+     .leftJoin('user_details.userType', 'user_type')
+     .leftJoin('user_details.office', 'office')
+     .getMany();
   }
 
   findUserByEmail(email: string): Promise<any>{
@@ -72,5 +97,10 @@ export class UsersService {
     if(updatedOtp){
      return new HttpException('OTP Verified Succesfully', HttpStatus.CREATED)
    }
+ }
+
+ async resetPassword(id: number){
+    const password = encodePassword('dimts123')
+    return await this.userRepository.update( id, { password: password })
  }
 }

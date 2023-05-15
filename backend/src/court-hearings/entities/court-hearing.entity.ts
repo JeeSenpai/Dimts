@@ -45,6 +45,11 @@ export class CourtHearing {
     })
     remarks: string
 
+    @Column({
+        type: 'int'
+    })
+    status: number
+
     @CreateDateColumn({
         default: () => 'CURRENT_TIMESTAMP(6)',
         nullable: false,

@@ -68,8 +68,8 @@
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
             <div class="p-3 flex flex-wrap">
-                <div v-if="proceedingData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold hover:bg-gray-200"> No Case Proceedings or Decision Yet</div>
-                  <div v-for="proceeding in proceedingData" :key="proceeding" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 hover:bg-gray-200">
+                <div v-if="proceedingData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Case Proceedings or Decision Yet</div>
+                  <div v-for="proceeding in proceedingData" :key="proceeding" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5">
                     <div class="space-y-5 mb-3">
                             <div class="flex text-left font-semibold space-x-32 mt-3 ml-4">
                                 <div>
@@ -121,7 +121,7 @@
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
             <div class="p-3 flex flex-wrap">
-                  <div v-for="hearing in courtHearings" :key="hearing" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 hover:bg-gray-200">
+                  <div v-for="hearing in courtHearings" :key="hearing" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5">
                     <div class="space-y-8 mb-3">
                             <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                 <div>
@@ -143,8 +143,14 @@
                                     <p class="text-xs">{{ hearing.raffledCourt.description }}</p>
                                 </div>
                                 <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Judge Assigned</p>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Status</p>
                                     <p class="text-xs">{{ hearing.judgeAssigned.name }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Judge Assigned</p>
+                                    <span v-if="hearing.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
+                                    <span v-if="hearing.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
+                                    <span v-if="hearing.status == 2" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>
                                 </div>
                             </div>
                             <div class="ml-4 font-semibold mt-3.5">
@@ -168,8 +174,8 @@
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
             <div class="p-3 flex flex-wrap">
-                <div v-if="documentServedData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold hover:bg-gray-200"> No Documents Found</div>
-                  <div v-for="document in documentServedData" :key="document" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 hover:bg-gray-200">
+                <div v-if="documentServedData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Documents Found</div>
+                  <div v-for="document in documentServedData" :key="document" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5">
                     <div class="space-y-8 mb-3">
                             <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                 <div>
@@ -185,13 +191,14 @@
                                     <p class="text-xs">
                                         <span v-if="document.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Acknowledge - {{ formatDate(document.acknowledge_date) }}</span>
                                         <span v-if="document.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-600 rounded-md">Pending</span>
+                                        <span v-if="document.status == null" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-600 rounded-md">Waiting to Send</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                 <div>
                                     <p class="font-thin text-xs text-gray-600 text-left">Date Recieved</p>
-                                    <p class="text-xs">{{ formatDate(document.sended_date) }}</p>
+                                    <p class="text-xs">{{ document.sended_date == null ? 'N/A' : formatDate(document.sended_date) }}</p>
                                 </div>
                                 <div>
                                     <p class="font-thin text-xs text-gray-600 text-left">Sender</p>
@@ -224,7 +231,7 @@
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
             <div class="p-3 flex flex-wrap">
-                <div v-if="custodiesData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold hover:bg-gray-200"> No Custodies Found</div>
+                <div v-if="custodiesData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Custodies Found</div>
                   <div v-for="custodies in custodiesData" :key="custodies" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 hover:bg-gray-200">
                     <div class="space-y-5 mb-3">
                             <div class="flex text-left font-semibold space-x-32 mt-3 ml-4">

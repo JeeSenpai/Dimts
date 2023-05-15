@@ -17,6 +17,11 @@ export class JudgesController {
     return this.judgesService.findAll();
   }
 
+  @Get('active')
+  findAllActive() {
+    return this.judgesService.findAllActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.judgesService.findOne(+id);

@@ -12,8 +12,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto)
+  create(@Body() data: any) {
+    return this.usersService.create(data)
+  }
+
+  @Post('update')
+  update(@Body() data: any){
+    return this.usersService.update(data)
   }
 
   @Get(':id')
@@ -24,5 +29,10 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Patch('resetPass/:id')
+  resetPass(@Param('id') id: number){
+    return this.usersService.resetPassword(id)
   }
 }

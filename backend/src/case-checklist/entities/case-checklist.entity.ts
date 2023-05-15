@@ -25,9 +25,6 @@ export class CaseChecklist {
 
     @Column()
     maxPenalty: number
-
-    @Column()
-    level: number
     
     @CreateDateColumn({
         default: () => 'CURRENT_TIMESTAMP(6)',
