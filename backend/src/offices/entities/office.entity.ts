@@ -1,4 +1,3 @@
-import { UserType } from "src/user_type/entities/user_type.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
