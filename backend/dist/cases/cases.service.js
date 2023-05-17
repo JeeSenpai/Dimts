@@ -53,7 +53,6 @@ let CasesService = class CasesService {
             .leftJoin('case.caseType', 'case_type')
             .leftJoinAndMapMany('case.courtHearings', court_hearing_entity_1.CourtHearing, 'court_hearing', 'case.id = court_hearing.case')
             .leftJoinAndMapOne('court_hearing.hearingType', hearing_type_entity_1.HearingType, 'hearing_type', 'court_hearing.hearingType = hearing_type.id')
-            .where('case.caseStatus = true')
             .orderBy('case.updated_at', 'DESC')
             .getMany();
     }

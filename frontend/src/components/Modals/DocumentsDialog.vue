@@ -62,6 +62,13 @@
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
                         </div>
                     </div>
+                    <div class="text-left ml-6 mt-3.5 text-[13px] text-gray-800 font-bold">Address</div>
+                    <div><input 
+                        v-model="address" 
+                        :class="{ invalid: isSubmitting && !address }"
+                        type="text"
+                        class=" ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
+                    </div>
                     <div class="text-left ml-6 mt-6 text-[13px] text-gray-800 font-bold">Remarks</div>
                     <div><textarea
                         v-model="remarks"
@@ -102,6 +109,7 @@ export default {
             office: "",
             sender: "",
             reciever: "",
+            address: "",
             remarks: "",
 
             //query datas
@@ -143,6 +151,7 @@ export default {
             this.office = "",
             this.sender = "",
             this.reciever = "",
+            this.address = ""
             this.remarks = ""
         },
         initializeUpdate(data){
@@ -158,6 +167,7 @@ export default {
             this.office = data.office.id,
             this.sender = data.sender,
             this.reciever = data.reciever,
+            this.address = data.address,
             this.remarks = data.remarks
         },
         initializeView(data){
@@ -173,6 +183,7 @@ export default {
             this.office = data.office == undefined ? data.fromOffice.id : data.office.id,
             this.sender = data.sender,
             this.reciever = data.reciever,
+            this.address = data.address,
             this.remarks = data.remarks
         },
         generateRandomString() {
@@ -196,6 +207,7 @@ export default {
                     office: this.office,
                     sender: this.sender,
                     reciever: this.reciever,
+                    address: this.address,
                     remarks: this.remarks
                 } 
                 if(this.action == "add"){

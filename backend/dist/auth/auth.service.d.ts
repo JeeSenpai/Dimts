@@ -12,6 +12,5 @@ export declare class AuthService {
         user: any;
         isValidated: any;
     }>;
-    signUp(): Promise<void>;
     otpVerified(id: number): Promise<void>;
 }

@@ -53,9 +53,6 @@ let AuthService = class AuthService {
             return new common_1.HttpException('User Not Found', common_1.HttpStatus.NOT_FOUND);
         }
     }
-    async signUp() {
-        this.mailService.sendUserConfirmation();
-    }
     async otpVerified(id) {
         const user = await this.usersService.findOne(id);
         if (user) {

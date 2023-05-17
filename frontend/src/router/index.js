@@ -74,7 +74,7 @@ const routes = [
       }
     ]
   },
-
+  
   {
     path: '/staff',
     name: 'staff',
@@ -115,6 +115,11 @@ const routes = [
         path: '/staff/userprofile',
         component: UserProfile,
         meta: { title: 'Profile'} 
+      },
+      {
+        path: '/staff/clustering',
+        component: Clustering,
+        meta: { title: 'Clustering'} 
       },
     ],
   },

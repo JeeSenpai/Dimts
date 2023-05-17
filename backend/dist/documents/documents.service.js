@@ -18,10 +18,15 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const document_entity_1 = require("./entities/document.entity");
 const notification_entity_1 = require("../notifications/entities/notification.entity");
+const office_entity_1 = require("../offices/entities/office.entity");
+const user_entity_1 = require("../users/entities/user.entity");
+const mail_service_1 = require("../mail/mail.service");
 let DocumentsService = class DocumentsService {
-    constructor(documentRepository, notifRepository) {
+    constructor(documentRepository, notifRepository, userRepository, mailService) {
         this.documentRepository = documentRepository;
         this.notifRepository = notifRepository;
+        this.userRepository = userRepository;
+        this.mailService = mailService;
     }
     async create(data) {
         const save = this.documentRepository.create({
@@ -33,6 +38,7 @@ let DocumentsService = class DocumentsService {
             sender: data.sender,
             reciever: data.reciever,
             remarks: data.remarks,
+            address: data.address,
             status: null,
         });
         return await this.documentRepository.save(save);
@@ -48,6 +54,7 @@ let DocumentsService = class DocumentsService {
             .leftJoin('document.case', 'case')
             .leftJoin('document.documentType', 'document_type')
             .leftJoin('document.office', 'office')
+            .leftJoinAndMapOne('document.fromOffice', office_entity_1.Office, 'fromOffice', 'document.fromOffice = fromOffice.id')
             .where('document.fromOffice =:id', { id })
             .orderBy('document.updated_at', 'DESC')
             .getMany();
@@ -93,10 +100,36 @@ let DocumentsService = class DocumentsService {
             sender: data.sender,
             reciever: data.reciever,
             remarks: data.remarks,
+            address: data.address,
             status: null,
         });
     }
     async sendDocument(data) {
+        const users = await this.userRepository.createQueryBuilder('user')
+            .select([
+            'user',
+            'user_details',
+            'office'
+        ])
+            .leftJoin('user.userDetails', 'user_details')
+            .leftJoin('user_details.office', 'office')
+            .where('user_details.office = :id ', { id: data.office.id })
+            .getMany();
+        for (let i = 0; i < users.length; i++) {
+            let sendEmail = {
+                email: users[i].email,
+                recieving_office: data.office.description,
+                sending_office: data.fromOffice.description,
+                document_type: data.documentType.description,
+                control_no: data.control_number,
+                case_no: data.case.case_no,
+                case_title: data.case.case_title,
+                sender: data.sender,
+                reciever: data.reciever,
+                address: data.address,
+            };
+            await this.mailService.sendUserDocuments(sendEmail);
+        }
         const date = new Date();
         const saveNotif = this.notifRepository.create({
             notif_type: 1,
@@ -126,8 +159,11 @@ DocumentsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(document_entity_1.Document)),
     __param(1, (0, typeorm_1.InjectRepository)(notification_entity_1.Notification)),
+    __param(2, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        mail_service_1.MailService])
 ], DocumentsService);
 exports.DocumentsService = DocumentsService;
 //# sourceMappingURL=documents.service.js.map

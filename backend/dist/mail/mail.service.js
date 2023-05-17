@@ -16,11 +16,22 @@ let MailService = class MailService {
     constructor(mailerService) {
         this.mailerService = mailerService;
     }
-    async sendUserConfirmation() {
+    async sendUserDocuments(data) {
         await this.mailerService.sendMail({
-            to: 'frostbitz.gamingph@gmail.com',
+            to: data.email,
             subject: 'DIMTS Notifications',
-            template: 'confirmation',
+            template: 'documents',
+            context: {
+                recieving_office: data.recieving_office,
+                sending_office: data.sending_office,
+                document_type: data.document_type,
+                control_no: data.control_no,
+                case_no: data.case_no,
+                case_title: data.case_title,
+                sender: data.sender,
+                reciever: data.reciever,
+                address: data.address,
+            },
         });
     }
 };

@@ -46,6 +46,12 @@ export class Document {
         type: 'text',
         nullable: true
     })
+    address: string
+
+    @Column({
+        type: 'text',
+        nullable: true
+    })
     remarks: string
 
     @Column({

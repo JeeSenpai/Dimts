@@ -32,13 +32,13 @@ export class AuthService {
        }
     }
 
-      async signUp() {
-        // const cred = await this.usersService.create(user);
-        // const token = Math.floor(100000 + Math.random() * 9000)
-        // const emailUser = { email: cred.email, OTP: token, name: cred.userDetails.fname + " " + cred.userDetails.lname }
+      // async signUp() {
+      //   // const cred = await this.usersService.create(user);
+      //   // const token = Math.floor(100000 + Math.random() * 9000)
+      //   // const emailUser = { email: cred.email, OTP: token, name: cred.userDetails.fname + " " + cred.userDetails.lname }
 
-            this.mailService.sendUserConfirmation()
-         }
+      //       this.mailService.sendUserConfirmation()
+      //    }
       
 
       async otpVerified(id: number){

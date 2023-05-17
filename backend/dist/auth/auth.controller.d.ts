@@ -7,6 +7,5 @@ export declare class AuthController {
         user: any;
         isValidated: any;
     }>;
-    signUp(): Promise<void>;
     verifyOtp(req: any): Promise<void>;
 }

@@ -13,11 +13,13 @@ const documents_controller_1 = require("./documents.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const document_entity_1 = require("./entities/document.entity");
 const notification_entity_1 = require("../notifications/entities/notification.entity");
+const user_entity_1 = require("../users/entities/user.entity");
+const mail_module_1 = require("../mail/mail.module");
 let DocumentsModule = class DocumentsModule {
 };
 DocumentsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([document_entity_1.Document, notification_entity_1.Notification])],
+        imports: [mail_module_1.MailModule, typeorm_1.TypeOrmModule.forFeature([document_entity_1.Document, notification_entity_1.Notification, user_entity_1.User])],
         controllers: [documents_controller_1.DocumentsController],
         providers: [documents_service_1.DocumentsService]
     })

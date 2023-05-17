@@ -7,6 +7,7 @@ export declare class Document {
     control_number: string;
     sender: string;
     reciever: string;
+    address: string;
     remarks: string;
     status: number;
     sended_date: string;

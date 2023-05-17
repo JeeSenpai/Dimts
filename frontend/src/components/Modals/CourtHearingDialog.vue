@@ -20,7 +20,7 @@
                         <div>
                             <select :disabled="date_action != 1" v-model="caseId" :class="{ invalid: isSubmitting && caseId == '' }" class="ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select case number</option>
-                              <option v-for="cases in caseData" :key="cases" :value="cases.id"> {{ cases.case_no }} - {{ cases.case_title }}</option>
+                              <option v-for="cases in action == 'add' ? filteredCase : caseData" :key="cases" :value="cases.id"> {{ cases.case_no }} - {{ cases.case_title }}</option>
                             </select>
                         </div>
                     </div>
@@ -148,6 +148,11 @@ export default {
             raffledCourtData: [],
             judgesData: [],
             hearingTypeData: []
+        }
+    },
+    computed: {
+        filteredCase(){
+            return this.caseData.filter(item => item.caseStatus !== 0)
         }
     },
     methods: {

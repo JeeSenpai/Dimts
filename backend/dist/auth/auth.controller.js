@@ -23,9 +23,6 @@ let AuthController = class AuthController {
     async login(req) {
         return this.authService.login(req.body);
     }
-    async signUp() {
-        return this.authService.signUp();
-    }
     async verifyOtp(req) {
         return this.authService.otpVerified(req.body.id);
     }
@@ -37,12 +34,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
-__decorate([
-    (0, common_1.Post)('signUp'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], AuthController.prototype, "signUp", null);
 __decorate([
     (0, common_1.Post)('updateOtp'),
     __param(0, (0, common_1.Request)()),

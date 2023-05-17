@@ -67,6 +67,13 @@ __decorate([
         nullable: true
     }),
     __metadata("design:type", String)
+], Document.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'text',
+        nullable: true
+    }),
+    __metadata("design:type", String)
 ], Document.prototype, "remarks", void 0);
 __decorate([
     (0, typeorm_1.Column)({

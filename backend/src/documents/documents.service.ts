@@ -5,11 +5,16 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { Document } from './entities/document.entity';
 import { Notification } from 'src/notifications/entities/notification.entity';
+import { Office } from 'src/offices/entities/office.entity';
+import { User } from 'src/users/entities/user.entity';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class DocumentsService {
   constructor(@InjectRepository(Document) private readonly documentRepository: Repository<Document>,
-              @InjectRepository(Notification) private readonly notifRepository: Repository<Notification>){}
+              @InjectRepository(Notification) private readonly notifRepository: Repository<Notification>,
+              @InjectRepository(User) private readonly userRepository: Repository<User>,
+              private mailService: MailService){}
 
 
   async create(data: any) {
@@ -22,6 +27,7 @@ export class DocumentsService {
        sender: data.sender,
        reciever: data.reciever,
        remarks: data.remarks,
+       address: data.address,
        status: null,
     });
 
@@ -39,6 +45,7 @@ export class DocumentsService {
     .leftJoin('document.case', 'case')
     .leftJoin('document.documentType', 'document_type')
     .leftJoin('document.office', 'office')
+    .leftJoinAndMapOne( 'document.fromOffice', Office, 'fromOffice', 'document.fromOffice = fromOffice.id' )
     .where('document.fromOffice =:id', { id })
     .orderBy('document.updated_at', 'DESC')
     .getMany();
@@ -86,11 +93,39 @@ export class DocumentsService {
         sender: data.sender,
         reciever: data.reciever,
         remarks: data.remarks,
+        address: data.address,
         status: null,
     });
   }
 
   async sendDocument( data: any){
+    const users = await this.userRepository.createQueryBuilder('user')
+    .select([
+      'user',
+      'user_details',
+      'office'
+     ])
+     .leftJoin('user.userDetails', 'user_details')
+     .leftJoin('user_details.office', 'office')
+     .where('user_details.office = :id ', { id: data.office.id })
+     .getMany();
+
+     for (let i = 0; i < users.length; i++) {
+        let sendEmail = {
+          email: users[i].email,
+          recieving_office: data.office.description,
+          sending_office: data.fromOffice.description,
+          document_type: data.documentType.description,
+          control_no: data.control_number,
+          case_no: data.case.case_no,
+          case_title: data.case.case_title,
+          sender: data.sender,
+          reciever: data.reciever,
+          address: data.address,
+        }
+        await this.mailService.sendUserDocuments(sendEmail)
+     }
+
     const date = new Date()
     const saveNotif = this.notifRepository.create({
       notif_type: 1,

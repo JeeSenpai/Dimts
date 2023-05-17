@@ -30,7 +30,7 @@
                             Name
                         </th>
                         <th scope="col" class="px-5 py-3">
-                            Username
+                            Email
                         </th>
                         <th scope="col" class="px-5 py-3">
                             Role
