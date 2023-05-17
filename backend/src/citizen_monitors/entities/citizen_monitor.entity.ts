@@ -1,5 +1,5 @@
-import { Case } from "src/cases/entities/case.entity";
-import { Citizen } from "src/citizen/entities/citizen.entity";
+import { Case } from "../../cases/entities/case.entity";
+import { Citizen } from "../../citizen/entities/citizen.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

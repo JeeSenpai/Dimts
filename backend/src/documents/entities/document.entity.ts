@@ -1,6 +1,6 @@
-import { Case } from "src/cases/entities/case.entity";
-import { DocumentType } from "src/document-type/entities/document-type.entity";
-import { Office } from "src/offices/entities/office.entity";
+import { Case } from "../../cases/entities/case.entity";
+import { DocumentType } from "../../document-type/entities/document-type.entity";
+import { Office } from "../../offices/entities/office.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

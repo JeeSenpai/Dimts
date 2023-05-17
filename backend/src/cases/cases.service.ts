@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CaseDecision } from 'src/case-decision/entities/case-decision.entity';
-import { CourtHearing } from 'src/court-hearings/entities/court-hearing.entity';
-import { HearingType } from 'src/hearing-types/entities/hearing-type.entity';
-import { Judge } from 'src/judges/entities/judge.entity';
-import { Proceeding } from 'src/proceedings/entities/proceeding.entity';
-import { RaffledCourt } from 'src/raffled-court/entities/raffled-court.entity';
+import { CaseDecision } from '../case-decision/entities/case-decision.entity';
+import { CourtHearing } from '../court-hearings/entities/court-hearing.entity';
+import { HearingType } from '../hearing-types/entities/hearing-type.entity';
+import { Judge } from '../judges/entities/judge.entity';
+import { Proceeding } from '../proceedings/entities/proceeding.entity';
+import { RaffledCourt } from '../raffled-court/entities/raffled-court.entity';
 import { Repository } from 'typeorm';
 import { CreateCaseDto } from './dto/create-case.dto';
 import { UpdateCaseDto } from './dto/update-case.dto';
