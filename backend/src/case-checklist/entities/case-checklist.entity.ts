@@ -1,4 +1,4 @@
-import { CaseTag } from "src/case-tags/entities/case-tag.entity";
+import { CaseTag } from "../../case-tags/entities/case-tag.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
