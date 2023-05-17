@@ -41,7 +41,7 @@
                     </div>
                     <div class="flex mt-4 justify-between">
                         <div class="w-1/2 text-left ml-5 text-[13px] text-gray-800 font-bold">Last Name</div>
-                        <div class=" w-1/2 text-left ml-2 text-[13px] text-gray-800 font-bold">Username</div>
+                        <div class=" w-1/2 text-left ml-2 text-[13px] text-gray-800 font-bold">Email</div>
                     </div>
                     <div class="flex justify-between">
                         <div>

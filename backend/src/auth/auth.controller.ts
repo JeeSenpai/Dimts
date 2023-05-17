@@ -12,10 +12,10 @@ export class AuthController {
       return this.authService.login(req.body);
     }
 
-    @Post('signUp')
-    async signUp() {
-      return this.authService.signUp();
-    }
+    // @Post('signUp')
+    // async signUp() {
+    //   return this.authService.signUp();
+    // }
     
     @Post('updateOtp')
     async verifyOtp(@Request() req){

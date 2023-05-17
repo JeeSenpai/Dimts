@@ -160,9 +160,9 @@ export default {
             data: [],
             savedData: [],
             page: 1,
-            perPage: 10,
+            perPage: 5,
             pages: [],
-            changePerPage: 10,
+            changePerPage: 5,
 
             comply: 1,
             tabs: [
