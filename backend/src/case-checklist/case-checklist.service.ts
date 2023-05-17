@@ -4,7 +4,6 @@ import { UpdateCaseChecklistDto } from './dto/update-case-checklist.dto';
 import { CaseChecklist } from './entities/case-checklist.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CaseTag } from 'src/case-tags/entities/case-tag.entity';
 
 @Injectable()
 export class CaseChecklistService {

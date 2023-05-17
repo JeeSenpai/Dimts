@@ -1,5 +1,5 @@
-import { CaseDecision } from "src/case-decision/entities/case-decision.entity";
-import { Case } from "src/cases/entities/case.entity";
+import { CaseDecision } from "../../case-decision/entities/case-decision.entity";
+import { Case } from "../../cases/entities/case.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

@@ -1,6 +1,6 @@
 
-import { Office } from "src/offices/entities/office.entity";
-import { UserType } from "src/user_type/entities/user_type.entity";
+import { Office } from "../../offices/entities/office.entity";
+import { UserType } from "../../user_type/entities/user_type.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

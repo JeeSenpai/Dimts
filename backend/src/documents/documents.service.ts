@@ -4,10 +4,10 @@ import { Repository } from 'typeorm';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import { Document } from './entities/document.entity';
-import { Notification } from 'src/notifications/entities/notification.entity';
-import { Office } from 'src/offices/entities/office.entity';
-import { User } from 'src/users/entities/user.entity';
-import { MailService } from 'src/mail/mail.service';
+import { Notification } from '../notifications/entities/notification.entity';
+import { Office } from '../offices/entities/office.entity';
+import { User } from '../users/entities/user.entity';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class DocumentsService {

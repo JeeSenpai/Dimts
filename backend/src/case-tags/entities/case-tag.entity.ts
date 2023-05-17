@@ -1,4 +1,4 @@
-import { CaseType } from "src/case-type/entities/case-type.entity";
+import { CaseType } from "../../case-type/entities/case-type.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

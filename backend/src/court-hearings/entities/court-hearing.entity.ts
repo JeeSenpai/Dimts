@@ -1,7 +1,7 @@
-import { Case } from "src/cases/entities/case.entity";
-import { HearingType } from "src/hearing-types/entities/hearing-type.entity";
-import { Judge } from "src/judges/entities/judge.entity";
-import { RaffledCourt } from "src/raffled-court/entities/raffled-court.entity";
+import { Case } from "../../cases/entities/case.entity";
+import { HearingType } from "../../hearing-types/entities/hearing-type.entity";
+import { Judge } from "../../judges/entities/judge.entity";
+import { RaffledCourt } from "../../raffled-court/entities/raffled-court.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()

@@ -3,9 +3,9 @@ import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Document } from 'src/documents/entities/document.entity';
+import { Document } from '../documents/entities/document.entity';
 import { Notification } from './entities/notification.entity';
-import { Office } from 'src/offices/entities/office.entity';
+import { Office } from '../offices/entities/office.entity';
 
 @Injectable()
 export class NotificationsService {

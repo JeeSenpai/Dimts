@@ -3,7 +3,7 @@ import { CasesService } from './cases.service';
 import { CasesController } from './cases.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Case } from './entities/case.entity';
-import { CourtHearing } from 'src/court-hearings/entities/court-hearing.entity';
+import { CourtHearing } from '../court-hearings/entities/court-hearing.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Case, CourtHearing])],
