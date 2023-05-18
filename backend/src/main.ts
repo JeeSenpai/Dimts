@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+export default  async function bootstrap() {
   
   var whitelist = ["http://3.115.138.237", "http://localhost:8080", "http://localhost:8000", "http://localhost:8081", "https://dimts-rtc.vercel.app" ];
   const app = await NestFactory.create(AppModule, {
