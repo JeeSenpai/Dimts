@@ -8,6 +8,7 @@
     ],
     "functions": {
         "api/**/*.js": {
+          "timeout": 30,
           "maxDuration": 60
         }
     },
