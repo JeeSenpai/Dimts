@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   
-  var whitelist = ["http://3.115.138.237", "http://localhost:8080", "http://localhost:8000", "http://localhost:8081" ];
+  var whitelist = ["http://3.115.138.237", "http://localhost:8080", "http://localhost:8000", "http://localhost:8081", "https://dimts-rtc.vercel.app" ];
   const app = await NestFactory.create(AppModule, {
     cors: {
       origin: function (origin, callback) {
@@ -23,8 +23,8 @@ async function bootstrap() {
   });
 
     const config = new DocumentBuilder()
-    .setTitle('AUMS')
-    .setDescription('Academic Unit Management System')
+    .setTitle('DIMTS')
+    .setDescription('Document Information Management and Tracking System')
     .setVersion('1.0')
     .build();
     const document = SwaggerModule.createDocument(app, config);
