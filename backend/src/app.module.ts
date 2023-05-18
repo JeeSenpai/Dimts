@@ -48,7 +48,7 @@ import { Citizen } from './citizen/entities/citizen.entity';
 import { CitizenMonitor } from './citizen_monitors/entities/citizen_monitor.entity';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forRoot({
+  imports: [UsersModule,ConfigModule.forRoot(), TypeOrmModule.forRoot({
     type: 'mysql',
     host: process.env.DATABASE_HOST,
     port: parseInt(process.env.DATABASE_PORT),
