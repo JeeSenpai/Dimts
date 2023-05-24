@@ -20,7 +20,7 @@ export class CaseChecklist {
     })
     status: boolean
 
-    @Column()
+    @Column({})
     minPenalty: number
 
     @Column()

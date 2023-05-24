@@ -47,6 +47,21 @@ export class CasesController {
     return this.casesService.findOne(id);
   }
 
+  @Get('countCasesByCaseType/:id')
+  countCasesByCaseType(@Param('id') id: number){
+    return this.casesService.countCasesByCaseType(id)
+  }
+
+  @Get('countDocketCase/:id')
+  countDocketCase(@Param('id') id: number){
+    return this.casesService.countDocketCase(id)
+  }
+
+  @Get('countCases/:id')
+  countCases(@Param('id') id: number){
+    return this.casesService.countCases(id)
+  }
+
   @Post('update')
   update(@Body() data: any) {
     return this.casesService.update(data);

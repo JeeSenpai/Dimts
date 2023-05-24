@@ -136,7 +136,7 @@ export default {
                   }
 
                   else{
-                      localStorage.setItem('access_token', result.data.access_token);
+                      localStorage.setItem('dimts_token', result.data.dimts_token);
 
                       this.$store.commit('UPDATE_USER', result.data.user)
                       this.$store.commit('UPDATE_SERVERURL', process.env.VUE_APP_BASE_URL)

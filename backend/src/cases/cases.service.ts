@@ -42,6 +42,7 @@ export class CasesService {
     .leftJoin('case.caseType', 'case_type')
     .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
     .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
+    .where('case.caseStatus = true')
     .orderBy('case.updated_at', 'DESC')
     .getMany();
   }
@@ -175,6 +176,34 @@ export class CasesService {
     .where('case.caseType = 1')
     .andWhere('case.caseStatus = false')
     .getMany();
+  }
+
+  async countCasesByCaseType(id: number){
+     return await this.caseRepository.createQueryBuilder('case')
+     .select([
+        'COUNT(case.id) as caseCount'
+     ])
+     .where('case.caseType =:id', { id })
+     .andWhere('case.caseStatus = true')
+     .getRawMany()
+  }
+
+   countCases(id: number) {
+    return this.caseRepository.createQueryBuilder('case')
+     .select([
+        'COUNT(case.id) as caseCount'
+     ])
+     .where('case.id > :id', {id})
+     .getRawMany()
+ }
+
+   countDocketCase(id: number){
+     return  this.caseRepository.createQueryBuilder('case')
+     .select([
+      'COUNT(case.id) as caseCount'
+   ])
+   .where('case.caseStatus =:id', { id })
+   .getRawMany()
   }
 
 }

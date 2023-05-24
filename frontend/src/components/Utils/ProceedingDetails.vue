@@ -322,7 +322,7 @@ export default {
     },
     data(){
         return{
-            token: localStorage.getItem("access_token"),
+            token: localStorage.getItem("dimts_token"),
             isSubmitting: false,
             showTransferDialog: false,
 
