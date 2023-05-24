@@ -11,8 +11,8 @@ import { use } from 'passport';
 export class CitizenService {
   constructor(@InjectRepository(Citizen) private readonly citizenRepository: Repository<Citizen>){}
 
-  create(createCitizenDto: CreateCitizenDto) {
-    return 'This action adds a new citizen';
+  async create(files: any, data: any) {
+    const citizen = this.citizenRepository.create 
   }
 
   async findUserByUsername(username: any){
