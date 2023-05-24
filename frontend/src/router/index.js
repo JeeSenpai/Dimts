@@ -153,7 +153,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   
-  let user = localStorage.getItem('access_token')
+  let user = localStorage.getItem('dimts_token')
   let usertype = store.state.user;
 
   if (to.matched.some(rec => rec.meta.alreadyAuth)) {

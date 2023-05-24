@@ -193,7 +193,7 @@ import { useToast } from "vue-toastification"
 export default {
     data(){
         return {
-            token: localStorage.getItem("access_token"),
+            token: localStorage.getItem("dimts_token"),
             isSubmitting: false,
             action: null,
             title: null,
@@ -317,6 +317,7 @@ export default {
             }
         },
         showAddDialog(){
+            this.checkSubmitting = false
             this.checkTitle = 'Add Checklist'
             this.checkId = null
             this.checkDescription = ""
@@ -327,6 +328,7 @@ export default {
             this.showDialog = true
         },
         showUpdateDialog(data){
+            this.checkSubmitting = false
             this.checkTitle = 'Update Checklist'
             this.checkId = data.id
             this.checkDescription = data.description

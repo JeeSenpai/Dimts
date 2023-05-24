@@ -125,7 +125,7 @@ export default {
     },
     data(){
         return {
-            token: localStorage.getItem("access_token"),
+            token: localStorage.getItem("dimts_token"),
             isSubmitting: false,
             action: null,
             title: null,

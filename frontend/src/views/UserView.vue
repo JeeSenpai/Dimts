@@ -221,7 +221,7 @@ export default {
     data() {
         return {
             userType: '',
-            token: localStorage.getItem("access_token"),
+            token: localStorage.getItem("dimts_token"),
             isLoading: false,
 
             userPosition: null,
@@ -251,7 +251,7 @@ export default {
         },
         logout() {
             localStorage.removeItem("vuex");
-            localStorage.removeItem("access_token");
+            localStorage.removeItem("dimts_token");
             window.location.reload()
         },
         loadMenu(userType) {

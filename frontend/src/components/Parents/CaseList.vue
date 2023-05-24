@@ -155,14 +155,14 @@ export default {
     },
     data(){
         return{
-            token: localStorage.getItem("access_token"),
+            token: localStorage.getItem("dimts_token"),
             searchText: null,
             data: [],
             savedData: [],
             page: 1,
-            perPage: 5,
+            perPage: 10,
             pages: [],
-            changePerPage: 5,
+            changePerPage: 10,
 
             comply: 1,
             tabs: [

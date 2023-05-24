@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CourtHearingsService } from './court-hearings.service';
 import { CreateCourtHearingDto } from './dto/create-court-hearing.dto';
 import { UpdateCourtHearingDto } from './dto/update-court-hearing.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Court Hearing')
 @Controller('court-hearings')
 export class CourtHearingsController {
   constructor(private readonly courtHearingsService: CourtHearingsService) {}

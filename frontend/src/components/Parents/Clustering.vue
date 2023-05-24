@@ -8,10 +8,9 @@
               <div class="mt-3.5">
                 DBSCAN Clustering
               </div>
-                
             </div>
             <canvas
-            ref="myChart">
+                ref="myChart">
             </canvas>
         </div>
         <button type="button" id="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCaseDetails" class="hidden bg-transparent mr-2.5 py-1.5"></button>
@@ -34,14 +33,14 @@ export default {
     },
     data(){
         return {
-            token: localStorage.getItem("access_token"),
-            data: null
+            token: localStorage.getItem("dimts_token"),
+            data: null,
+            backendUrl: this.$store.state.serverUrl
         }
     },
     methods: {
         plotDBSCAN(dataPoints, dataPoints2) {
             
-
             const chartData = {
             datasets: [
                 {
@@ -125,7 +124,7 @@ export default {
                         var dataset = myChart.data.datasets[datasetIndex];
                         var data = dataset.data[index].id;
                         // Add your onclick code here
-                        axios.get('http://localhost:9000' + '/cases/' + data, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                        axios.get( this.backendUrl + '/cases/' + data, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                             ref.initializeView(res.data)
                             document.getElementById('button').click()
                         })
@@ -134,10 +133,10 @@ export default {
             };
 
             const ctx = this.$refs.myChart.getContext('2d');
-            const myChart = new Chart(ctx, {
-            type: 'scatter',
-            data: chartData,
-            options: chartOptions,
+                const myChart = new Chart(ctx, {
+                type: 'scatter',
+                data: chartData,
+                options: chartOptions,
             });
         },
         

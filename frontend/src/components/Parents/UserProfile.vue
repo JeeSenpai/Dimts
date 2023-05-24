@@ -148,7 +148,7 @@ export default {
    methods: {
         // Load all the current user information
         intialize(){
-          const token = localStorage.getItem("access_token"); 
+          const token = localStorage.getItem("dimts_token"); 
 
           axios.get( this.$store.state.serverUrl + '/users/' + this.$store.state.user.id , {headers: {Authorization: `Bearer  ${token}`}}).then((result)=>{
                       if(result){
@@ -175,7 +175,7 @@ export default {
 
     // Function for saving user basic information
     saveBasicInfo(){
-        const token = localStorage.getItem("access_token");
+        const token = localStorage.getItem("dimts_token");
 
         this.isSubmitting = true;
         const formValid1 = [this.basicInfo.fname, this.basicInfo.lname]
@@ -205,7 +205,7 @@ export default {
       
     // Function for saving user security information
     saveSecurityInfo(){
-        const token = localStorage.getItem("access_token");
+        const token = localStorage.getItem("dimts_token");
 
         this.isSubmitting = true;
         const formValid2 = [this.secureInfo.password, this.confirmPass]
@@ -222,7 +222,7 @@ export default {
                   this.showEye = false
 
                   localStorage.removeItem("vuex");
-                  localStorage.removeItem("access_token");
+                  localStorage.removeItem("dimts_token");
                   window.location.reload()
                  
               } 
