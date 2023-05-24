@@ -12,7 +12,28 @@ export class CitizenService {
   constructor(@InjectRepository(Citizen) private readonly citizenRepository: Repository<Citizen>){}
 
   async create(files: any, data: any) {
-    const citizen = this.citizenRepository.create 
+    const fileArray = []
+    const citizen = this.citizenRepository.create({
+        fname: data.fname,
+        mname: data.mname,
+        lname: data.lname,
+        age: data.age,
+        contact_no: data.contact_no,
+        address: data.address,
+        email: data.email,
+        username: data.usename,
+        password: data.password,
+    })
+
+    const fileRow = await this.citizenRepository.save(citizen);
+
+    for(var i = 0; i < files.length; i++ ){
+       var obj = ""
+       obj = files[i].filename
+       fileArray.push(obj)
+    } 
+
+    this.citizenRepository.update(fileRow.id, {valid_id: JSON.stringify(fileArray)});
   }
 
   async findUserByUsername(username: any){

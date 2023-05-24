@@ -161,13 +161,11 @@
                         <div>
                             <input 
                             v-model="minPenalty" 
-                            :class="{ invalid: checkSubmitting && !minPenalty }"
                             type="number"
                             class="ml-5 px-2 py-2.5 w-[12rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
                         </div>
                         <div><input 
                             v-model="maxPenalty"
-                            :class="{ invalid: checkSubmitting && !maxPenalty }"
                             type="number"
                             class="mr-5 px-2 py-2.5 w-[12rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
                         </div>
@@ -344,7 +342,7 @@ export default {
             .map((x) => x.trim())
             .every(Boolean);
 
-            if(formValid && this.minPenalty && this.maxPenalty){
+            if(formValid){
                 let formData = {
                     id: this.checkId,
                     caseTag: this.tagId,
