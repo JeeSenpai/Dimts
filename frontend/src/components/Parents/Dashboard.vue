@@ -84,30 +84,7 @@ export default {
     methods: {
         // Function for determining if theres and active semester
         init(){
-            let monthData = {
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                  datasets: [
-                    {
-                      label: 'Cases',
-                      backgroundColor: 'rgba(191, 64, 191, 0.4)',
-                      borderColor: 'rgb(191 64 191)',
-                      borderWidth: 1,
-                      data: [65, 59, 80, 81, 56, 55, 40, 45, 30, 25, 10, 5]
-                    }
-                  ]
-             }
-
-             const ctx4 = this.$refs.myChart4.getContext('2d');
-                new Chart(ctx4, {
-                type: 'bar',
-                data: monthData,
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false
-                }
-            });
             
-
             let option = {
               legend: {
                 display: false,
@@ -120,76 +97,101 @@ export default {
 
                 axios.get(this.$store.state.serverUrl + '/cases/countCasesByCaseType/' + 1, {headers: {Authorization: `Bearer  ${this.token}`}}).then((criminal)=>{
                       this.criminalCases = criminal.data[0].caseCount
-                      
-                      let criminalData = {
-                        labels: [
-                            'Criminal Cases',
-                            'Total Cases'
-                        ],
-                        datasets: [
-                            {
-                              backgroundColor: ['#ff7518', '#D3D3D3'],
-                              data: [this.criminalCases, this.totalCases]
-                            }
-                        ],    
-                      };
 
-                      const ctx1 = this.$refs.myChart1.getContext('2d');
-                          new Chart(ctx1, {
-                          type: 'doughnut',
-                          data: criminalData,
-                          options: option,
-                      });
-                });
+                      axios.get(this.$store.state.serverUrl + '/cases/countCasesByCaseType/' + 2, {headers: {Authorization: `Bearer  ${this.token}`}}).then((civil)=>{
+                            this.civilCases = civil.data[0].caseCount
+                            
+                            axios.get(this.$store.state.serverUrl + '/cases/countDocketCase/' + 0, {headers: {Authorization: `Bearer  ${this.token}`}}).then((docket)=>{
+                                  this.docketCases = docket.data[0].caseCount
 
-                axios.get(this.$store.state.serverUrl + '/cases/countCasesByCaseType/' + 2, {headers: {Authorization: `Bearer  ${this.token}`}}).then((civil)=>{
-                      this.civilCases = civil.data[0].caseCount
-                      
-                      let civilData = {
-                          labels: [
-                              'Civil Cases',
-                              'Total Cases'
-                          ],
-                          datasets: [
-                              {
-                                backgroundColor: ['#36A2EB', '#D3D3D3'],
-                                data: [this.civilCases, this.totalCases]
-                              }
-                          ],    
-                      };
+                                  let criminalData = {
+                                    labels: [
+                                        'Criminal Cases',
+                                        'Total Cases'
+                                    ],
+                                    datasets: [
+                                        {
+                                          backgroundColor: ['#ff7518', '#D3D3D3'],
+                                          data: [this.criminalCases, this.totalCases]
+                                        }
+                                    ],    
+                                  };
 
-                      const ctx2 = this.$refs.myChart2.getContext('2d');
-                          new Chart(ctx2, {
-                          type: 'doughnut',
-                          data: civilData,
-                          options: option,
-                      });
-                  });
-                });
 
-                axios.get(this.$store.state.serverUrl + '/cases/countDocketCase/' + 0, {headers: {Authorization: `Bearer  ${this.token}`}}).then((docket)=>{
-                      this.docketCases = docket.data[0].caseCount
-                      
-                      let docketData = {
-                            labels: [
-                                'Docket Cases',
-                                'Total Cases'
-                            ],
-                            datasets: [
-                                {
-                                  backgroundColor: ['#ff3232', '#D3D3D3'],
-                                  data: [this.docketCases, this.totalCases]
-                                }
-                            ],    
-                        };
+                                  let civilData = {
+                                      labels: [
+                                          'Civil Cases',
+                                          'Total Cases'
+                                      ],
+                                      datasets: [
+                                          {
+                                            backgroundColor: ['#36A2EB', '#D3D3D3'],
+                                            data: [this.civilCases, this.totalCases]
+                                          }
+                                      ],    
+                                  };
+                                  
+                                  let docketData = {
+                                        labels: [
+                                            'Docket Cases',
+                                            'Total Cases'
+                                        ],
+                                        datasets: [
+                                            {
+                                              backgroundColor: ['#ff3232', '#D3D3D3'],
+                                              data: [this.docketCases, this.totalCases]
+                                            }
+                                        ],    
+                                    };
 
-                        const ctx3 = this.$refs.myChart3.getContext('2d');
-                            new Chart(ctx3, {
-                            type: 'doughnut',
-                            data: docketData,
-                            options: option,
+                                    let monthData = {
+                                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                                        datasets: [
+                                          {
+                                            label: 'Cases',
+                                            backgroundColor: 'rgba(191, 64, 191, 0.4)',
+                                            borderColor: 'rgb(191 64 191)',
+                                            borderWidth: 1,
+                                            data: [0, 0, 0, 0, this.totalCases, 0, 0, 0, 0, 0, 0, 0]
+                                          }
+                                        ]
+                                  }
+
+                                  const ctx4 = this.$refs.myChart4.getContext('2d');
+                                      new Chart(ctx4, {
+                                      type: 'bar',
+                                      data: monthData,
+                                      options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false
+                                      }
+                                  });
+
+                                    const ctx2 = this.$refs.myChart2.getContext('2d');
+                                      new Chart(ctx2, {
+                                      type: 'doughnut',
+                                      data: civilData,
+                                      options: option,
+                                  });
+
+                                    const ctx1 = this.$refs.myChart1.getContext('2d');
+                                      new Chart(ctx1, {
+                                      type: 'doughnut',
+                                      data: criminalData,
+                                      options: option,
+                                  });
+
+                                    const ctx3 = this.$refs.myChart3.getContext('2d');
+                                        new Chart(ctx3, {
+                                        type: 'doughnut',
+                                        data: docketData,
+                                        options: option,
+                                    });
+                              });
                         });
-                  });
+                      });
+                });
+
         },
 
         // Function for format date from 2022-01-01 to string

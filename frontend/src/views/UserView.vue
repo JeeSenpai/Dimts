@@ -167,21 +167,14 @@
                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
             </a>
             <ul class="dropdown-menu w-full absolute hidden bg-white text-black z-50 float-right py-2 -ml-2 list-none text-right rounded-lg shadow-lg mt-2 bg-clip-padding border-none" aria-labelledby="dropdownMenuButton2">
-               <li> 
+               <!-- <li> 
                <router-link class="dropdown-item text-sm text-center py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-900 hover:bg-gray-100" 
                :to="userType + '/userprofile'">
                <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-1 h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                </svg>Profile</router-link>
-
-               <router-link class="dropdown-item text-sm text-center py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-900 hover:bg-gray-100" 
-               to="/user/settings">
-               <svg xmlns="http://www.w3.org/2000/svg" class="inline mr-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-               </svg>Settings</router-link>
                </li>
-                  <div class="mb-1 mt-1 flex flex-wrap mx-2 right-0 border-gray-400 border-t"/>
+                  <div class="mb-1 mt-1 flex flex-wrap mx-2 right-0 border-gray-400 border-t"/> -->
                <li>
                <button class="dropdown-item text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-gray-900 hover:bg-gray-100 hover:text-red-600" 
                @click="logout()">
