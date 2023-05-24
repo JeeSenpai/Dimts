@@ -51,7 +51,7 @@
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
                         </div>
                     </div>
-                    <div v-if="action == 'add' && caseType == 1 ? toggleUpdate == false : toggleUpdate == true">
+                    <div v-if="action == 'add' ? toggleUpdate == false : toggleUpdate == true">
                     <div class="text-left ml-6 mt-3 text-[13px] text-gray-800 font-bold">Case Tag</div>
                     <div>
                         <Multiselect

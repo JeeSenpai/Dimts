@@ -19,6 +19,7 @@ export class FilesHelper {
     }
    
     static destinationPath(req, file, cb) {
-      cb(null, './files/')
+      cb(null, './images/')
+      // cb(null, '../dist/images/')
     }
   }

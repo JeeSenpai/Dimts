@@ -29,6 +29,7 @@ export class CitizenController {
   uploadFile(@UploadedFiles() files: Array<Express.Multer.File> , @Request() req) {
     const filesArray = files
     const body = JSON.parse(req.body.body)
+    return this.citizenService.create(filesArray,body)
   }
 
   @Get()

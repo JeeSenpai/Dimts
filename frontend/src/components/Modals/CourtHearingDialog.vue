@@ -214,50 +214,61 @@ export default {
         checkForm(){
             this.isSubmitting = true
 
-            if(this.caseId && this.hearingSched && this.startTime && this.endTime && this.judgeAssigned && this.raffledCourt && this.hearingType){
-                let formData = {
-                    court_hearing_id: this.courtHearingId,
-                    case_id: this.caseId,
-                    hearing_type: this.hearingType,
-                    hearing_schedule: this.hearingSched,
-                    start_time: this.startTime,
-                    end_time: this.endTime,
-                    judge: this.judgeAssigned,
-                    raffled_court: this.raffledCourt,
-                    status: this.status,
-                    remarks: this.remarks
-                } 
-                if(this.action == "add"){
-                    axios.post(this.$store.state.serverUrl + '/court-hearings', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
-                        if(res){
-                            this.$emit('refresh')
-                            document.getElementById('close-btn').click();
+            if(this.hearingSched < moment(new Date()).format('YYYY-MM-DD')){
+                const toast = useToast();
+                toast.error("Hearing Schedule must not be less that this day", {
+                timeout: 3000,
+                closeOnClick: true,
+                pauseOnHover: false,
+                showCloseButtonOnHover: true,
+                });
+            }
+            else{
+                if(this.caseId && this.hearingSched && this.startTime && this.endTime && this.judgeAssigned && this.raffledCourt && this.hearingType){
+                    let formData = {
+                        court_hearing_id: this.courtHearingId,
+                        case_id: this.caseId,
+                        hearing_type: this.hearingType,
+                        hearing_schedule: this.hearingSched,
+                        start_time: this.startTime,
+                        end_time: this.endTime,
+                        judge: this.judgeAssigned,
+                        raffled_court: this.raffledCourt,
+                        status: this.status,
+                        remarks: this.remarks
+                    } 
+                    if(this.action == "add"){
+                        axios.post(this.$store.state.serverUrl + '/court-hearings', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                            if(res){
+                                this.$emit('refresh')
+                                document.getElementById('close-btn').click();
 
-                            const toast = useToast();
-                            toast.success("Court Hearing Succesfully Saved", {
-                            timeout: 2000,
-                            closeOnClick: true,
-                            pauseOnHover: false,
-                            showCloseButtonOnHover: true,
-                            });
-                        }
-                    });
-                }
-                else if(this.action == "update"){
-                    axios.patch(this.$store.state.serverUrl + '/court-hearings', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
-                        if(res){
-                            this.$emit('refresh')
-                            document.getElementById('close-btn').click();
+                                const toast = useToast();
+                                toast.success("Court Hearing Succesfully Saved", {
+                                timeout: 2000,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                showCloseButtonOnHover: true,
+                                });
+                            }
+                        });
+                    }
+                    else if(this.action == "update"){
+                        axios.patch(this.$store.state.serverUrl + '/court-hearings', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                            if(res){
+                                this.$emit('refresh')
+                                document.getElementById('close-btn').click();
 
-                            const toast = useToast();
-                            toast.success("Court Hearing Succesfully Updated", {
-                            timeout: 2000,
-                            closeOnClick: true,
-                            pauseOnHover: false,
-                            showCloseButtonOnHover: true,
-                            });
-                        }
-                    });
+                                const toast = useToast();
+                                toast.success("Court Hearing Succesfully Updated", {
+                                timeout: 2000,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                showCloseButtonOnHover: true,
+                                });
+                            }
+                        });
+                    }
                 }
             }
         }
