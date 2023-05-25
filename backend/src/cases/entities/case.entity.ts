@@ -3,7 +3,9 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 
 @Entity()
 export class Case {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({
+        type: 'int'
+    })
     id: number
 
     @ManyToOne(type => CaseType) 
