@@ -82,8 +82,8 @@ export class CasesController {
     return this.casesService.remove(+id);
   }
 
-  @Post('delete/:caseNo')
-  deleteAllCases(@Param('caseNo') caseNo: any){
+  @Delete('delete/:caseNo')
+  deleteAllCases(@Param('caseNo') caseNo: string){
      return this.casesService.deleteAllCases(caseNo)
   }
 }
