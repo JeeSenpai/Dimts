@@ -5,15 +5,16 @@ import { UpdateCitizenDto } from './dto/update-citizen.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { FilesHelper } from 'src/shared/helper';
+import { ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Citizen')
 @Controller('citizen')
 export class CitizenController {
   constructor(private readonly citizenService: CitizenService) {}
 
 
   @Post('citizenLogin/:username/:password')
-  citizenLogin(@Param('username') username: any, @Param('password') password: any){
+  citizenLogin(@Param('username') username: string, @Param('password') password: string){
     return this.citizenService.login(username, password)
   }
 
