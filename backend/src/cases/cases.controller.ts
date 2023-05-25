@@ -82,7 +82,7 @@ export class CasesController {
     return this.casesService.remove(+id);
   }
 
-  @Delete('deleteAll')
+  @Post('deleteAll')
   deleteAllCases(){
      return this.casesService.deleteAllCases()
   }
