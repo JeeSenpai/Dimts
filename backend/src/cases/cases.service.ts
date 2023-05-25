@@ -89,7 +89,7 @@ export class CasesService {
     .leftJoinAndMapOne('court_hearing.raffledCourt', RaffledCourt , 'raffled_court', 'court_hearing.raffledCourt = raffled_court.id' )
     .leftJoinAndMapOne('court_hearing.judgeAssigned', Judge , 'judge_assigned', 'court_hearing.judgeAssigned = judge_assigned.id' )
     .where('case.id =:caseId', { caseId: id })
-    .orderBy('court_hearing.id', 'DESC')
+    .orderBy('court_hearing.hearing_schedule', 'DESC')
     .getOne();
   }
 

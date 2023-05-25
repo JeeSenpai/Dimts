@@ -2,7 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CasesService } from './cases.service';
 import { CreateCaseDto } from './dto/create-case.dto';
 import { UpdateCaseDto } from './dto/update-case.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Cases')
 @Controller('cases')
 export class CasesController {
   constructor(private readonly casesService: CasesService) {}
