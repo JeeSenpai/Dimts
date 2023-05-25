@@ -207,20 +207,8 @@ export class CasesService {
    .getRawMany()
   }
 
-  async deleteAllCases(){
-    try{
-      const del = await this.caseRepository.find()
-
-      for (let i = 0; i < del.length; i++) {
-           await this.caseRepository.delete({ id: del[i].id})
-      }
-
-      return 'Success'
-    }
-    catch(err){
-       return err
-    }
-    
+  async deleteAllCases(caseNo: any){
+    return await this.caseRepository.delete({ case_no: caseNo})
   }
 
 }
