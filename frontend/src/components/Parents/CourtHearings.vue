@@ -23,11 +23,11 @@
                 </div>
             </div>
             <div>
-                <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
+                <!-- <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5 mr-1 mb-0.5">
                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
                     </svg>Filter
-                </button>
+                </button> -->
                 <button v-if="comply == 1" @click="showAddDialog()" class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCase">
                     <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 mr-1 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -167,7 +167,6 @@ export default {
         init(){
             axios.get(this.$store.state.serverUrl + '/court-hearings', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.data = res.data
-                  
                 if(this.comply == 1){
                     this.data = this.data.filter(
                     (data) => data.case.caseStatus == 1 && data.hearing_schedule > moment(new Date()).format('YYYY-MM-DD')
@@ -266,6 +265,12 @@ export default {
                 .toLowerCase()
                 .indexOf(this.searchText.toLowerCase()) !== -1 ||
                 data.judgeAssigned.name
+                .toLowerCase()
+                .indexOf(this.searchText.toLowerCase()) !== -1 || 
+                data.hearingType.description
+                .toLowerCase()
+                .indexOf(this.searchText.toLowerCase()) !== -1 ||
+                this.formatDate(data.hearing_schedule)
                 .toLowerCase()
                 .indexOf(this.searchText.toLowerCase()) !== -1
             );

@@ -2,9 +2,9 @@
 <div class="flex">
     <!-- Form div -->
   <div class="min-h-full w-[500px] m-auto flex flex-col justify-center md:mt-16 py-10 sm:px-6">
-    <div class="sm:mx-auto sm:w-full md:max-w-sm">
-      <div class="bg-white py-8 px-2 shadow sm:rounded-lg sm:px-10">
-            <label class="mb-1 flex text-left"><p class="font-sans text-lg font-bold mr-2">Sign In</p><p class="font-sans text-lg">| Welcome Back!</p> </label>
+    <div class="mx-auto w-full max-w-sm flex flex-col">
+      <div class="bg-white py-8 shadow rounded-lg px-10">
+            <label class="mb-1 flex text-left"><p class="font-sans text-lg font-bold mr-2">Welcome Back !</p><p class="font-sans text-lg">| Sign In to DIMTS</p> </label>
         <div class="mb-3.5 w-full border-t-4 border-gray-500" />
         <div class="space-y-6">
             <div class="relative mt-6">
@@ -37,9 +37,11 @@
             </div>
           </div>
         </div>
-        <div class="pt-8">
+        <div>
+          <div class="mt-28">
             <button @click="userLogin()" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white button-submit focus:outline-none focus:ring-2 focus:ring-offset-2 ">Sign in</button>
           </div>
+        </div>
         <!-- <div class="mt-4">
           <div class="relative">
             <div class="absolute inset-0 flex items-center">
