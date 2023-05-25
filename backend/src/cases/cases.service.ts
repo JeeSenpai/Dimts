@@ -207,10 +207,7 @@ export class CasesService {
   }
 
   async deleteAllCases(){
-    return await this.caseRepository.createQueryBuilder()
-    .delete()
-    .from(Case)
-    .execute();
+    await this.caseRepository.clear()
   }
 
 }
