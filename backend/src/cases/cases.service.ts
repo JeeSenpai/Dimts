@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateCaseDto } from './dto/create-case.dto';
 import { UpdateCaseDto } from './dto/update-case.dto';
 import { Case } from './entities/case.entity';
+import { HTTPResponse } from 'puppeteer';
 
 @Injectable()
 export class CasesService {
@@ -207,7 +208,20 @@ export class CasesService {
   }
 
   async deleteAllCases(){
-    return await this.caseRepository.clear()
+
+    try{
+      const del = await this.caseRepository.find()
+
+      for (let i = 0; i < del.length; i++) {
+           await this.caseRepository.delete(del[i])
+      }
+
+      return 'Success'
+    }
+    catch(err){
+       return err
+    }
+    
   }
 
 }
