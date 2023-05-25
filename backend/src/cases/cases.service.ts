@@ -208,12 +208,11 @@ export class CasesService {
   }
 
   async deleteAllCases(){
-
     try{
       const del = await this.caseRepository.find()
 
       for (let i = 0; i < del.length; i++) {
-           await this.caseRepository.delete(del[i])
+           await this.caseRepository.delete({ id: del[i].id})
       }
 
       return 'Success'
