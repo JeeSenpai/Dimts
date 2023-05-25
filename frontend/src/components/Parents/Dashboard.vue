@@ -95,15 +95,6 @@ export default {
             axios.get(this.$store.state.serverUrl + '/cases/countCases/' + 0, {headers: {Authorization: `Bearer  ${this.token}`}}).then((totalCase)=>{
                 this.totalCases = totalCase.data[0].caseCount
 
-                axios.get(this.$store.state.serverUrl + '/cases/countCasesByCaseType/' + 1, {headers: {Authorization: `Bearer  ${this.token}`}}).then((criminal)=>{
-                      this.criminalCases = criminal.data[0].caseCount
-
-                      axios.get(this.$store.state.serverUrl + '/cases/countCasesByCaseType/' + 2, {headers: {Authorization: `Bearer  ${this.token}`}}).then((civil)=>{
-                            this.civilCases = civil.data[0].caseCount
-                            
-                            axios.get(this.$store.state.serverUrl + '/cases/countDocketCase/' + 0, {headers: {Authorization: `Bearer  ${this.token}`}}).then((docket)=>{
-                                  this.docketCases = docket.data[0].caseCount
-
                                   let criminalData = {
                                     labels: [
                                         'Criminal Cases',
@@ -181,15 +172,12 @@ export default {
                                       options: option,
                                   });
 
-                                    const ctx3 = this.$refs.myChart3.getContext('2d');
+                                  const ctx3 = this.$refs.myChart3.getContext('2d');
                                         new Chart(ctx3, {
                                         type: 'doughnut',
                                         data: docketData,
                                         options: option,
-                                    });
-                              });
-                        });
-                      });
+                                  });
                 });
 
         },
@@ -201,6 +189,19 @@ export default {
           },
     },
 
+    beforeMount(){
+      axios.get(this.$store.state.serverUrl + '/cases/countCasesByCaseType/' + 1, {headers: {Authorization: `Bearer  ${this.token}`}}).then((criminal)=>{
+                    this.criminalCases = criminal.data[0].caseCount
+            });
+
+            axios.get(this.$store.state.serverUrl + '/cases/countCasesByCaseType/' + 2, {headers: {Authorization: `Bearer  ${this.token}`}}).then((civil)=>{
+                    this.civilCases = civil.data[0].caseCount
+            });
+
+            axios.get(this.$store.state.serverUrl + '/cases/countDocketCase/' + 0, {headers: {Authorization: `Bearer  ${this.token}`}}).then((docket)=>{
+                    this.docketCases = docket.data[0].caseCount
+            });
+    },
     mounted(){
        this.init();
     }

@@ -206,4 +206,8 @@ export class CasesService {
    .getRawMany()
   }
 
+  async deleteAllCases(){
+    await this.caseRepository.createQueryBuilder('case').delete().execute();
+  }
+
 }
