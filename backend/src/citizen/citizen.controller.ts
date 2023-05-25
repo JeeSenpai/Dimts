@@ -12,7 +12,7 @@ export class CitizenController {
   constructor(private readonly citizenService: CitizenService) {}
 
 
-  @Get('citizenLogin/:username/:password')
+  @Post('citizenLogin/:username/:password')
   citizenLogin(@Param('username') username: any, @Param('password') password: any){
     return this.citizenService.login(username, password)
   }
