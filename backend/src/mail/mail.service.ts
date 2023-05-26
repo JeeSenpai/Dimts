@@ -24,4 +24,24 @@ export class MailService {
       },
     });
   }
+
+  async sendCourtHearing(data: any) {
+    await this.mailerService.sendMail({
+      to: data.email,
+      // from: '"Support Team" <support@example.com>', // override default from
+       subject: 'DIMTS Notifications',
+       template: 'courthearing', // `.hbs` extension is appended automatically
+       context: { // ✏️ filling curly brackets with content
+        citizen_name: data.recieving_office,
+        hearing_schedule: data.sending_office,
+        hearing_type: data.document_type,
+        case_no: data.case_no,
+        case_title: data.case_title,
+        raffled_court: data.sender,
+        judge_assigned: data.reciever,
+        start_time: data.address,
+        end_time: data.end_time
+      },
+    });
+  }
 }

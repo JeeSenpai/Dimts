@@ -8,28 +8,14 @@ import { ApiTags } from '@nestjs/swagger';
 export class CitizenMonitorsController {
   constructor(private readonly citizenMonitorsService: CitizenMonitorsService) {}
 
-  @Post()
-  create(@Body() createCitizenMonitorDto: CreateCitizenMonitorDto) {
-    return this.citizenMonitorsService.create(createCitizenMonitorDto);
+  @Post('createCitizenMonitor/:citizenId/:caseNum/:relation')
+  create(@Param('citizenId') citizenId: number, @Param('caseNum') caseNum: string, @Param('relation') relation: string) {
+    return this.citizenMonitorsService.create(citizenId,caseNum,relation);
   }
 
-  @Get()
-  findAll() {
-    return this.citizenMonitorsService.findAll();
-  }
-  @Get('findAllMonitorByCitizen/:id')
+  @Post('findAllMonitorByCitizen/:id')
   findAllMonitorByCitizen(@Param('id') id: number){
     return this.citizenMonitorsService.findAllMonitorByCitizen(id)
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.citizenMonitorsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCitizenMonitorDto: UpdateCitizenMonitorDto) {
-    return this.citizenMonitorsService.update(+id, updateCitizenMonitorDto);
   }
 
   @Patch('verifyCitizen/:id')
@@ -43,7 +29,7 @@ export class CitizenMonitorsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.citizenMonitorsService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.citizenMonitorsService.remove(id);
   }
 }

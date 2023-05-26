@@ -23,6 +23,7 @@ export class CasesService {
         case_title: data.case_title,
         case_description: data.case_description,
         date_recieved: data.date_recieved,
+        raffle_date: data.raffle_date,
         case_tag: data.case_tag,
         case_checklist: data.case_checklist,
         caseType: data.case_type,
@@ -127,6 +128,7 @@ export class CasesService {
       case_title: data.case_title,
       case_description: data.case_description,
       date_recieved: data.date_recieved,
+      raffle_date: data.raffle_date,
       case_tag: data.case_tag,
       case_checklist: data.case_checklist,
       caseType: data.case_type,
@@ -148,11 +150,6 @@ export class CasesService {
         caseStatus: false
      })
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} case`;
-  }
-
 
   // For clustering
   async findAllActiveCasesClusters() {

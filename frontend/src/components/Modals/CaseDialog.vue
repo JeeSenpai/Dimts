@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="modal fade fixed top-0 left-0 right-0 bottom-0 overflow-x-hidden hidden w-full h-full outline-none" id="staticBackdropCaseList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div  class="modal-dialog relative top-16 max-w-[30rem] pointer-events-none">
+            <div  class="modal-dialog relative top-10 max-w-[30rem] pointer-events-none">
                 <div class="modal-content border-none shadow-lg relative flex flex-col max-w-5x1 pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
                     <div class="modal-header flex flex-shrink-0 items-center justify-between bg-white p-4 border-b border-gray-200 rounded-t-md">
                          <div class="text-sm font-semibold leading-normal text-gray-800" id="exampleModalLabel">
@@ -30,25 +30,33 @@
                         class=" ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
                     </div>
                     <div class="flex mt-4 justify-between">
-                        <div class="w-1/2 text-left ml-6 text-[13px] text-gray-800 font-bold">Case Type</div>
-                        <div class=" w-1/2 text-left ml-2 text-[13px] text-gray-800 font-bold">Recieved Date</div>
+                        <div class="w-1/2 text-left ml-6 text-[13px] text-gray-800 font-bold">Date Filled</div>
+                        <div class=" w-1/2 text-left ml-2 text-[13px] text-gray-800 font-bold">Date Raffled</div>
                     </div>
                     <div class="flex justify-between">
-                        <div>
-                            <select :disabled="toggleUpdate == false && action == 'update'" v-model="caseType" @change="getCaseTag()" :class="{ invalid: isSubmitting && caseType == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
-                              <option disabled value="">Select case type</option>
-                              <option v-for="casetypes in caseTypeData" :key="casetypes" :value="casetypes.id"> {{ casetypes.description }}</option>
-                            </select>
-                            <div v-if="toggleUpdate == false && action == 'update'" class="font-medium text-left text-xs text-gray-600 ml-6 mt-1.5">
-                                Change case type and tags ? 
-                                <button @click="changeTags()" class="text-[#BF40BF] mr-2 underline">Yes</button>
-                            </div>
-                        </div>
                         <div><input 
                             v-model="recievedDate" 
                             :class="{ invalid: isSubmitting && recievedDate == '' }"
                             type="date"
+                            class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
+                        </div>
+                        <div><input 
+                            v-model="raffleDate" 
+                            :class="{ invalid: isSubmitting && recievedDate == '' }"
+                            type="date"
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
+                        </div>
+
+                    </div>
+                    <div class="text-left ml-6 mt-4 text-[13px] text-gray-800 font-bold">Case Type</div>
+                    <div>
+                        <select :disabled="toggleUpdate == false && action == 'update'" v-model="caseType" @change="getCaseTag()" :class="{ invalid: isSubmitting && caseType == '' }" class="ml-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                            <option disabled value="">Select case type</option>
+                            <option v-for="casetypes in caseTypeData" :key="casetypes" :value="casetypes.id"> {{ casetypes.description }}</option>
+                        </select>
+                        <div v-if="toggleUpdate == false && action == 'update'" class="font-medium text-left text-xs text-gray-600 ml-6 mt-1.5">
+                            Change case type and tags ? 
+                            <button @click="changeTags()" class="text-[#BF40BF] mr-2 underline">Yes</button>
                         </div>
                     </div>
                     <div v-if="action == 'add' ? toggleUpdate == false : toggleUpdate == true">
@@ -161,6 +169,7 @@ export default {
             caseTitle: "",
             caseDesc: "",
             recievedDate: "",
+            raffleDate: "",
             point_x: null,
             point_y: null,
             level: null,
@@ -289,6 +298,7 @@ export default {
             this.pointXData = []
             this.pointYData = []
             this.recievedDate =  moment(new Date()).format('YYYY-MM-DD');
+            this.raffleDate = moment(new Date()).format('YYYY-MM-DD')
             this.value = []
             this.checklist = []
             this.option = []
@@ -307,7 +317,8 @@ export default {
             this.getCaseTag()
             this.caseTitle = data.case_title
             this.caseDesc = data.case_description
-            this.recievedDate = data.date_recieved    
+            this.recievedDate = data.date_recieved
+            this.raffleDate = data.raffle_date  
             this.value = JSON.parse(data.case_tag)
             this.getChecklist()
             this.checklist = JSON.parse(data.case_checklist)
@@ -326,6 +337,7 @@ export default {
                     case_title: this.caseTitle,
                     case_description: this.caseDesc,
                     date_recieved: this.recievedDate,
+                    raffle_date: this.raffleDate,
                     case_type: this.caseType,
                     point_x: this.point_x,
                     point_y: this.point_y,

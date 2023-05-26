@@ -78,11 +78,6 @@ export class CasesController {
      return this.casesService.updateCaseStatusToFalse(data)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.casesService.remove(+id);
-  }
-
   @Delete('delete/:caseNo')
   deleteAllCases(@Param('caseNo') caseNo: string){
      return this.casesService.deleteAllCases(caseNo)

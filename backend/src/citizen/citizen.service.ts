@@ -4,7 +4,7 @@ import { UpdateCitizenDto } from './dto/update-citizen.dto';
 import { Citizen } from './entities/citizen.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { comparePassword } from 'src/auth/utils/bcrypt';
+import { comparePassword, encodePassword } from 'src/auth/utils/bcrypt';
 import { use } from 'passport';
 
 @Injectable()
@@ -13,6 +13,7 @@ export class CitizenService {
 
   async create(files: any, data: any) {
     const fileArray = []
+    const password = encodePassword(data.password);
     const citizen = this.citizenRepository.create({
         fname: data.fname,
         mname: data.mname,
@@ -22,7 +23,7 @@ export class CitizenService {
         address: data.address,
         email: data.email,
         username: data.usename,
-        password: data.password,
+        password: password,
     })
 
     const fileRow = await this.citizenRepository.save(citizen);
