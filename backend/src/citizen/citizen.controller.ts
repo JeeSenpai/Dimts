@@ -20,7 +20,7 @@ export class CitizenController {
 
   @Post('citizenSignup')
   @UseInterceptors(
-  FilesInterceptor('files',1, {
+  FilesInterceptor('files',1,{
       storage: diskStorage({
         destination: FilesHelper.destinationPath,
         filename: FilesHelper.customFileName,

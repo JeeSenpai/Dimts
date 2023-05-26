@@ -1,21 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCitizenMonitorDto } from './dto/create-citizen_monitor.dto';
 import { UpdateCitizenMonitorDto } from './dto/update-citizen_monitor.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CitizenMonitor } from './entities/citizen_monitor.entity';
 import { Repository } from 'typeorm';
+import { Case } from '../cases/entities/case.entity';
 
 @Injectable()
 export class CitizenMonitorsService {
-  constructor(@InjectRepository(CitizenMonitor) private readonly citizenMonitorRepository: Repository<CitizenMonitor>){}
+  constructor(@InjectRepository(CitizenMonitor) private readonly citizenMonitorRepository: Repository<CitizenMonitor>,
+              @InjectRepository(Case) private readonly caseRepository: Repository<Case>){}
 
-  create(createCitizenMonitorDto: CreateCitizenMonitorDto) {
-    return 'This action adds a new citizenMonitor';
+  async create(citizenId: number, case_no: string, relationship: string) {
+     const cases = await this.caseRepository.createQueryBuilder('case')
+     .where('case.case_no =:case_no', { case_no })
+     .getOne()
+
+     if(cases){
+        const save = this.citizenMonitorRepository.create({
+          citizen: citizenId,
+          case: cases.id,
+          relationship: relationship,
+          is_verified: false
+        })
+
+        return await this.citizenMonitorRepository.save(save)
+     }
+     else{
+        return new HttpException('Case Not Found', HttpStatus.BAD_REQUEST)
+     }
   }
 
-  findAll() {
-    return `This action returns all citizenMonitors`;
-  }
 
   async findAllMonitorByCitizen(citizenId: number){
      return await this.citizenMonitorRepository.createQueryBuilder('citizen_monitor')
@@ -29,13 +44,6 @@ export class CitizenMonitorsService {
      .getMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} citizenMonitor`;
-  }
-
-  update(id: number, updateCitizenMonitorDto: UpdateCitizenMonitorDto) {
-    return `This action updates a #${id} citizenMonitor`;
-  }
 
   async verifyCitizen(citizenId: number){
      return await this.citizenMonitorRepository.update(citizenId, { is_verified: true })
@@ -44,7 +52,7 @@ export class CitizenMonitorsService {
     return await this.citizenMonitorRepository.update(citizenId, { is_verified: false })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} citizenMonitor`;
+  async remove(id: number) {
+    return await this.citizenMonitorRepository.delete({ id: id });
   }
 }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="modal fade fixed top-0 left-0 right-0 bottom-0 overflow-x-hidden hidden w-full h-full outline-none" id="staticBackdropCitizenMonitor" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div  class="modal-dialog relative top-16 max-w-[75rem] pointer-events-none">
+            <div  class="modal-dialog relative top-16 max-w-[82rem] pointer-events-none">
                 <div class="modal-content border-none shadow-lg relative flex flex-col max-w-5x1 pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
                     <div class="modal-header flex flex-shrink-0 items-center justify-between bg-white p-4 border-b border-gray-200 rounded-t-md">
                         <div class="text-sm font-semibold leading-normal text-gray-800" id="exampleModalLabel">
@@ -15,24 +15,64 @@
                     </div>
                 <div class="modal-body rounded-md relative">
                     <div class="flex justify-between ml-4 mt-2 mb-2">
-                        <div class="text-sm text-left mt-2">
-                            Name: <span class="font-semibold"> {{ name }}</span>
+                        <div class="space-y-6">
+                            <div class="flex text-left font-semibold space-x-16 mt-2">
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">First Name</p>
+                                    <p class="text-sm">{{ fname }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Middle Name</p>
+                                    <p class="text-sm">{{ mname }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Last Name</p>
+                                    <p class="text-sm">{{ lname }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Username</p>
+                                    <p class="text-sm">{{ username }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Age</p>
+                                    <p class="text-sm">{{ age }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Contact No.</p>
+                                    <p class="text-sm">{{ contact_no }}</p>
+                                </div>
+                                
+                            </div>
+                            <div class="flex text-left font-semibold space-x-16 mt-8">
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Email</p>
+                                    <p class="text-sm">{{ email }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Address</p>
+                                    <p class="text-sm text-left break-word">{{ address }}</p>
+                                </div>
+                                
+                            </div>
                         </div>
                         <div>
-                            <button @click="sendEmailTest()" class="mr-3 rounded-xl px-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button">
+                            <button @click="sendEmailTest()" class="mr-4 rounded-xl px-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 mr-1 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                 </svg> View Citizen ID
                             </button>
                         </div>
                     </div>
-                    <div class="mt-1 mb-4 ml-4 max-w-[80rem]">
-                        <div class="relative overflow-x-auto shadow-md -ml-1 mr-3 rounded-lg">
+                    <div class="mt-4 mb-4 ml-4 max-w-[80rem]">
+                        <div class="relative overflow-x-auto shadow-md -ml-1 rounded-lg">
                         <table class="w-full text-xs text-left text-gray-700 ">
                             <thead class="text-xs bg-[#BF40BF] text-white uppercase text-center">
                                 <tr>
                                     <th scope="col" class="px-5 py-3 text-left">
                                         Case No & Title
+                                    </th>
+                                    <th scope="col" class="px-5 py-3 text-left">
+                                        Case Description
                                     </th>
                                     <th scope="col" class="px-5 py-3">
                                         Relations
@@ -49,6 +89,9 @@
                                 <tr v-for="data in displayedPaginatedData" :key="data" class="bg-white border-b text-xs text-center">
                                     <td class="px-5 py-3 text-black max-w-[18rem] text-left">
                                        {{ data.case.case_no }} - {{ data.case.case_title }}
+                                    </td>
+                                    <td class="px-5 py-3">
+                                       {{ data.case.case_description }}
                                     </td>
                                     <td class="px-5 py-3">
                                        {{ data.relationship }}
@@ -115,7 +158,14 @@ export default {
             subTitle: null,
             //form datas
             id: null,
-            name: null,
+            fname: "",
+            mname: null,
+            lname: null,
+            age: null,
+            contact_no: null,
+            address: null,
+            email: null,
+            username: null,
 
             //query datas
             citizenMonitorData: [],
@@ -136,7 +186,14 @@ export default {
             this.title = 'Citizen Monitors'
             this.subTitle = 'Manage Cases for Citizen to Monitor'
             this.id = data.id
-            this.name = !data.mname ? data.lname + ', ' + data.fname : data.lname + ', ' + data.fname + " " + data.mname[0] + '.'
+            this.fname = data.fname
+            this.mname = data.mname
+            this.lname = data.lname
+            this.age = data.age
+            this.contact_no = data.contact_no
+            this.address = data.address
+            this.email = data.email
+            this.username = data.username
             this.updateTable()
         },
         updateTable(){

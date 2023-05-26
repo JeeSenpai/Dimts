@@ -36,6 +36,12 @@ export class Case {
         type: "date"
     })
     date_recieved: string
+
+    @Column({
+        type: "date",
+        default: null
+    })
+    raffle_date: string
     
     @Column({
         type: "int",

@@ -11,8 +11,17 @@
         </div>
         <div v-if="tab.id == 1" class="checkFade animated">
         <div class="flex flex-row justify-between">
-            <div>
-                <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+            <div class="flex">
+                <div>
+                    <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+                </div>
+                <div>
+                    <select v-model="sortCase" @change="sortCaseStatus()" class=" text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 ml-2 px-2 py-2.5 w-[13rem]">
+                        <option value="1" selected>All Cases</option>
+                        <option value="2">Criminal Cases</option>
+                        <option value="3">Civil Cases</option>
+                    </select> 
+                </div>
             </div>
             <div>
                 <!-- <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
@@ -46,7 +55,7 @@
                             Case Type
                         </th>
                         <th scope="col" class="px-5 py-3">
-                            Recieved Date
+                            Date Filled
                         </th>
                         <th scope="col" class="px-5 py-3">
                             Status & Recent Schedule
@@ -157,6 +166,7 @@ export default {
         return{
             token: localStorage.getItem("dimts_token"),
             searchText: null,
+            sortCase: 1,
             data: [],
             savedData: [],
             page: 1,
@@ -189,6 +199,33 @@ export default {
                     this.pages.push(index);
                 }
             });
+        },
+        sortCaseStatus(){
+            if(this.sortCase == 1){
+                this.init()
+            }
+            else if (this.sortCase == 2){
+                this.data = this.savedData.filter(
+                (data) => data.caseType.id == 1
+                );
+                this.page = 1
+                this.pages = []
+                let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                        this.pages.push(index);
+                }
+            }
+            else if (this.sortCase == 3){
+                this.data = this.savedData.filter(
+                (data) => data.caseType.id == 2
+                );
+                this.page = 1
+                this.pages = []
+                let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                        this.pages.push(index);
+                }
+            }
         },
         handleSearching() {
         if (this.searchText == "" || !this.searchText) {

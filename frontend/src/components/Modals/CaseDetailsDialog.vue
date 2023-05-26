@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="modal fade fixed top-0 left-0 right-0 bottom-0 overflow-x-hidden hidden w-full h-full outline-none" id="staticBackdropCaseDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div  class="modal-dialog relative top-16 max-w-[45rem] pointer-events-none">
+            <div  class="modal-dialog relative top-16 max-w-[55rem] pointer-events-none">
                 <div class="modal-content border-none shadow-lg relative flex flex-col max-w-5x1 pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
                     <div class="modal-header flex flex-shrink-0 items-center justify-between bg-white p-4 border-b border-gray-200 rounded-t-md">
                          <div class="text-sm font-semibold leading-normal text-gray-800" id="exampleModalLabel">
@@ -30,8 +30,12 @@
                                     <p class="text-sm">{{ caseType }}</p>
                                 </div>
                                 <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Date Recieved</p>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Date Filled</p>
                                     <p class="text-sm">{{ formatDate(recievedDate) }}</p>
+                                </div>
+                                <div>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Date Raffled</p>
+                                    <p class="text-sm">{{ !raffleDate ? 'N/A' : formatDate(raffleDate) }}</p>
                                 </div>
                             </div>
                             <div class="font-semibold mt-3.5">
@@ -95,6 +99,7 @@ export default {
             caseDesc: "",
             courtHearings: "",
             recievedDate: "",
+            raffleDate: "",
 
             //convertion
             caseNoString: "1",
@@ -122,6 +127,7 @@ export default {
             this.caseTitle = data.case_title
             this.caseDesc = data.case_description
             this.recievedDate = data.date_recieved
+            this.raffleDate = data.raffle_date
             this.courtHearings = data.courtHearings
         },
         viewProceedings(data){
