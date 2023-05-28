@@ -57,7 +57,11 @@ export class CitizenService {
     if(user){
         const matched = comparePassword(password, user.password);
         if(matched){
-            return user
+            const citizen = {
+               citizenData: null
+            }
+            citizen.citizenData = user
+            return citizen
         }
         else{
           return new HttpException('Password not match', HttpStatus.CONFLICT);
