@@ -32,14 +32,14 @@ export class MailService {
        subject: 'DIMTS Notifications',
        template: 'courthearing', // `.hbs` extension is appended automatically
        context: { // ✏️ filling curly brackets with content
-        citizen_name: data.recieving_office,
-        hearing_schedule: data.sending_office,
-        hearing_type: data.document_type,
+        citizen_name: data.citizen_name,
+        hearing_schedule: data.hearing_schedule,
+        hearing_type: data.hearing_type,
         case_no: data.case_no,
         case_title: data.case_title,
-        raffled_court: data.sender,
-        judge_assigned: data.reciever,
-        start_time: data.address,
+        raffled_court: data.raffled_court,
+        judge_assigned: data.judge_assigned,
+        start_time: data.start_time,
         end_time: data.end_time
       },
     });
