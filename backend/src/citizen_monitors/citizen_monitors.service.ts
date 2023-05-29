@@ -24,7 +24,8 @@ export class CitizenMonitorsService {
           is_verified: false
         })
 
-        return await this.citizenMonitorRepository.save(save)
+        await this.citizenMonitorRepository.save(save)
+        return new HttpException('Case Monitor Created', HttpStatus.CREATED)
      }
      else{
         return new HttpException('Case Not Found', HttpStatus.BAD_REQUEST)
@@ -43,6 +44,24 @@ export class CitizenMonitorsService {
      .orderBy('citizen_monitor.created_at', 'DESC')
      .getMany()
   }
+
+  async findAllMonitorByCitizenInMobile(citizenId: number){
+   const find = await this.citizenMonitorRepository.createQueryBuilder('citizen_monitor')
+   .select([
+      'citizen_monitor',
+      'case'
+   ])
+   .leftJoin('citizen_monitor.case', 'case')
+   .where('citizen_monitor.citizen =:citizenId', { citizenId })
+   .orderBy('citizen_monitor.created_at', 'DESC')
+   .getMany()
+
+   const arr = {
+      citizenMonitor: null
+   }
+   arr.citizenMonitor = find
+   return arr
+}
 
 
   async verifyCitizen(citizenId: number){

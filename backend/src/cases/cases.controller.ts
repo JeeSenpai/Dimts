@@ -37,6 +37,11 @@ export class CasesController {
   findOneCaseWithProceedings( @Param('id') id: number ){
     return this.casesService.findOneCaseWithProceedings(id)
   }
+  
+  @Get('findOneCaseWithProceedingsInMobile/:caseId')
+  findOneCaseWithProceedingsInMobile(@Param('caseId') id: number ){
+    return this.casesService.findOneCaseWithProceedingsInMobile(id)
+  }
 
   @Get('proceedings')
   findCaseWithProceedings(){
