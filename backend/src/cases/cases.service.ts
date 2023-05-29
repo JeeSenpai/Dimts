@@ -11,6 +11,9 @@ import { CreateCaseDto } from './dto/create-case.dto';
 import { UpdateCaseDto } from './dto/update-case.dto';
 import { Case } from './entities/case.entity';
 import { HTTPResponse } from 'puppeteer';
+import { Document } from '../documents/entities/document.entity';
+import { Custody } from '../custodies/entities/custody.entity';
+import { DocumentType } from '../document-type/entities/document-type.entity';
 
 @Injectable()
 export class CasesService {
@@ -92,6 +95,33 @@ export class CasesService {
     .where('case.id =:caseId', { caseId: id })
     .orderBy('court_hearing.hearing_schedule', 'DESC')
     .getOne();
+  }
+
+  async findOneCaseWithProceedingsInMobile( id: number){
+    const find = await this.caseRepository.createQueryBuilder('case')
+    .select([
+        'case',
+        'case_type',
+    ])
+    .leftJoin('case.caseType', 'case_type')
+    .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
+    .leftJoinAndMapMany('case.document', Document, 'document', 'case.id = document.case' )
+    .leftJoinAndMapMany('case.custodies', Custody, 'custodies', 'case.id = custodies.case' )
+    .leftJoinAndMapMany('case.proceedings', Proceeding, 'proceedings', 'case.id = proceedings.case' )
+    .leftJoinAndMapOne('document.documentType', DocumentType, 'documentType', 'document.documentType = documentType.id')
+    .leftJoinAndMapOne('proceedings.caseDecision', CaseDecision, 'caseDecision', 'proceedings.caseDecision = proceedings.id')
+    .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
+    .leftJoinAndMapOne('court_hearing.raffledCourt', RaffledCourt , 'raffled_court', 'court_hearing.raffledCourt = raffled_court.id' )
+    .leftJoinAndMapOne('court_hearing.judgeAssigned', Judge , 'judge_assigned', 'court_hearing.judgeAssigned = judge_assigned.id' )
+    .where('case.id =:caseId', { caseId: id })
+    .orderBy('court_hearing.hearing_schedule', 'DESC')
+    .getOne();
+
+    const arr = {
+       proceedingData: null
+    }
+    arr.proceedingData = find
+    return arr
   }
 
   async findCaseWithProceedings(){

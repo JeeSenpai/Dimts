@@ -18,6 +18,11 @@ export class CitizenMonitorsController {
     return this.citizenMonitorsService.findAllMonitorByCitizen(id)
   }
 
+  @Post('findAllMonitorByCitizenInMobile/:citizenID')
+  findAllMonitorByCitizenInMobile(@Param('citizenID') id: number){
+    return this.citizenMonitorsService.findAllMonitorByCitizenInMobile(id)
+  }
+
   @Patch('verifyCitizen/:id')
   verifyCitizen(@Param('id') id: number){
     return this.citizenMonitorsService.verifyCitizen(id)
