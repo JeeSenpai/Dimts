@@ -28,6 +28,11 @@ export class CasesController {
     return this.casesService.findAllDocketCasesClusters();
   }
 
+  @Get('findAllActive')
+  findAllActive() {
+    return this.casesService.findAllActive();
+  }
+
   @Get('findAllDocket')
   findAllDocket() {
     return this.casesService.findAllDocket();

@@ -13,7 +13,7 @@ export class CitizenMonitorsController {
     return this.citizenMonitorsService.create(citizenId,caseNum,relation);
   }
 
-  @Post('findAllMonitorByCitizen/:id')
+  @Get('findAllMonitorByCitizen/:id')
   findAllMonitorByCitizen(@Param('id') id: number){
     return this.citizenMonitorsService.findAllMonitorByCitizen(id)
   }
@@ -21,6 +21,16 @@ export class CitizenMonitorsController {
   @Post('findAllMonitorByCitizenInMobile/:citizenID')
   findAllMonitorByCitizenInMobile(@Param('citizenID') id: number){
     return this.citizenMonitorsService.findAllMonitorByCitizenInMobile(id)
+  }
+
+  @Post('createCitizenMonitorByAdmin')
+  createCitizenMonitorByAdmin(@Body() data: any){
+     return this.citizenMonitorsService.createCitizenMonitorByAdmin(data)
+  }
+
+  @Post('updateCitizenMonitorByAdmin')
+  updateCitizenMonitorByAdmin(@Body() data: any){
+     return this.citizenMonitorsService.updateCitizenMonitorByAdmin(data)
   }
 
   @Patch('verifyCitizen/:id')

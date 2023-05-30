@@ -143,11 +143,11 @@
                                     <p class="text-xs">{{ hearing.raffledCourt.description }}</p>
                                 </div>
                                 <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Status</p>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Judge Assigned</p>
                                     <p class="text-xs">{{ hearing.judgeAssigned.name }}</p>
                                 </div>
                                 <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Judge Assigned</p>
+                                    <p class="font-thin text-xs text-gray-600 text-left">Status</p>
                                     <span v-if="hearing.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
                                     <span v-if="hearing.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
                                     <span v-if="hearing.status == 2" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>

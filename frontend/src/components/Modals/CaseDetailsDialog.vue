@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="modal fade fixed top-0 left-0 right-0 bottom-0 overflow-x-hidden hidden w-full h-full outline-none" id="staticBackdropCaseDetails" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div  class="modal-dialog relative top-16 max-w-[55rem] pointer-events-none">
+            <div  class="modal-dialog relative top-12 max-w-[55rem] pointer-events-none">
                 <div class="modal-content border-none shadow-lg relative flex flex-col max-w-5x1 pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
                     <div class="modal-header flex flex-shrink-0 items-center justify-between bg-white p-4 border-b border-gray-200 rounded-t-md">
                          <div class="text-sm font-semibold leading-normal text-gray-800" id="exampleModalLabel">
@@ -14,6 +14,15 @@
                          </button>
                     </div>
                 <div class="modal-body rounded-md relative">
+                    <!-- <div class="text-left ml-2">
+                            <div class="text-sm font-semibold text-center text-gray-500 border-gray-200">
+                                <ul class="flex flex-wrap mb-2">
+                                    <li v-for="tab in tabs" :key="tab.id">
+                                        <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block p-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> -->
                     <div class="flex">
                         <div>
                             <vue-qrcode :value="caseNoString" :options="{ width: 275 }"></vue-qrcode>
@@ -90,6 +99,14 @@ export default {
             title: null,
             subTitle: null,
 
+            comply: 1,
+            tabs: [
+                { id: 1, description: 'Case Details'},
+                { id: 2, description: 'Case Checklist' },
+                { id: 3, description: 'Citizen Monitor' },
+            ],
+            tab: { id: 1, description: 'Case Details' },
+
             //form datas
             caseData: null,
             caseId: null,
@@ -137,6 +154,10 @@ export default {
         formatDate(date) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' }
             return new Date(date).toLocaleDateString('en', options)
+        },
+        changeTab(data){
+            this.tab = data;
+            this.comply = data.id
         },
         checkForm(){
             this.isSubmitting = true
