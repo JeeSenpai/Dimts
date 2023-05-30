@@ -32,6 +32,26 @@ export class CitizenMonitorsService {
      }
   }
 
+  async createCitizenMonitorByAdmin(data: any){
+     const save = this.citizenMonitorRepository.create({
+         citizen: data.citizenId,
+         case: data.caseId,
+         relationship: data.relation,
+         is_verified: data.is_verified
+     })
+
+     return await this.citizenMonitorRepository.save(save)
+  }
+
+  async updateCitizenMonitorByAdmin(data: any){
+      return await this.citizenMonitorRepository.update(data.monitorId, {
+         citizen: data.citizenId,
+         case: data.caseId,
+         relationship: data.relation,
+         is_verified: data.is_verified
+      })
+  }
+
 
   async findAllMonitorByCitizen(citizenId: number){
      return await this.citizenMonitorRepository.createQueryBuilder('citizen_monitor')

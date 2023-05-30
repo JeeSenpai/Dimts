@@ -128,7 +128,7 @@ export default {
     },
     methods: {
         init(){
-            axios.get(this.$store.state.serverUrl + '/cases', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/cases/findAllActive', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.caseData = res.data
             });
             axios.get(this.$store.state.serverUrl + '/document-type/active', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{

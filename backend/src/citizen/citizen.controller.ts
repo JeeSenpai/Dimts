@@ -18,6 +18,16 @@ export class CitizenController {
     return this.citizenService.login(username, password)
   }
 
+  @Post('createCitizenByAdmin')
+  createCitizenByAdmin(@Body() data: any){
+    return this.citizenService.createCitizenByAdmin(data)
+  }
+
+  @Post('updateCitizenByAdmin')
+  updateCitizenByAdmin(@Body() data: any){
+    return this.citizenService.updateCitizenByAdmin(data)
+  }
+
   @Post('citizenSignup')
   @UseInterceptors(
   FilesInterceptor('files',1,{
@@ -41,11 +51,6 @@ export class CitizenController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.citizenService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCitizenDto: UpdateCitizenDto) {
-    return this.citizenService.update(+id, updateCitizenDto);
   }
 
 }

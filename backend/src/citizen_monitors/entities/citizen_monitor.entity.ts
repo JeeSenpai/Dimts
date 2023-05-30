@@ -9,11 +9,11 @@ export class CitizenMonitor {
 
     @ManyToOne(type => Citizen) 
     @JoinColumn({referencedColumnName: "id"}) 
-    citizen: number;
+    citizen: any;
 
     @ManyToOne(type => Case) 
     @JoinColumn({referencedColumnName: "id"}) 
-    case: number;
+    case: any;
 
     @Column({
         type: 'text'

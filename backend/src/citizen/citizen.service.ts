@@ -37,6 +37,23 @@ export class CitizenService {
     this.citizenRepository.update(fileRow.id, {valid_id: JSON.stringify(fileArray)});
   }
 
+  async createCitizenByAdmin(data: any){
+      const password = encodePassword('dimts123');
+      const save = this.citizenRepository.create({
+        fname: data.fname,
+        mname: data.mname,
+        lname: data.lname,
+        age: data.age,
+        contact_no: data.contact_no,
+        address: data.address,
+        email: data.email,
+        username: data.fname + data.lname,
+        password: password,
+      })
+      
+      return await this.citizenRepository.save(save)
+  }
+
   async findUserByUsername(username: any){
      this.citizenRepository.createQueryBuilder('citizen')
       .select([
@@ -82,8 +99,17 @@ export class CitizenService {
     return `This action returns a #${id} citizen`;
   }
 
-  update(id: number, updateCitizenDto: UpdateCitizenDto) {
-    return `This action updates a #${id} citizen`;
+  async updateCitizenByAdmin(data: any) {
+    return await this.citizenRepository.update(data.citizenId, {
+      fname: data.fname,
+      mname: data.mname,
+      lname: data.lname,
+      age: data.age,
+      contact_no: data.contact_no,
+      address: data.address,
+      email: data.email,
+      username: data.fname + data.lname,
+    })
   }
 
 }

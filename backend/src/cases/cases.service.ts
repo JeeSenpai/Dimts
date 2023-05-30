@@ -47,6 +47,19 @@ export class CasesService {
     .leftJoin('case.caseType', 'case_type')
     .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
     .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
+    .orderBy('case.updated_at', 'DESC')
+    .getMany();
+  }
+
+  async findAllActive() {
+    return await this.caseRepository.createQueryBuilder('case')
+    .select([
+        'case',
+        'case_type',
+    ])
+    .leftJoin('case.caseType', 'case_type')
+    .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
+    .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
     .where('case.caseStatus = true')
     .orderBy('case.updated_at', 'DESC')
     .getMany();

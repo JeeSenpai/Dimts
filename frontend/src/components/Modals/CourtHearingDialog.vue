@@ -32,7 +32,7 @@
                         <div>
                             <select :disabled="date_action != 1" v-model="hearingType" :class="{ invalid: isSubmitting && hearingType == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select type of hearing</option>
-                              <option v-for="ht in hearingTypeData" :key="ht" :value="ht.id"> {{ ht.description }}</option>
+                              <option v-for="ht in hearingTypeData" :key="ht" :value="ht"> {{ ht.description }}</option>
                             </select>
                         </div>
                         <div><input 
@@ -72,12 +72,12 @@
                         <div>
                             <select :disabled="date_action != 1" v-model="raffledCourt" :class="{ invalid: isSubmitting && raffledCourt == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select raffled court</option>
-                              <option v-for="rf in raffledCourtData" :key="rf" :value="rf.id"> {{ rf.description }}</option>
+                              <option v-for="rf in raffledCourtData" :key="rf" :value="rf"> {{ rf.description }}</option>
                             </select>
                         </div>
                         <div><select :disabled="date_action != 1" v-model="judgeAssigned" :class="{ invalid: isSubmitting && judgeAssigned == '' }" class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select judge</option>
-                              <option v-for="judge in judgesData" :key="judge" :value="judge.id"> {{ judge.name }}</option>
+                              <option v-for="judge in judgesData" :key="judge" :value="judge"> {{ judge.name }}</option>
                             </select>
                         </div>
                     </div>
@@ -103,10 +103,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 mt-6 border-t border-gray-200 rounded-b-md">
+                <div v-if="sendingEmail == false" class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 mt-6 border-t border-gray-200 rounded-b-md">
                     <button v-if="action == 'update' && date_action != 4" @click="checkForm()" type="button" class="inline-block px-5 py-2.5 mr-3 bg-[#BF40BF] text-white font-semibold text-xs leading-tight uppercase rounded-md border border-[#BF40BF] hover:bg-[#BF40BF] hover:text-white hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out ml-1">Update</button>
                     <button v-if="action == 'add'" @click="checkForm()" type="button" class="inline-block px-5 py-2.5 mr-3 bg-[#BF40BF] text-white font-semibold text-xs leading-tight uppercase rounded-md border border-[#BF40BF] hover:bg-[#BF40BF] hover:text-white hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out ml-1">Save</button>
                     <button type="button" class="inline-block px-5 py-2.5 bg-white text-gray-500 font-semibold text-xs leading-tight uppercase border border-gray-400 rounded-md hover:shadow-lg hover:text-white hover:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out" data-bs-dismiss="modal">Cancel</button>
+                </div>
+                <div v-if="sendingEmail == true" class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 mt-6 border-t border-gray-200 rounded-b-md">
+                    <button disabled type="button" class="inline-block px-5 py-2.5 mr-3 bg-[#BF40BF] text-white font-semibold text-xs leading-tight uppercase rounded-md border border-[#BF40BF] hover:bg-[#BF40BF] hover:text-white hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out ml-1">Sending Email ...</button>
+                    <button disabled type="button" class="inline-block px-5 py-2.5 bg-white text-gray-500 font-semibold text-xs leading-tight uppercase border border-gray-400 rounded-md hover:shadow-lg hover:text-white hover:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out" data-bs-dismiss="modal">Cancel</button>
                 </div>
          </div>
         </div>
@@ -130,6 +134,7 @@ export default {
             action: null,
             title: null,
             subTitle: null,
+            sendingEmail: false,
 
             //form datas
             courtHearingId: null,
@@ -168,7 +173,7 @@ export default {
             });
         },
         initializeAdd(){
-            axios.get(this.$store.state.serverUrl + '/cases', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/cases/findAllActive', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.caseData = res.data
             });
             this.isSubmitting = false
@@ -192,7 +197,7 @@ export default {
                 });
             }
             else{
-                axios.get(this.$store.state.serverUrl + '/cases', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                axios.get(this.$store.state.serverUrl + '/cases/findAllActive', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                     this.caseData = res.data
                 });
             }
@@ -202,12 +207,12 @@ export default {
             this.subTitle = "Update court schedule and details"
             this.courtHearingId = data.id
             this.caseId = data.case.id
-            this.hearingType = data.hearingType.id
+            this.hearingType = data.hearingType
             this.hearingSched = data.hearing_schedule,
             this.startTime = data.start_time,
             this.endTime = data.end_time,
-            this.judgeAssigned = data.judgeAssigned.id,
-            this.raffledCourt = data.raffledCourt.id,
+            this.judgeAssigned = data.judgeAssigned,
+            this.raffledCourt = data.raffledCourt,
             this.remarks = data.remarks
             this.status = data.status
         },
@@ -238,9 +243,11 @@ export default {
                         remarks: this.remarks
                     } 
                     if(this.action == "add"){
+                        this.sendingEmail = true
                         axios.post(this.$store.state.serverUrl + '/court-hearings', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                             if(res){
                                 this.$emit('refresh')
+                                this.sendingEmail = false
                                 document.getElementById('close-btn').click();
 
                                 const toast = useToast();

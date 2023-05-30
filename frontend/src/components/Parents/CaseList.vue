@@ -189,7 +189,7 @@ export default {
     },
     methods: {
         init(){
-            axios.get(this.$store.state.serverUrl + '/cases', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+            axios.get(this.$store.state.serverUrl + '/cases/findAllActive', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.data = res.data
                 this.savedData = res.data
                 this.page = 1

@@ -1,5 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+const hbs = require('handlebars');
+const moment = require('moment');
 
 @Injectable()
 export class MailService {
