@@ -17,8 +17,9 @@
                 <div>
                     <select v-model="selectedCaseType" id="files" @change="sortHearingCaseType()" class=" text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 ml-2 px-2 py-2.5 w-[13rem]">
                         <option value="1" selected>All Cases</option>
-                        <option value="2">Criminal Cases</option>
-                        <option value="3">Civil</option> 
+                        <option value="2">Pending Cases</option>
+                        <option value="3">Canceled Cases</option>
+                        <option value="4">Completed Cases</option>
                     </select> 
                 </div>
             </div>
@@ -227,7 +228,7 @@ export default {
             }
             else if (this.selectedCaseType == 2){
                 this.data = this.savedData.filter(
-                (data) => data.case.caseType.id == 1
+                (data) => data.status == 0
                 );
                 this.page = 1
                 this.pages = []
@@ -238,7 +239,18 @@ export default {
             }
             else if (this.selectedCaseType == 3){
                 this.data = this.savedData.filter(
-                (data) => data.case.caseType.id == 2
+                (data) => data.status == 1
+                );
+                this.page = 1
+                this.pages = []
+                let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                for (let index = 1; index <= numberOfPages; index++) {
+                        this.pages.push(index);
+                }
+            }
+            else if (this.selectedCaseType == 4){
+                this.data = this.savedData.filter(
+                (data) => data.status == 2
                 );
                 this.page = 1
                 this.pages = []

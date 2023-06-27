@@ -207,6 +207,12 @@ export class CasesService {
     .getMany();
   }
 
+  async findCasesWithSameCaseNo( case_no: string){
+    return await this.caseRepository.createQueryBuilder('case')
+    .where('case.case_no LIKE :case_no', { case_no })
+    .getMany()
+  }
+
   async findAllDocketCasesClusters() {
     return await this.caseRepository.createQueryBuilder('case')
     .select([
@@ -216,6 +222,14 @@ export class CasesService {
     .leftJoin('case.caseType', 'case_type')
     .where('case.caseType = 1')
     .andWhere('case.caseStatus = false')
+    .getMany();
+  }
+
+  async findAllLevelClusters() {
+    return await this.caseRepository.createQueryBuilder('case')
+    .select([
+        'case',
+    ])
     .getMany();
   }
 
