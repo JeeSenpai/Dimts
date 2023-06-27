@@ -3,6 +3,9 @@ import store from '../store';
 import UserView from '../views/UserView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import CitizenLoginView from '../views/CitizenLoginView.vue'
+import CitizenSignupView from '../views/CitizenSignupView.vue'
+import CitizenView from '../views/CitizenView.vue'
 import Dashboard from '@/components/Parents/Dashboard.vue'
 import UserProfile from '@/components/Parents/UserProfile.vue'
 import CaseList from '@/components/Parents/CaseList.vue'
@@ -13,6 +16,8 @@ import Custodies from '@/components/Parents/Custodies.vue'
 import Clustering from '@/components/Parents/Clustering.vue'
 import SystemInfo from '@/components/Parents/SystemInfo.vue'
 import ManageAccounts from '@/components/Parents/ManageAccounts.vue'
+import CourtRules from '@/components/Parents/CourtRules.vue'
+import CitizenCases from '@/components/Parents/CitizenCases.vue'
 
 const routes = [
 
@@ -125,6 +130,43 @@ const routes = [
   },
 
   {
+    path: '/citizen',
+    name: 'citizen',
+    meta: { routeForCitizen: true },
+    component: CitizenView,
+    children: [ 
+      {
+        path: '/citizen/court-rules',
+        component: CourtRules,
+        meta: { title: 'Court Rules & Etiquette'} 
+      },
+      {
+        path: '/citizen/cases',
+        component: CitizenCases,
+        meta: { title: 'Case Monitor'} 
+      },
+    ],
+  },
+
+  {
+    path: '/citizen-login',
+    name: 'citizen-login',
+    component: CitizenLoginView,
+    meta: {
+      alreadyAuth: true
+    }
+  },
+
+  {
+    path: '/citizen-signup',
+    name: 'citizen-signup',
+    component: CitizenSignupView,
+    meta: {
+      alreadyAuth: true
+    }
+  },
+
+  {
     path: '/',
     name: 'login',
     component: LoginView,
@@ -158,15 +200,22 @@ router.beforeEach((to, from, next) => {
 
   if (to.matched.some(rec => rec.meta.alreadyAuth)) {
     if (user) {
-       if (usertype.userDetails.userType.id == 1){
-        next({
-          path: '/admin/dashboard'
-        })
+       if(user == 'citizen'){
+          next({
+            path: '/citizen/court-rules'
+          })
        }
-       else if(usertype.userDetails.userType.id == 2){
-        next({
-          path: '/staff/dashboard'
-        })
+       else{
+        if (usertype.userDetails.userType.id == 1){
+          next({
+            path: '/admin/dashboard'
+          })
+         }
+         else if(usertype.userDetails.userType.id == 2){
+          next({
+            path: '/staff/dashboard'
+          })
+         }
        }
     } else if (!user) {
         next()
@@ -201,6 +250,21 @@ router.beforeEach((to, from, next) => {
               })
           }
       }
+  }
+  else if (to.matched.some(record => record.meta.routeForCitizen)) {
+    if (!user) {
+        next({
+            path: '/citizen-login'
+        })
+    } else {
+        if (user == 'citizen') {
+            next()
+        } else {
+            next({
+                path: '/citizen-login'
+            })
+        }
+    }
   }
   else {
     next({

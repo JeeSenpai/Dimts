@@ -28,6 +28,11 @@ export class CasesController {
     return this.casesService.findAllDocketCasesClusters();
   }
 
+  @Get('findAllLevelClusters')
+  findAllLevelClusters(){
+    return this.casesService.findAllLevelClusters();
+  }
+
   @Get('findAllActive')
   findAllActive() {
     return this.casesService.findAllActive();
@@ -51,6 +56,11 @@ export class CasesController {
   @Get('proceedings')
   findCaseWithProceedings(){
     return this.casesService.findCaseWithProceedings()
+  }
+
+  @Get('findCasesWithSameCaseNo/:case_no')
+  findCasesWithSameCaseNo(@Param('case_no') case_no: string){
+    return this.casesService.findCasesWithSameCaseNo(case_no)
   }
 
   @Get(':id')

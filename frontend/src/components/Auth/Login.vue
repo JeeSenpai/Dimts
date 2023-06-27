@@ -4,16 +4,16 @@
   <div class="min-h-full w-[500px] m-auto flex flex-col justify-center md:mt-16 py-10 sm:px-6">
     <div class="mx-auto w-full max-w-sm flex flex-col">
       <div class="bg-white py-8 shadow rounded-lg px-10">
-            <label class="mb-1 flex text-left"><p class="font-sans text-lg font-bold mr-2">Welcome Back !</p><p class="font-sans text-lg">| Sign In to DIMTS</p> </label>
+            <label class="mb-1 flex text-left"><p class="font-sans text-lg font-bold mr-2">DIMTS</p><p class="font-sans text-lg">| Welcome Back !</p></label>
         <div class="mb-3.5 w-full border-t-4 border-gray-500" />
         <div class="space-y-6">
             <div class="relative mt-6">
-              <input @keyup.enter="userLogin()" v-model="user.email" :class="{ invalid: isSubmitting && !user.email.trim() }" type="email" id="floating_outlined" class="block px-2.5 pb-2.5 pl-5 pt-3 w-full text-xs text-gray-900 bg-transparent rounded-3xl border-1 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
+              <input @keyup.enter="userLogin()" v-model="user.email" :class="{ invalid: isSubmitting && !user.email.trim() }" type="email" id="floating_outlined" class="block px-2.5 pb-2.5 pl-5 pt-3 w-full text-xs text-gray-900 bg-transparent rounded-lg border-1 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
               <label for="floating_outlined" class="absolute text-[13px] text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 ml-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 focus:border-purple-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Email</label>
             </div>
 
             <div class="relative">
-              <input @keyup.enter="userLogin()" v-model="user.password" :class="{ invalid: isSubmitting && !user.password.trim() }" :type="show ? 'password': 'text'" id="floating_outlined2" class="block px-2.5 pb-2.5 pl-5 pt-3 w-full text-xs text-gray-900 bg-transparent rounded-3xl border-1 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
+              <input @keyup.enter="userLogin()" v-model="user.password" :class="{ invalid: isSubmitting && !user.password.trim() }" :type="show ? 'password': 'text'" id="floating_outlined2" class="block px-2.5 pb-2.5 pl-5 pt-3 w-full text-xs text-gray-900 bg-transparent rounded-lg border-1 border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
               <label for="floating_outlined2" class="absolute text-[13px] text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 ml-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 focus:border-purple-600 peer-focus:text-purple-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">Password</label>
               <button type="submit" class="absolute right-2.5 bottom-2.5">
                 <svg @click="show = !show" :class="{'hidden': !show, 'block':show }" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="gray" stroke-width="2">
@@ -166,12 +166,10 @@ export default {
  
     .button-submit{
            background: #c341af;
-           border-radius: 20px;
            
     }
      .button-signup{
            background: #a4a4a4;
-           border-radius: 20px;   
     }
 
     :hover.button-submit{

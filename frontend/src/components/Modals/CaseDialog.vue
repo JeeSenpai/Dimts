@@ -6,7 +6,6 @@
                     <div class="modal-header flex flex-shrink-0 items-center justify-between bg-white p-4 border-b border-gray-200 rounded-t-md">
                          <div class="text-sm font-semibold leading-normal text-gray-800" id="exampleModalLabel">
                               <h5 class="text-left">{{ title }}</h5>
-                              <p class="font-thin text-xs text-gray-600 text-left">Case No.- {{ caseNumber }}</p>
                          </div>
                           <button type="button" class="p-2" id="close-btn" data-bs-dismiss="modal"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -14,6 +13,16 @@
                          </button>
                     </div>
                 <div class="modal-body rounded-md relative">
+                    <div class="text-left ml-6 mt-3.5 text-[13px] text-gray-800 font-bold">Case No</div>
+                    <div><input 
+                        v-model="caseNumber"
+                        @keyup="watchCaseNo()"
+                        :class="{ invalid: isSubmitting && !caseNumber.trim() }"
+                        type="text"
+                        class=" ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
+                    </div>
+                    <span v-if="validCaseNo == false" class="text-red-500 text-xs font-extralight"><p class="mt-1">Duplicate Case No. Found</p></span>
+                    <span v-if="validCaseNo == true" class="text-green-500 text-xs font-extralight"><p class="mt-1">Valid Case No.</p></span>
                     <div class="text-left ml-6 mt-3.5 text-[13px] text-gray-800 font-bold">Case Title</div>
                     <div><input 
                         v-model="caseTitle" 
@@ -127,7 +136,7 @@
                         <div v-for="check in checklistData" :key="check" class="ml-3 mt-2">
                             <div class="text-left ml-3.5 mt-1 mb-1 text-[13px] text-gray-800 font-bold underline">{{ check.label }}</div>
                             <label v-for="list in check.checklist" :key="list" class="flex p-2.5 mx-5 ml-1 mt-1.5 rounded-lg bg-gray-200">
-                            <input v-model="checklist" @click="setChecklist(list)" :value="list.id" type="checkbox" class="text-[#BF40BF] focus:ring-0 rounded w-3.5 h-3.5">
+                            <input :disabled="toggleUpdate == false && action == 'update'" v-model="checklist" @click="setChecklist(list)" :value="list.id" type="checkbox" class="text-[#BF40BF] focus:ring-0 rounded w-3.5 h-3.5">
                             <p class="text-xs text-left ml-1.5 font-sans text-gray-900">{{ list.description }}</p> 
                             </label>
                         </div>
@@ -161,6 +170,7 @@ export default {
             action: null,
             title: null,
             toggleUpdate: false,
+            validCaseNo: Boolean,
 
             //form datas
             caseId: null,
@@ -180,6 +190,7 @@ export default {
             value: [],
             checklist: [],
             option: [],
+            checkCaseNo: null,
 
             //query datas
             caseTypeData: [],
@@ -229,6 +240,7 @@ export default {
             }
         },
         setChecklist(data){
+
             if(this.checklist.includes(data.id)){
               for( var i = 0; i < this.checklist.length; i++){                
                 if ( this.checklist[i] === data.id) { 
@@ -244,28 +256,50 @@ export default {
               this.pointXData.push(data.minPenalty)
               this.pointYData.push(data.maxPenalty)
             }
-            let highX = this.pointXData.length ? Math.max(...this.pointXData) : 0;
-            let highY = this.pointYData.length ? Math.max(...this.pointYData) : 0;
+            
+            let highX = this.pointXData.length > 0 ? Math.max(...this.pointXData) : 0;
+            let highY = this.pointYData.length > 0 ? Math.max(...this.pointYData) : 0;
 
-            this.point_x = highX == 0 ? 0 : highX + Math.random() * 4
-            this.point_y = highY == 0 ? 0 : highY + Math.random() * 4
+            let epsilon = 1
 
-            if(this.point_x > 0 && this.point_y < 1.5){
+            if(highX >= 30 && highY >= 40){
+                 epsilon = 3
+            }
+            else if( highX >= 20 && highY >= 30 ){
+                epsilon = 2.5
+            }
+            else if( highX >= 12 && highY >= 20 ){
+                epsilon = 2
+            }
+            else if( highX >= 6 && highY >= 12 ){
+                epsilon = 1.5
+            }
+            else if(highX >= 1 && highY >= 6 ){
+                epsilon = 1
+            }
+            else if(highX >= 0 && highY >= 1 ){
+                epsilon = 0.7
+            }
+
+            this.point_x = highX + Math.random() * epsilon
+            this.point_y = highY + Math.random() * epsilon
+
+            if(this.point_x > 0 && this.point_y < 1.7){
                 this.level = 1
             }
-            else if(this.point_x > 1.5 && this.point_y < 6.5 ){
+            else if(this.point_x > 1 && this.point_y < 6.9 ){
                 this.level = 2
             }
-            else if(this.point_x > 6.5 && this.point_y < 12.5 ){
+            else if(this.point_x > 6.9 && this.point_y < 12.9 ){
                 this.level = 3
             }
-            else if(this.point_x > 12.5 && this.point_y < 20.5){
+            else if(this.point_x > 12.9 && this.point_y < 20.9){
                 this.level = 4
             }
-            else if(this.point_x > 20.5 && this.point_y < 30.5){
+            else if(this.point_x > 20.9 && this.point_y < 30.9){
                 this.level = 5
             }
-            else if(this.point_x > 30.5){
+            else if(this.point_x > 30){
                 this.level = 6
             }
         },
@@ -289,7 +323,8 @@ export default {
             this.isSubmitting = false
             this.action = "add"
             this.title = "Add New Case Record"
-            this.caseNumber = moment(new Date()).format('YYYY')+"-"+Math.floor(Math.random()*90000)
+            this.validCaseNo = Boolean
+            this.caseNumber = ""
             this.caseType = "",
             this.caseTitle = "",
             this.caseDesc = "",
@@ -307,12 +342,14 @@ export default {
         initializeUpdate(data){
             this.toggleUpdate = false
             this.isSubmitting = false
+            this.validCaseNo = Boolean
             this.action = "update"
             this.title = "Update Case Record"
             this.caseId = data.id
             this.point_x = data.point_x
             this.point_y = data.point_y
             this.caseNumber = data.case_no
+            this.checkCaseNo = data.case_no
             this.caseType = data.caseType.id
             this.getCaseTag()
             this.caseTitle = data.case_title
@@ -324,13 +361,38 @@ export default {
             this.checklist = JSON.parse(data.case_checklist)
             this.level = data.level
         },
+        watchCaseNo(){
+            if(this.caseNumber.trim()){
+                axios.get(this.$store.state.serverUrl + '/cases/findCasesWithSameCaseNo/' + this.caseNumber, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                    if(res){
+                        if(res.data.length > 0 && this.action == 'add'){
+                            this.validCaseNo = false
+                        }
+                        else if (res.data.length > 0 && this.action == 'update'){
+                            if(this.checkCaseNo == this.caseNumber){
+                                this.validCaseNo = Boolean
+                            }
+                            else{
+                                this.validCaseNo = false
+                            }
+                        }
+                        else{
+                            this.validCaseNo = true
+                        }
+                    } 
+                });
+            }
+            else{
+                this.validCaseNo = Boolean
+            }
+       },
         checkForm(){
             this.isSubmitting = true
-            const formValid = [this.caseTitle, this.caseDesc]
+            const formValid = [ this.caseNumber,this.caseTitle, this.caseDesc]
             .map((x) => x.trim())
             .every(Boolean);
 
-            if(formValid && this.caseType && this.value.length > 0){
+            if(formValid && this.caseType && this.value.length > 0 && this.validCaseNo){
                 let formData = {
                     case_id: this.caseId,
                     case_no: this.caseNumber,

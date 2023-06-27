@@ -27,27 +27,6 @@ body{
   overflow-y: hidden;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #efefeff6;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #c341af ;
-  border-radius: 10px;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #c341af ;
-}
-
 
 @keyframes fadeIn {
     0%{

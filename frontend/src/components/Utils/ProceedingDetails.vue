@@ -374,7 +374,6 @@ export default {
 
                 axios.get(this.$store.state.serverUrl + '/custodies/findAllCustodyById/' + this.caseId, {headers: {Authorization: `Bearer  ${this.token}`}}).then((custody)=>{
                     this.custodiesData = custody.data
-                    console.log(this.custodiesData)
                 });
             });
         },

@@ -219,7 +219,7 @@ export default {
         checkForm(){
             this.isSubmitting = true
 
-            if(this.hearingSched < moment(new Date()).format('YYYY-MM-DD')){
+            if( this.action == 'add' && this.hearingSched < moment(new Date()).format('YYYY-MM-DD')){
                 const toast = useToast();
                 toast.error("Hearing Schedule must not be less that this day", {
                 timeout: 3000,

@@ -22,7 +22,7 @@ export class CitizenService {
         contact_no: data.contact_no,
         address: data.address,
         email: data.email,
-        username: data.usename,
+        username: data.username,
         password: password,
     })
 

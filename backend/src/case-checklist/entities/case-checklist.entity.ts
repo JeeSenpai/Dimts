@@ -20,10 +20,14 @@ export class CaseChecklist {
     })
     status: boolean
 
-    @Column({})
+    @Column({
+        type: 'decimal',
+    })
     minPenalty: number
 
-    @Column()
+    @Column({
+        type: 'decimal',
+    })
     maxPenalty: number
     
     @CreateDateColumn({
