@@ -105,7 +105,10 @@ export default {
                         ticks: {
                             beginAtZero: true,
                             max: 50,
-                            stepSize: 10
+                            stepSize: 10,
+                            callback: (value, index, values) => {
+                                return value == 0 ? value : value + ' years';
+                            }
                         },
                         gridLines: {
                             display: false
@@ -117,7 +120,10 @@ export default {
                         ticks: {
                             beginAtZero: true,
                             max: 50,
-                            stepSize: 10
+                            stepSize: 10,
+                            callback: (value, index, values) => {
+                                return value == 0 ? value : value + ' years';
+                            }
                         },
                         gridLines: {
                             display: false
@@ -255,7 +261,10 @@ export default {
                         ticks: {
                             beginAtZero: true,
                             max: 50,
-                            stepSize: 10
+                            stepSize: 10,
+                            callback: (value, index, values) => {
+                                return value == 0 ? value : value + ' years';
+                            }
                         },
                         gridLines: {
                             display: false
@@ -267,7 +276,10 @@ export default {
                         ticks: {
                             beginAtZero: true,
                             max: 50,
-                            stepSize: 10
+                            stepSize: 10,
+                            callback: (value, index, values) => {
+                                return value == 0 ? value : value + ' years';
+                            }
                         },
                         gridLines: {
                             display: false

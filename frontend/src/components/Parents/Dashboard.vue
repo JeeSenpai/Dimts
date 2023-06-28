@@ -143,7 +143,7 @@ export default {
                                             backgroundColor: 'rgba(191, 64, 191, 0.4)',
                                             borderColor: 'rgb(191 64 191)',
                                             borderWidth: 1,
-                                            data: [0, 0, 0, 0, this.totalCases, 0, 0, 0, 0, 0, 0, 0]
+                                            data: [0, 0, 0, 0, 0, this.totalCases, 0, 0, 0, 0, 0, 0]
                                           }
                                         ]
                                   }
@@ -154,7 +154,20 @@ export default {
                                       data: monthData,
                                       options: {
                                         responsive: true,
-                                        maintainAspectRatio: false
+                                        maintainAspectRatio: false,
+                                        scales: {
+                                              yAxes: [{
+                                                  type: 'linear',
+                                                  position: 'left',
+                                                  ticks: {
+                                                      beginAtZero: true,
+                                                      stepSize: 1,
+                                                      callback: (value, index, values) => {
+                                                          return value + ' cases';
+                                                      }
+                                                  },
+                                              }]
+                                          },
                                       }
                                   });
 
