@@ -15,7 +15,7 @@ export class UsersService {
      const newUserDetails = this.userDetailsRepository.create({ 
          fname: data.fname,
          mname: data.mname,
-         lname: data.lname,
+         lname: data.lname, 
          userType: data.usertype,
          office: data.office   
     });
