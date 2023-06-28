@@ -1,7 +1,7 @@
 <template>
     <div class="checkFade animated">
         <div v-if="showProceeding == true">
-            <div class="mx-auto">
+            <div class="m-auto text-center w-screen">
                 <div class="text-xs font-semibold text-center text-gray-500 border-gray-200">
                     <ul class="flex flex-wrap mb-2">
                         <li v-for="tab in tabs" :key="tab.id">
@@ -10,8 +10,9 @@
                     </ul>
                 </div>
                 <div v-if="tab.id == 1">
-                    <div class="pl-2 pr-2 pt-2 pb-2">
-                        <div v-for="hearing in courtHearings" :key="hearing" class="bg-white shadow-lg rounded-lg w-full">
+                    <div class="pl-2 pr-2 pb-2">
+                        <div v-if="courtHearings.length == 0" class="bg-white shadow-lg rounded-lg w-full mb-3.5 p-2 text-sm font-semibold"> No Court Hearing Schedule</div>
+                        <div v-for="hearing in courtHearings" :key="hearing" class="bg-white shadow-lg rounded-lg w-full mt-3.5">
                             <div class="space-y-5">
                                 <div class="flex text-left font-semibold space-x-14 ml-4">
                                     <div>
@@ -57,7 +58,7 @@
                 </div>
                 <div v-if="tab.id == 2">
                     <div class="pl-2 pr-2 pt-2 pb-2">
-                        <div v-if="documentServedData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-sm font-semibold"> No Documents Served</div>
+                        <div v-if="documentServedData.length == 0" class="bg-white shadow-lg rounded-lg w-full mb-3.5 p-2 text-sm font-semibold"> No Documents Served</div>
                         <div v-for="document in documentServedData" :key="document" class="bg-white shadow-lg rounded-lg w-full">
                             <div class="space-y-5">
                                 <div class="flex text-left font-semibold space-x-14 ml-4">
@@ -110,44 +111,52 @@
                 </div>
                 <div v-if="tab.id == 3">
                     <div class="pl-2 pr-2 pt-2 pb-2">
-                        <div v-for="hearing in courtHearings" :key="hearing" class="bg-white shadow-lg rounded-lg w-full">
+                        <div v-if="custodiesData.length == 0" class="bg-white shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Custodies Found</div>
+                        <div v-for="custodies in custodiesData" :key="custodies" class="bg-white shadow-lg rounded-lg w-full">
                             <div class="space-y-5">
                                 <div class="flex text-left font-semibold space-x-14 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Hearing Type</p>
-                                        <p class="text-sm">{{ hearing.hearingType.description }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Detainee Name</p>
+                                        <p class="text-sm">{{ custodies.lname }}, {{ custodies.fname }} {{ !custodies.mname ? '' : custodies.mname[0] }} {{ custodies.suffix }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Hearing Schedule</p>
-                                        <p class="text-sm">{{ formatDate(hearing.hearing_schedule) }} </p>
+                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Height</p>
+                                        <p class="text-sm">{{ custodies.height }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left">Time Start & End</p>
-                                        <p class="text-sm">{{ formatTime(hearing.start_time) + " - " + formatTime(hearing.end_time) }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Weight</p>
+                                        <p class="text-sm">{{ custodies.weight }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left">Raffle Court</p>
-                                        <p class="text-sm">{{ hearing.raffledCourt.description }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Birthdate</p>
+                                        <p class="text-sm">{{ formatDate(custodies.birth_date) }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left">Judge Assigned</p>
-                                        <p class="text-sm">{{ hearing.judgeAssigned.name }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Blood Type</p>
+                                        <p class="text-sm">{{ custodies.blood_type }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
+                                    <div>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Address</p>
+                                        <p class="text-sm">{{ custodies.address }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                     <div class="mb-3">
-                                        <p class="font-thin text-sm text-gray-600 text-left">Status</p>
-                                        <span v-if="hearing.status == 0" class="text-sm inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
-                                        <span v-if="hearing.status == 1" class="text-sm inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
-                                        <span v-if="hearing.status == 2" class="text-sm inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>
+                                        <p class="font-thin text-sm text-gray-600 text-left">Transfer Status</p>
+                                        <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 0 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">PNP - {{ formatDate(custodies.pnp_status_date) }}</span>
+                                        <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 1 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-blue-200 text-blue-600 rounded-md">BJMP - {{ formatDate(custodies.bjmp_status_date) }}</span>
+                                        <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 1 && custodies.bucor_status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">BuCor - {{ formatDate(custodies.bucor_status_date) }}</span>
+                                        <span v-if="custodies.pnp_status == 0 && custodies.bjmp_status == 0 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-600 rounded-md">No Transfer History</span>
                                     </div>
                                 </div>
                             </div>
@@ -156,44 +165,49 @@
                 </div>
                 <div v-if="tab.id == 4">
                     <div class="pl-2 pr-2 pt-2 pb-2">
-                        <div v-for="hearing in courtHearings" :key="hearing" class="bg-white shadow-lg rounded-lg w-full">
+                        <div v-if="proceedingData.length == 0" class="bg-white shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Case Proceedings or Decision Yet</div>
+                        <div v-for="proceeding in proceedingDatas" :key="proceeding" class="bg-white shadow-lg rounded-lg w-full">
                             <div class="space-y-5">
                                 <div class="flex text-left font-semibold space-x-14 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Hearing Type</p>
-                                        <p class="text-sm">{{ hearing.hearingType.description }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Case Decision</p>
+                                        <p class="text-sm">{{ proceeding.caseDecision.description }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Hearing Schedule</p>
-                                        <p class="text-sm">{{ formatDate(hearing.hearing_schedule) }} </p>
+                                        <p class="font-thin text-sm text-gray-800 text-left mt-2">Minimum Sentence</p>
+                                        <p class="text-sm">{{ !proceeding.minimum_sentence ? 'N/A' : proceeding.minimum_sentence }} {{ getSentenceDuration(proceeding.minimum_duration)}} </p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left">Time Start & End</p>
-                                        <p class="text-sm">{{ formatTime(hearing.start_time) + " - " + formatTime(hearing.end_time) }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Maximum Sentence</p>
+                                        <p class="text-sm">{{ !proceeding.maximum_sentence ? 'N/A' : proceeding.maximum_sentence }} {{ getSentenceDuration(proceeding.maximum_duration)}}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left">Raffle Court</p>
-                                        <p class="text-sm">{{ hearing.raffledCourt.description }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Minimum Fines</p>
+                                        <p class="text-sm">{{ !proceeding.minimum_fines ? 'N/A' : proceeding.minimum_fines }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                                     <div>
-                                        <p class="font-thin text-sm text-gray-800 text-left">Judge Assigned</p>
-                                        <p class="text-sm">{{ hearing.judgeAssigned.name }}</p>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Maximum Fines</p>
+                                        <p class="text-sm">{{ !proceeding.maximum_fines ? 'N/A' : proceeding.maximum_fines }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
-                                    <div class="mb-3">
-                                        <p class="font-thin text-sm text-gray-600 text-left">Status</p>
-                                        <span v-if="hearing.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
-                                        <span v-if="hearing.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
-                                        <span v-if="hearing.status == 2" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>
+                                    <div>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Last Court Action</p>
+                                        <p class="text-sm">{{ formatDate(proceeding.last_court_action) }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
+                                    <div>
+                                        <p class="font-thin text-sm text-gray-800 text-left">Remarks</p>
+                                        <p class="text-sm">{{ proceeding.remarks }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -208,8 +222,8 @@
             </button>
         </div>
         
-        <div v-if="showProceeding == false" class="pl-2 pr-2 pt-2 pb-2">
-            <button :disabled="data.is_verified == false" v-for="data in citizenMonitorData" :key="data" @click="showProceedings(data)" class="bg-white shadow-lg rounded-lg w-full">
+        <div v-if="showProceeding == false" class="pl-2 pr-2 pb-2">
+            <button :disabled="data.is_verified == false" v-for="data in citizenMonitorData" :key="data" @click="showProceedings(data)" class="bg-white shadow-lg rounded-lg w-full mt-3.5">
                 <div class="space-y-5">
                     <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
                         <div>
@@ -316,6 +330,20 @@ export default {
                     this.custodiesData = custody.data
                 });
             });
+        },
+        getSentenceDuration(data){
+            if(data == 1){
+                return "Days"
+            }
+            else if(data == 2){
+                return "Months"
+            }
+            else if(data == 3){
+                return "Years"
+            }
+            else{
+                return ""
+            }
         },
         changeTab(data){
             this.tab = data;
