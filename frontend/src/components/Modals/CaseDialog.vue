@@ -284,23 +284,23 @@ export default {
             this.point_x = highX + Math.random() * epsilon
             this.point_y = highY + Math.random() * epsilon
 
-            if(this.point_x > 0 && this.point_y < 1.7){
-                this.level = 1
+            if(this.point_x > 30){
+                this.level = 6
             }
-            else if(this.point_x > 1 && this.point_y < 6.9 ){
-                this.level = 2
-            }
-            else if(this.point_x > 6.9 && this.point_y < 12.9 ){
-                this.level = 3
-            }
-            else if(this.point_x > 12.9 && this.point_y < 20.9){
-                this.level = 4
-            }
-            else if(this.point_x > 20.9 && this.point_y < 30.9){
+            else if(this.point_x > 20){
                 this.level = 5
             }
-            else if(this.point_x > 30){
-                this.level = 6
+            else if(this.point_x > 12){
+                this.level = 4
+            }
+            else if(this.point_x > 6){
+                this.level = 3
+            }
+            else if(this.point_x > 1){
+                this.level = 2
+            }
+            else if(this.point_x > 0){
+                this.level = 1
             }
         },
         getOptionLabel(option) {
