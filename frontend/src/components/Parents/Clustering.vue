@@ -16,7 +16,8 @@
               </div>
               <div class="mt-4">
                 <input 
-                    v-model="searcText"
+                    v-model="searchText"
+                    @keyup="filteredDots()"
                     type="text"
                     placeholder="Search"
                     class=" ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
@@ -48,7 +49,7 @@ export default {
         return {
             token: localStorage.getItem("dimts_token"),
             data: null,
-            search: null,
+            searchText: null,
             selectedCluster: 1,
             chartData: null,
             chartOptions: null,
@@ -409,27 +410,102 @@ export default {
                     });
 
         },
-        // filteredDots() {
-        //     if (this.search == "" || !this.search) {
-        //         this.selectCluster();
-        //     }
-        //     else {
-        //         console.log(this.chartData.datasets)
-        //         this.chartData.datasets = this.chartData.datasets.filter(
-        //         (datas) =>
-        //             datas.data[0].case_no
-        //             .toLowerCase()
-        //             .indexOf(this.search.toLowerCase()) !== -1
-        //         );
+        filteredDots() {
+        if (this.searchText == "" || !this.searchText) {
+            this.selectCluster()
+        }
 
-        //         const ctx = this.$refs.myChart.getContext('2d');
-        //         const myChart = new Chart(ctx, {
-        //         type: 'scatter',
-        //         data: this.chartData,
-        //         options: this.chartOptions,
-        //         });
-        //     }
-        // },
+        else if (this.selectedCluster == 1) {
+
+        let filteredDataPoints = [];
+        let filteredDataPoints2 = [];
+
+        axios.get(this.$store.state.serverUrl + '/cases/findAllActiveCasesClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
+            .then((res1) => {
+            for (let i = 0; i < res1.data.length; i++) {
+                if (res1.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                    res1.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+                let obj = {
+                    x: res1.data[i].point_x,
+                    y: res1.data[i].point_y,
+                    id: res1.data[i].id,
+                    case_no: res1.data[i].case_no,
+                    case_title: res1.data[i].case_title,
+                    level: res1.data[i].level
+                };
+                filteredDataPoints.push(obj);
+                }
+                }
+            
+
+            axios.get(this.$store.state.serverUrl + '/cases/findAllDocketCasesClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
+            .then((res2) => {
+                for (let i = 0; i < res2.data.length; i++) {
+                    if (res2.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                        res2.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+                    let obj = {
+                        x: res2.data[i].point_x,
+                        y: res2.data[i].point_y,
+                        id: res2.data[i].id,
+                        case_no: res2.data[i].case_no,
+                        case_title: res2.data[i].case_title,
+                        level: res2.data[i].level
+                    };
+                    filteredDataPoints2.push(obj);
+                    }
+                }
+                this.plotDBSCAN(filteredDataPoints, filteredDataPoints2);
+              });
+           });
+        }
+
+        else if (this.selectedCluster == 2) {
+            let filteredDataPoints1 = [];
+            let filteredDataPoints2 = [];
+            let filteredDataPoints3 = [];
+            let filteredDataPoints4 = [];
+            let filteredDataPoints5 = [];
+            let filteredDataPoints6 = [];
+
+            axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
+                .then((res) => {
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                            res.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+                        let obj = {
+                            x: res.data[i].point_x,
+                            y: res.data[i].point_y,
+                            id: res.data[i].id,
+                            case_no: res.data[i].case_no,
+                            case_title: res.data[i].case_title,
+                            level: res.data[i].level
+                        };
+                        switch (obj.level) {
+                            case 1:
+                                filteredDataPoints1.push(obj)
+                                break;
+                            case 2:
+                                filteredDataPoints2.push(obj)
+                                break; 
+                            case 3:
+                                filteredDataPoints3.push(obj)
+                                break; 
+                            case 4:
+                                filteredDataPoints4.push(obj)
+                                break; 
+                            case 5:
+                                filteredDataPoints5.push(obj)
+                                break;
+                            case 6:
+                                filteredDataPoints6.push(obj)
+                                break;
+                          }
+                        }
+                    }
+                    this.plotDBSCANLevel(filteredDataPoints1, filteredDataPoints2, filteredDataPoints3, filteredDataPoints4, filteredDataPoints5, filteredDataPoints6)
+                });
+            }
+        },
         selectCluster(){
             if(this.selectedCluster == 1){
                 this.setDataPointByCaseStatus()
