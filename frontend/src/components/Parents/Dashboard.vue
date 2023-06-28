@@ -161,7 +161,7 @@ export default {
                                                   position: 'left',
                                                   ticks: {
                                                       beginAtZero: true,
-                                                      stepSize: 5,
+                                                      stepSize: 10,
                                                       callback: (value, index, values) => {
                                                           return value + ' cases';
                                                       }

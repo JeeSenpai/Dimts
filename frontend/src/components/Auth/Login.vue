@@ -114,16 +114,6 @@ export default {
                     });
                   }
 
-                  else if(result && result.data.isValidated == false){ 
-                        const toast = useToast();
-                        toast.error("Your not validated yet to access AUMS\nNote: Please contact the admin for approval", {
-                        position: "top-left",
-                        timeout: 6000,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        showCloseButtonOnHover: true,
-                    });
-                  }
 
                   else if(result && result.data.user.status == false){
                         
