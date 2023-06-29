@@ -1,11 +1,11 @@
 <template>
     <div class="checkFade animated">
         <div v-if="showProceeding == true">
-            <div class="m-auto text-center w-screen">
-                <div class="text-xs font-semibold text-center text-gray-500 border-gray-200">
-                    <ul class="flex flex-wrap mb-2">
+            <div>
+                <div class="text-sm font-semibold text-center text-gray-500 border-gray-200">
+                    <ul class="flex flex-wrap mb-2 w-screen justify-center">
                         <li v-for="tab in tabs" :key="tab.id">
-                            <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block p-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
+                            <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block px-2.5 py-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
                         </li>
                     </ul>
                 </div>
