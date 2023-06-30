@@ -9,20 +9,37 @@
                 Predicted Years of Imprisonment Per Case
               </div>
               <div class="mt-4">
-                <select v-model="selectedCluster" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                <select v-model="selectedCluster" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[10rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                     <option value="1">By Case Status</option>
                     <option value="2">By Case Level</option>
                 </select>
               </div>
-              <div class="mt-4">
+              <div v-if="selectedCluster == 2" class="mt-4">
+                <select v-model="selectedLevel" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[10rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                    <option value="">All Levels</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                    <option value="5">Level 5</option>
+                    <option value="6">Life Imprisonment</option>
+                </select>
+              </div>
+                <div class="mt-4">
                 <input 
                     v-model="searchText"
-                    @keyup="filteredDots()"
                     type="text"
+                    @keyup="searchText == '' ? selectCluster() : searchText"
                     placeholder="Search"
                     class=" ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
                 </div>
+                <div class="mt-4">
+                <button @click="filteredDots()" type="button" class="inline-block px-5 py-2 ml-3 mt-0.5 bg-[#BF40BF] text-white font-semibold text-xs leading-tight uppercase rounded-md border border-[#BF40BF] hover:bg-[#BF40BF] hover:text-white hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out">
+                    Search
+                </button>
             </div>
+            </div>
+            
             <canvas
                 ref="myChart">
             </canvas>
@@ -51,12 +68,15 @@ export default {
             data: null,
             searchText: null,
             selectedCluster: 1,
+            selectedLevel: "",
             chartData: null,
             chartOptions: null,
             backendUrl: this.$store.state.serverUrl
         }
     },
     methods: {
+
+    
         // Plot Clustering through case status
         plotDBSCAN(dataPoints, dataPoints2) {
             
@@ -89,80 +109,7 @@ export default {
                ],
             };
 
-            this.chartOptions = {
-                layout: {
-                    padding: {
-                        left: 10,
-                        right: 30,
-                        top: 20,
-                        bottom: 10
-                    }
-                },
-                scales: {
-                    xAxes: [{
-                        type: 'linear',
-                        position: 'bottom',
-                        ticks: {
-                            beginAtZero: true,
-                            max: 50,
-                            stepSize: 10,
-                            callback: (value, index, values) => {
-                                return value == 0 ? value : value + ' years';
-                            }
-                        },
-                        gridLines: {
-                            display: false
-                        }
-                    }],
-                    yAxes: [{
-                        type: 'linear',
-                        position: 'left',
-                        ticks: {
-                            beginAtZero: true,
-                            max: 50,
-                            stepSize: 10,
-                            callback: (value, index, values) => {
-                                return value == 0 ? value : value + ' years';
-                            }
-                        },
-                        gridLines: {
-                            display: false
-                        }
-                    }]
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                            var case_no = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].case_no;
-                            var case_title = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].case_title;
-                            var level = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].level;
-                            var label = level < 6 ? case_no + " - " +  case_title +  ' ( Level ' + level + ' )' : case_no + " - " +  case_title + ' ( Life Imprisonment )' ;
-                            return label
-                        }
-                    }
-                },
-                onClick: function(event, elements) {
-                    if (elements.length > 0) {
-                        var ref = this.$refs.CaseDetails;
-                        var datasetIndex = elements[0]._datasetIndex;
-                        var index = elements[0]._index;
-                        var dataset = myChart.data.datasets[datasetIndex];
-                        var data = dataset.data[index].id;
-                        // Add your onclick code here
-                        axios.get( this.backendUrl + '/cases/' + data, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
-                            ref.initializeView(res.data)
-                            document.getElementById('button').click()
-                        })
-                    }
-                }.bind(this)
-            };
-
-            const ctx = this.$refs.myChart.getContext('2d');
-                const myChart = new Chart(ctx, {
-                type: 'scatter',
-                data: this.chartData,
-                options: this.chartOptions,
-            });
+            this.plotData()
         },
         
         // Plot Clustering through level
@@ -245,6 +192,10 @@ export default {
                ],
             };
 
+            this.plotData()
+        },
+
+        plotData(){
             this.chartOptions = {
                 layout: {
                     padding: {
@@ -324,7 +275,8 @@ export default {
         setDataPointByCaseStatus(){
             let dataPoints = [];
             let dataPoints2 = [];
-
+            this.selectedLevel = ""
+            
             axios.get(this.$store.state.serverUrl + '/cases/findAllActiveCasesClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res1)=>{
                     for (let i = 0; i < res1.data.length; i++) {
                         let obj = {
@@ -396,7 +348,8 @@ export default {
                                 obj.case_no = res.data[i].case_no
                                 obj.case_title = res.data[i].case_title
                                 obj.level = res.data[i].level
-                                
+
+
                                 switch (obj.level) {
                                 case 1:
                                     dataPoints1.push(obj)
@@ -417,10 +370,60 @@ export default {
                                     dataPoints6.push(obj)
                                     break;
                                 }
-
                               }
-                            this.plotDBSCANLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
-                            
+
+                              if(this.selectedLevel == ""){
+                                this.plotDBSCANLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
+                              }
+                              else{
+
+                                switch (this.selectedLevel) {
+                                    case '1':
+                                        dataPoints2 = [];
+                                        dataPoints3 = [];
+                                        dataPoints4 = [];
+                                        dataPoints5 = [];
+                                        dataPoints6 = [];
+                                        break;
+                                    case '2':
+                                        dataPoints1 = [];
+                                        dataPoints3 = [];
+                                        dataPoints4 = [];
+                                        dataPoints5 = [];
+                                        dataPoints6 = [];
+                                        break; 
+                                    case '3':
+                                        dataPoints1 = [];
+                                        dataPoints2 = [];
+                                        dataPoints4 = [];
+                                        dataPoints5 = [];
+                                        dataPoints6 = [];
+                                        break; 
+                                    case '4':
+                                        dataPoints1 = [];
+                                        dataPoints2 = [];
+                                        dataPoints3 = [];
+                                        dataPoints5 = [];
+                                        dataPoints6 = [];
+                                        break; 
+                                    case '5':
+                                        dataPoints1 = [];
+                                        dataPoints2 = [];
+                                        dataPoints3 = [];
+                                        dataPoints4 = [];
+                                        dataPoints6 = [];
+                                        break;
+                                    case '6':
+                                        dataPoints1 = [];
+                                        dataPoints2 = [];
+                                        dataPoints3 = [];
+                                        dataPoints4 = [];
+                                        dataPoints5 = [];
+                                        break;
+                                    }
+                                    this.plotDBSCANLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
+                                }
+                                
                     });
 
         },
