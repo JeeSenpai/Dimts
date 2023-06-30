@@ -14,16 +14,16 @@
                          </button>
                     </div>
                 <div class="modal-body rounded-md relative">
-                    <!-- <div class="text-left ml-2">
-                            <div class="text-sm font-semibold text-center text-gray-500 border-gray-200">
-                                <ul class="flex flex-wrap mb-2">
-                                    <li v-for="tab in tabs" :key="tab.id">
-                                        <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block p-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div> -->
-                    <div class="flex">
+                    <div class="text-left ml-2">
+                        <div class="text-sm font-semibold text-center text-gray-500 border-gray-200">
+                            <ul class="flex flex-wrap mb-2">
+                                <li v-for="tab in tabs" :key="tab.id">
+                                    <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block p-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div v-if="comply ==1" class="flex">
                         <div>
                             <vue-qrcode :value="caseNoString" :options="{ width: 275 }"></vue-qrcode>
                             <p class="font-thin text-xs text-gray-600 text-center">{{ caseNumber }}</p>
@@ -72,6 +72,23 @@
                             </div>
                         </div>
                     </div>
+                    <div v-if="comply == 2">
+                        <div class="font-semibold mt-3.5 ml-6">
+                            <div class="mt-3.5 mr-[3rem]">
+                                <p class="font-thin text-xs text-gray-600 text-left">Level of Penalty</p>
+                                <p class="text-sm text-left">{{ level >= 6 ? 'Reclusion Perpetua (Life Imprisontment)' : 'Level ' + level}}</p>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap">
+                            <div v-for="check in checklistData" :key="check" class="ml-3 mt-2">
+                                <div class="text-left ml-3.5 mt-1 mb-1 text-[13px] text-gray-800 font-bold underline">{{ check.label }}</div>
+                                <label v-for="list in check.checklist" :key="list" class="flex p-2.5 mx-5 ml-1 mt-1.5 rounded-lg bg-gray-200">
+                                <input :disabled="true" v-model="checklist" :value="list.id" type="checkbox" class="text-[#BF40BF] focus:ring-0 rounded w-3.5 h-3.5">
+                                <p class="text-xs text-left ml-1.5 font-sans text-gray-900">{{ list.description }}</p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 mt-6 border-t border-gray-200 rounded-b-md">
                     <button v-if="courtHearings.length > 0" @click="viewProceedings(caseData)" type="button" class="inline-block px-5 py-2.5 mr-3 bg-[#BF40BF] text-white font-semibold text-xs leading-tight uppercase rounded-md border border-[#BF40BF] hover:bg-[#BF40BF] hover:text-white hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out ml-1">View Case Proceedings</button>
@@ -102,8 +119,7 @@ export default {
             comply: 1,
             tabs: [
                 { id: 1, description: 'Case Details'},
-                { id: 2, description: 'Case Checklist' },
-                { id: 3, description: 'Citizen Monitor' },
+                { id: 2, description: 'Case Tag & Checklist' },
             ],
             tab: { id: 1, description: 'Case Details' },
 
@@ -117,6 +133,8 @@ export default {
             courtHearings: "",
             recievedDate: "",
             raffleDate: "",
+            level: "",
+            checklist: [],
 
             //convertion
             caseNoString: "1",
@@ -125,6 +143,7 @@ export default {
             caseTypeData: [],
             raffledCourtData: [],
             judgesData: [],
+            checklistData: [],
         }
     },
     methods: {
@@ -134,6 +153,28 @@ export default {
             });
         },
         initializeView(data){
+            let parseChecklist = JSON.parse(data.case_tag)
+
+            if( parseChecklist.length > 0){
+                this.checklistData = []
+                for (let i = 0; i < parseChecklist.length; i++) {
+                    axios.get(this.$store.state.serverUrl + '/case-checklist/findAllActiveChecklistByCaseTag/' + parseChecklist[i], {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                        let obj = {
+                            label: null,
+                            checklist: []
+                        }
+                        obj.label = res.data[0].caseTag.isForLife == true ? res.data[0].caseTag.description + ' (Life Imprisonment)'  : res.data[0].caseTag.description,
+                        obj.checklist = res.data
+                        this.checklistData.push(obj)
+                        
+                    });
+                }
+            }
+            else{
+                this.checklistData = []
+            }
+            
+            this.comply = 1
             this.title = "Case Details"
             this.subTitle = "View case details and proceedings"
             this.caseData = data
@@ -146,6 +187,9 @@ export default {
             this.recievedDate = data.date_recieved
             this.raffleDate = data.raffle_date
             this.courtHearings = data.courtHearings
+            this.level = data.level
+            this.checklist = JSON.parse(data.case_checklist)
+
         },
         viewProceedings(data){
             const routeData = this.$router.resolve({path: '/admin/proceedings', query: { id: data.id } });

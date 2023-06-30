@@ -120,7 +120,7 @@
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:ring-[#BF40BF]"/>
                         </div>
                     </div>
-                    <div class="flex justify-between mt-2">
+                    <div v-if="pnp_status == true && this.pnp_status_date < returnDateNow()" class="flex justify-between mt-2">
                         <div>
                             <label class="flex flex-row justify-between p-2.5 mx-4 mt-1 mb-1 rounded-lg">
                             <input v-model="bjmp_status" :disabled="bucor_status == true" @change="bjmp_status == true ? bjmp_status_date = returnDateNow() : bjmp_status_date = null" type="checkbox" class="text-[#BF40BF] focus:ring-0 rounded w-3.5 h-3.5">
@@ -135,7 +135,7 @@
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:ring-[#BF40BF]"/>
                         </div>
                     </div>
-                    <div class="flex justify-between mt-1.5">
+                    <div v-if="bjmp_status == true && this.bjmp_status_date < returnDateNow()" class="flex justify-between mt-1.5">
                         <div>
                             <label class="flex flex-row justify-between p-2.5 mx-4 mt-1 mb-1 rounded-lg">
                             <input v-model="bucor_status" @change="bucor_status == true ? bucor_status_date = returnDateNow() : bucor_status_date = null" type="checkbox" class="text-[#BF40BF] focus:ring-0 rounded w-3.5 h-3.5">

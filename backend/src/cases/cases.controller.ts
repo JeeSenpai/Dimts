@@ -97,6 +97,11 @@ export class CasesController {
   updateCaseStatusToFalse(@Body() data: any ){
      return this.casesService.updateCaseStatusToFalse(data)
   }
+  
+  @Post('uploadCSV')
+  uploadCSV(@Body() data: any){
+     return this.casesService.uploadCSV(data)
+  }
 
   @Delete('delete/:caseNo')
   deleteAllCases(@Param('caseNo') caseNo: string){

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaseDecision } from '../case-decision/entities/case-decision.entity';
 import { CourtHearing } from '../court-hearings/entities/court-hearing.entity';
@@ -263,6 +263,28 @@ export class CasesService {
 
   async deleteAllCases(caseNo: any){
     return await this.caseRepository.delete({ case_no: caseNo})
+  }
+
+  async uploadCSV( data: any ){
+    for (let i = 0; i < data.length; i++) {
+        const saveData = this.caseRepository.create({
+            case_no: data[i].case_no,
+            case_title: data[i].case_title,
+            case_description: data[i].case_description,
+            caseType: data[i].caseType == 'Criminal' ? 1 : 2,
+            date_recieved: data[i].date_received,
+            raffle_date: data[i].raffle_date,
+            level: 0,
+            caseStatus: false,
+            reopenCount: 0,
+            case_tag: '[]',
+            case_checklist: '[]',
+            point_x: 0,
+            point_y: 0
+        })
+      await this.caseRepository.save(saveData)
+    }
+    return new HttpException('CSV Succesfullly Saved', HttpStatus.CREATED)
   }
 
 }

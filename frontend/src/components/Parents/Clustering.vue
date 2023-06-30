@@ -341,7 +341,9 @@ export default {
                         obj.case_no = res1.data[i].case_no
                         obj.case_title = res1.data[i].case_title
                         obj.level = res1.data[i].level
-                        dataPoints.push(obj)
+                        if(obj.level > 0){
+                            dataPoints.push(obj)
+                        }
                     }
 
                     axios.get(this.$store.state.serverUrl + '/cases/findAllDocketCasesClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res2)=>{
@@ -360,7 +362,9 @@ export default {
                                 obj.case_no = res2.data[i].case_no
                                 obj.case_title = res2.data[i].case_title
                                 obj.level = res2.data[i].level
-                                dataPoints2.push(obj)
+                                if(obj.level > 0){
+                                    dataPoints2.push(obj)
+                                }
                               }
                             
                             this.plotDBSCAN(dataPoints, dataPoints2);
@@ -415,8 +419,6 @@ export default {
                                 }
 
                               }
-                            //const cluster1 = this.dbscan(dataPoints, epsilon, minPts)
-                            //const cluster2 = this.dbscan(dataPoints2, epsilon, minPts)
                             this.plotDBSCANLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
                             
                     });
