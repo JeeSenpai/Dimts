@@ -9,12 +9,12 @@
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5 mr-1 mb-0.5">
                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                     </svg>Export
-                </button>
-                <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
+                </button> -->
+                <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropDocketCSV">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5 mr-1 mb-0.5">
                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>Import
-                </button> -->
+                </button>
             </div>
         </div>
         <div class="relative overflow-x-auto shadow-md -ml-1 mr-3 rounded-lg">
@@ -31,10 +31,10 @@
                             Case Type
                         </th>
                         <th scope="col" class="px-5 py-3">
-                            Recieved Date
+                            Date Filled
                         </th>
                         <th scope="col" class="px-5 py-3">
-                            Last Court Action
+                            Raffled Date
                         </th>
                         <th scope="col" class="px-6 py-3 text-right">
                             Action  
@@ -56,10 +56,10 @@
                             {{ formatDate(data.date_recieved) }}
                         </td>
                         <td class="px-5 py-3 whitespace-nowrap text-center">
-                            <span class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded-md">{{ data.proceedings[0].caseDecision.description }} - {{ formatDate(data.proceedings[0].last_court_action) }}</span>
+                            {{ formatDate(data.raffle_date) }}
                         </td>
                         <td class="py-3 px-2 text-right">
-                            <button @click=" showCaseDetails(data)" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCaseDetails" class="bg-transparent mr-3 py-1.5">
+                            <button @click="showCaseDetails(data)" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCaseDetails" class="bg-transparent mr-3 py-1.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 013.75 9.375v-4.5zM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 01-1.125-1.125v-4.5zM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0113.5 9.375v-4.5z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 6.75h.75v.75h-.75v-.75zM6.75 16.5h.75v.75h-.75v-.75zM16.5 6.75h.75v.75h-.75v-.75zM13.5 13.5h.75v.75h-.75v-.75zM13.5 19.5h.75v.75h-.75v-.75zM19.5 13.5h.75v.75h-.75v-.75zM19.5 19.5h.75v.75h-.75v-.75zM16.5 16.5h.75v.75h-.75v-.75z" />
@@ -113,6 +113,12 @@
             ref="CaseDetails"
             />
         </div>
+        <div>
+            <DocketCaseCSV
+            ref="DocketCaseCSV"
+            v-on:refresh="init()"
+            />
+        </div>
         <div v-show="showReopenDialog" tabindex="-1" aria-hidden="false" class="checkFade animated  modal overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
                 <div class="relative p-4 w-full max-w-md mx-auto top-48 h-full md:h-auto">
                 <div class="relative bg-white rounded-lg shadow">
@@ -134,12 +140,14 @@ import axios from 'axios';
 import DocketCase from '../Parents/DocketCases.vue'
 import CaseDialog from '../Modals/CaseDialog.vue'
 import CaseDetails from '../Modals/CaseDetailsDialog.vue'
+import DocketCaseCSV from '../Modals/DocketCaseCSV.vue'
 
 export default {
     components: {
         DocketCase,
         CaseDialog,
-        CaseDetails
+        CaseDetails,
+        DocketCaseCSV
     },
     data(){
         return{

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="modal fade fixed top-0 left-0 right-0 bottom-0 overflow-x-hidden hidden w-full h-full outline-none" id="staticBackdropCaseList" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div  class="modal-dialog relative top-10 max-w-[30rem] pointer-events-none">
+            <div  class="modal-dialog relative top-5 max-w-[30rem] pointer-events-none">
                 <div class="modal-content border-none shadow-lg relative flex flex-col max-w-5x1 pointer-events-auto bg-white bg-clip-padding rounded-md outline-none text-current">
                     <div class="modal-header flex flex-shrink-0 items-center justify-between bg-white p-4 border-b border-gray-200 rounded-t-md">
                          <div class="text-sm font-semibold leading-normal text-gray-800" id="exampleModalLabel">
@@ -13,16 +13,33 @@
                          </button>
                     </div>
                 <div class="modal-body rounded-md relative">
-                    <div class="text-left ml-6 mt-3.5 text-[13px] text-gray-800 font-bold">Case No</div>
-                    <div><input 
+                    <div class="flex mt-4 justify-between">
+                        <div class="w-1/2 text-left ml-6 text-[13px] text-gray-800 font-bold">Case Type</div>
+                        <div class=" w-1/2 text-left ml-2 text-[13px] text-gray-800 font-bold">Case No.</div>
+                    </div>
+                    <div class="flex justify-between">
+                        <div><select :disabled="toggleUpdate == false && action == 'update'" v-model="caseType" @change="getCaseTag()" :class="{ invalid: isSubmitting && caseType == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                            <option disabled value="">Select case type</option>
+                            <option v-for="casetypes in caseTypeData" :key="casetypes" :value="casetypes.id"> {{ casetypes.description }}</option>
+                        </select>
+                        <div v-if="toggleUpdate == false && action == 'update'" class="font-medium text-left text-xs text-gray-600 ml-6 mt-1.5">
+                            Change case type and tags ? 
+                            <button @click="changeTags()" class="text-[#BF40BF] mr-2 underline">Yes</button>
+                        </div>
+                        </div>
+                        <div>
+                            <input 
                         v-model="caseNumber"
                         @keyup="watchCaseNo()"
                         :class="{ invalid: isSubmitting && !caseNumber.trim() }"
                         type="text"
-                        class=" ml-5 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
+                        class=" ml-5 mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
+                        <span v-if="validCaseNo == false" class="text-red-500 text-xs text-right font-extralight"><p class="mt-1 mr-6">Not Valid Case No.</p></span>
+                        <span v-if="validCaseNo == true" class="text-green-500 text-xs text-right font-extralight"><p class="mt-1 mr-6">Valid Case No.</p></span>
+                        </div>
+                       
                     </div>
-                    <span v-if="validCaseNo == false" class="text-red-500 text-xs font-extralight"><p class="mt-1">Duplicate Case No. Found</p></span>
-                    <span v-if="validCaseNo == true" class="text-green-500 text-xs font-extralight"><p class="mt-1">Valid Case No.</p></span>
+                    
                     <div class="text-left ml-6 mt-3.5 text-[13px] text-gray-800 font-bold">Case Title</div>
                     <div><input 
                         v-model="caseTitle" 
@@ -54,18 +71,6 @@
                             :class="{ invalid: isSubmitting && recievedDate == '' }"
                             type="date"
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
-                        </div>
-
-                    </div>
-                    <div class="text-left ml-6 mt-4 text-[13px] text-gray-800 font-bold">Case Type</div>
-                    <div>
-                        <select :disabled="toggleUpdate == false && action == 'update'" v-model="caseType" @change="getCaseTag()" :class="{ invalid: isSubmitting && caseType == '' }" class="ml-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
-                            <option disabled value="">Select case type</option>
-                            <option v-for="casetypes in caseTypeData" :key="casetypes" :value="casetypes.id"> {{ casetypes.description }}</option>
-                        </select>
-                        <div v-if="toggleUpdate == false && action == 'update'" class="font-medium text-left text-xs text-gray-600 ml-6 mt-1.5">
-                            Change case type and tags ? 
-                            <button @click="changeTags()" class="text-[#BF40BF] mr-2 underline">Yes</button>
                         </div>
                     </div>
                     <div v-if="action == 'add' ? toggleUpdate == false : toggleUpdate == true">
@@ -208,6 +213,15 @@ export default {
         getCaseTag(){
             this.option = []
             this.value = []
+            if (this.caseType == 1 && this.action == 'add'){
+                this.caseNumber = ''
+                this.caseNumber = 'CRC-'
+                
+            }
+            else if(this.caseType == 2 && this.action == 'add'){
+                this.caseNumber = ''
+                this.caseNumber = 'CVL-'
+            }
             axios.get(this.$store.state.serverUrl + '/case-tags/findAllTagsByCaseType/' + this.caseType, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 for (let i = 0; i < res.data.length; i++) {
                     let obj = {
@@ -362,7 +376,7 @@ export default {
             this.level = data.level
         },
         watchCaseNo(){
-            if(this.caseNumber.trim()){
+            if(this.caseNumber.length > 4){
                 axios.get(this.$store.state.serverUrl + '/cases/findCasesWithSameCaseNo/' + this.caseNumber, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                     if(res){
                         if(res.data.length > 0 && this.action == 'add'){
@@ -383,7 +397,7 @@ export default {
                 });
             }
             else{
-                this.validCaseNo = Boolean
+                this.validCaseNo = false
             }
        },
         checkForm(){
@@ -440,7 +454,7 @@ export default {
                     });
                 }
             }
-        }
+        },
     },
     mounted(){
         this.init()
