@@ -76,7 +76,7 @@
                         <div class="font-semibold mt-3.5 ml-6">
                             <div class="mt-3.5 mr-[3rem]">
                                 <p class="font-thin text-xs text-gray-600 text-left">Level of Penalty</p>
-                                <p class="text-sm text-left">{{ level >= 6 ? 'Reclusion Perpetua (Life Imprisontment)' : 'Level ' + level}}</p>
+                                <p class="text-sm text-left">{{ level >= 6 ? 'Reclusion Perpetua (Life Imprisontment)' + " ( " + returnYears(level) + " ) " : 'Level ' + level + " ( " + returnYears(level) + " ) "}}</p>
                             </div>
                         </div>
                         <div class="flex flex-wrap">
@@ -234,6 +234,22 @@ export default {
                         }
                     });
                 }
+            }
+        },
+        returnYears(level){
+            switch (level) {
+                case 1:
+                    return '10 days to 1 year imprisonment';
+                case 2:
+                    return '1 year to 6 years imprisonment';
+                case 3:
+                    return '6 years to 12 years imprisonment';
+                case 4:
+                    return '12 years to 20 years imprisonment';
+                case 5:
+                    return '20 years to 30 years imprisonment';
+                case 6:
+                    return '30 years to 40 years imprisonment';
             }
         }
     },

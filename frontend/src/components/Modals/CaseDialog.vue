@@ -215,12 +215,12 @@ export default {
             this.value = []
             if (this.caseType == 1 && this.action == 'add'){
                 this.caseNumber = ''
-                this.caseNumber = 'CRC-'
+                this.caseNumber = 'CRC '
                 
             }
             else if(this.caseType == 2 && this.action == 'add'){
                 this.caseNumber = ''
-                this.caseNumber = 'CVL-'
+                this.caseNumber = 'CVL '
             }
             axios.get(this.$store.state.serverUrl + '/case-tags/findAllTagsByCaseType/' + this.caseType, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 for (let i = 0; i < res.data.length; i++) {
