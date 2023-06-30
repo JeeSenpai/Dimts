@@ -10,11 +10,11 @@
               </div>
               <div class="mt-4">
                 <select v-model="selectedCluster" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[10rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
-                    <option value="1">By Case Status</option>
-                    <option value="2">By Case Level</option>
+                    <option value="1">By Case Level</option>
+                    <option value="2">By Case Status</option>
                 </select>
               </div>
-              <div v-if="selectedCluster == 2" class="mt-4">
+              <div v-if="selectedCluster == 1" class="mt-4">
                 <select v-model="selectedLevel" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[10rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                     <option value="">All Levels</option>
                     <option value="1">Level 1</option>
@@ -428,11 +428,14 @@ export default {
 
         },
         filteredDots() {
+
+        this.selectedLevel = ""
+
         if (this.searchText == "" || !this.searchText) {
             this.selectCluster()
         }
 
-        else if (this.selectedCluster == 1) {
+        else if (this.selectedCluster == 2) {
 
         let filteredDataPoints = [];
         let filteredDataPoints2 = [];
@@ -476,7 +479,7 @@ export default {
            });
         }
 
-        else if (this.selectedCluster == 2) {
+        else if (this.selectedCluster == 1) {
             let filteredDataPoints1 = [];
             let filteredDataPoints2 = [];
             let filteredDataPoints3 = [];
@@ -525,15 +528,15 @@ export default {
         },
         selectCluster(){
             if(this.selectedCluster == 1){
-                this.setDataPointByCaseStatus()
+                this.setDataPointByLevel()
             }
             else{
-                this.setDataPointByLevel()
+                this.setDataPointByCaseStatus()
             }
         }
     },
     mounted() {
-        this.setDataPointByCaseStatus()
+        this.selectCluster()
     },
 }
 </script>
