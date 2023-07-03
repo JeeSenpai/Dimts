@@ -835,7 +835,7 @@ export default {
                 }
 
                 newDataPoints[i].cluster = assignedCluster;
-                predictedClusters.push(assignedCluster);
+                predictedClusters.push(assignedCluster + 1);
             }
 
             console.log("Clustered Data Points:");
