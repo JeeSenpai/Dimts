@@ -26,6 +26,14 @@
                     <option value="6">Life Imprisonment</option>
                 </select>
               </div>
+              <div v-if="selectedCluster == 3" class="mt-4">
+                <select v-model="kgroups" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[10rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                    <option value=""></option>
+                    <option value="2">2 Clusters</option>
+                    <option value="3">3 Clusters</option>
+                    <option value="4">4 Clusters</option>
+                </select>
+              </div>
                 <div class="mt-4">
                 <input 
                     v-model="searchText"
@@ -197,6 +205,48 @@ export default {
             this.plotData()
         },
 
+        plotClustering(dataPoints){
+            let datasets = [] 
+            let colors = [
+                "#FF0000", // Red
+                "#00FF00", // Green
+                "#0000FF", // Blue
+                "#FFFF00", // Yellow
+                "#FF00FF", // Magenta
+                "#00FFFF", // Cyan
+            ]
+
+
+
+            for (let i = 0; i < this.kgroups; i++) {
+                let data = []
+                for (let j = 0; j < dataPoints.length; j++) {
+                    if(dataPoints[j].cluster == i){
+                        data.push(dataPoints[j])
+                    }
+                }
+
+                let obj ={
+                    label: 'Cluster ' + (i + 1),
+                    data: data,
+                    backgroundColor: colors[i],
+                    borderColor: colors[i],
+                    hoverBackgroundColor: colors[i],
+                    hoverBorderColor: colors[i],
+                    borderWidth: 1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    hitRadius: 1,
+                }
+
+                datasets.push(obj)
+                
+            }
+
+            this.chartData = { datasets }
+            
+            this.plotData()
+        },
 
 
         plotData(){
@@ -449,12 +499,14 @@ export default {
                         obj.case_no = res.data[i].case_no
                         obj.case_title = res.data[i].case_title
                         obj.level = res.data[i].level
-
-                        dataPoints.push(obj)
+                        if(obj.level > 0){
+                            dataPoints.push(obj)            
+                        }
+                        
                     }
 
                     const data = this.performClustering(this.kgroups, dataPoints)
-4
+                    this.plotClustering(data)
 
                 });
         },
@@ -556,6 +608,31 @@ export default {
                         this.plotLevel(filteredDataPoints1, filteredDataPoints2, filteredDataPoints3, filteredDataPoints4, filteredDataPoints5, filteredDataPoints6)
                     });
                 }
+
+                else if (this.selectedCluster == 3) {
+                let filteredDataPoints = [];
+   
+
+                axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
+                    .then((res) => {
+                        for (let i = 0; i < res.data.length; i++) {
+                            if (res.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                                res.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+                            let obj = {
+                                x: res.data[i].point_x,
+                                y: res.data[i].point_y,
+                                id: res.data[i].id,
+                                case_no: res.data[i].case_no,
+                                case_title: res.data[i].case_title,
+                                level: res.data[i].level
+                            };
+                            filteredDataPoints.push(obj)
+                          }
+                        }
+                        const data = this.performClustering(this.kgroups, filteredDataPoints)
+                        this.plotClustering(data)
+                    });
+                }    
         },
         selectCluster(){
             if(this.selectedCluster == 1){
@@ -576,7 +653,7 @@ export default {
             let cluster = null
             
             let clusterCenters = this.getRandomCenters(k, datapoints);
-            cluster = this.clusterDatapoints(k, datapoints)
+            cluster = this.clusterDatapoints(k, datapoints, datapoints)
             
             while (true) {
             this.assignPointsToClusters(clusterCenters, datapoints);
@@ -672,7 +749,7 @@ export default {
         },
 
         // Assigned cluster group in each datapoints
-        clusterDatapoints(K, datapoints){
+        clusterDatapoints(K, datapoints, newDataPoints){
             const dataPoints = datapoints
 
             const k = K
@@ -740,12 +817,34 @@ export default {
             if (convergedCount === dataPoints.length) {
                 converged = true;
             }
+        }
+
+            const predictedClusters = [];
+    
+            for (let i = 0; i < newDataPoints.length; i++) {
+                let minDistance = Infinity;
+                let assignedCluster = null;
+
+                for (let j = 0; j < centroids.length; j++) {
+                const distance = this.calculateDistance(newDataPoints[i], centroids[j]);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    assignedCluster = j;
+                }
+                }
+
+                newDataPoints[i].cluster = assignedCluster;
+                predictedClusters.push(assignedCluster);
             }
 
             console.log("Clustered Data Points:");
             console.log(dataPoints);
             console.log("Cluster Centers:");
             console.log(centroids);
+
+            console.log("Predicted Clusters for New Data Points:");
+            console.log(predictedClusters);
 
             return dataPoints
         },
