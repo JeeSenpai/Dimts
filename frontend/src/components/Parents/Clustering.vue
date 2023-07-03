@@ -12,6 +12,7 @@
                 <select v-model="selectedCluster" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[10rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                     <option value="1">By Case Level</option>
                     <option value="2">By Case Status</option>
+                    <option value="3">By ML Clustering</option>
                 </select>
               </div>
               <div v-if="selectedCluster == 1" class="mt-4">
@@ -52,7 +53,7 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="js">
 import axios from 'axios';
 import Chart from 'chart.js';
 import CaseDetails from '../Modals/CaseDetailsDialog.vue';
@@ -67,18 +68,19 @@ export default {
             token: localStorage.getItem("dimts_token"),
             data: null,
             searchText: null,
+            kgroups: 2,
             selectedCluster: 1,
             selectedLevel: "",
             chartData: null,
             chartOptions: null,
-            backendUrl: this.$store.state.serverUrl
+            backendUrl: this.$store.state.serverUrl,
         }
     },
     methods: {
 
-    
+
         // Plot Clustering through case status
-        plotDBSCAN(dataPoints, dataPoints2) {
+        plotStatus(dataPoints, dataPoints2) {
             
             this.chartData = {
             datasets: [
@@ -113,7 +115,7 @@ export default {
         },
         
         // Plot Clustering through level
-        plotDBSCANLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6) {
+        plotLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6) {
             
             this.chartData = {
             datasets: [
@@ -194,6 +196,8 @@ export default {
 
             this.plotData()
         },
+
+
 
         plotData(){
             this.chartOptions = {
@@ -319,221 +323,439 @@ export default {
                                 }
                               }
                             
-                            this.plotDBSCAN(dataPoints, dataPoints2);
+                            this.plotStatus(dataPoints, dataPoints2);
                     });
             });
         },
 
         setDataPointByLevel(){
-            let dataPoints1 = [];
-            let dataPoints2 = [];
-            let dataPoints3 = [];
-            let dataPoints4 = [];
-            let dataPoints5 = [];
-            let dataPoints6 = [];
+                let dataPoints1 = [];
+                let dataPoints2 = [];
+                let dataPoints3 = [];
+                let dataPoints4 = [];
+                let dataPoints5 = [];
+                let dataPoints6 = [];
 
-            axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
-                                for (let i = 0; i < res.data.length; i++) {
-                                let obj = {
-                                    x: null,
-                                    y: null,
-                                    id: null,
-                                    case_no: null,
-                                    case_title: null,
-                                    level: null,
-                                }
-                                obj.x=res.data[i].point_x
-                                obj.y=res.data[i].point_y
-                                obj.id = res.data[i].id
-                                obj.case_no = res.data[i].case_no
-                                obj.case_title = res.data[i].case_title
-                                obj.level = res.data[i].level
+                axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                        for (let i = 0; i < res.data.length; i++) {
+                        let obj = {
+                            x: null,
+                            y: null,
+                            id: null,
+                            case_no: null,
+                            case_title: null,
+                            level: null,
+                        }
+                        obj.x=res.data[i].point_x
+                        obj.y=res.data[i].point_y
+                        obj.id = res.data[i].id
+                        obj.case_no = res.data[i].case_no
+                        obj.case_title = res.data[i].case_title
+                        obj.level = res.data[i].level
 
 
-                                switch (obj.level) {
-                                case 1:
-                                    dataPoints1.push(obj)
-                                    break;
-                                case 2:
-                                    dataPoints2.push(obj)
-                                    break; 
-                                case 3:
-                                    dataPoints3.push(obj)
-                                    break; 
-                                case 4:
-                                    dataPoints4.push(obj)
-                                    break; 
-                                case 5:
-                                    dataPoints5.push(obj)
-                                    break;
-                                case 6:
-                                    dataPoints6.push(obj)
-                                    break;
-                                }
-                              }
+                        switch (obj.level) {
+                        case 1:
+                            dataPoints1.push(obj)
+                            break;
+                        case 2:
+                            dataPoints2.push(obj)
+                            break; 
+                        case 3:
+                            dataPoints3.push(obj)
+                            break; 
+                        case 4:
+                            dataPoints4.push(obj)
+                            break; 
+                        case 5:
+                            dataPoints5.push(obj)
+                            break;
+                        case 6:
+                            dataPoints6.push(obj)
+                            break;
+                        }
+                        }
 
-                              if(this.selectedLevel == ""){
-                                this.plotDBSCANLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
-                              }
-                              else{
+                        if(this.selectedLevel == ""){
+                        this.plotLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
+                        }
+                        else{
 
-                                switch (this.selectedLevel) {
-                                    case '1':
-                                        dataPoints2 = [];
-                                        dataPoints3 = [];
-                                        dataPoints4 = [];
-                                        dataPoints5 = [];
-                                        dataPoints6 = [];
-                                        break;
-                                    case '2':
-                                        dataPoints1 = [];
-                                        dataPoints3 = [];
-                                        dataPoints4 = [];
-                                        dataPoints5 = [];
-                                        dataPoints6 = [];
-                                        break; 
-                                    case '3':
-                                        dataPoints1 = [];
-                                        dataPoints2 = [];
-                                        dataPoints4 = [];
-                                        dataPoints5 = [];
-                                        dataPoints6 = [];
-                                        break; 
-                                    case '4':
-                                        dataPoints1 = [];
-                                        dataPoints2 = [];
-                                        dataPoints3 = [];
-                                        dataPoints5 = [];
-                                        dataPoints6 = [];
-                                        break; 
-                                    case '5':
-                                        dataPoints1 = [];
-                                        dataPoints2 = [];
-                                        dataPoints3 = [];
-                                        dataPoints4 = [];
-                                        dataPoints6 = [];
-                                        break;
-                                    case '6':
-                                        dataPoints1 = [];
-                                        dataPoints2 = [];
-                                        dataPoints3 = [];
-                                        dataPoints4 = [];
-                                        dataPoints5 = [];
-                                        break;
-                                    }
-                                    this.plotDBSCANLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
-                                }
-                                
-                    });
+                        switch (this.selectedLevel) {
+                            case '1':
+                                dataPoints2 = [];
+                                dataPoints3 = [];
+                                dataPoints4 = [];
+                                dataPoints5 = [];
+                                dataPoints6 = [];
+                                break;
+                            case '2':
+                                dataPoints1 = [];
+                                dataPoints3 = [];
+                                dataPoints4 = [];
+                                dataPoints5 = [];
+                                dataPoints6 = [];
+                                break; 
+                            case '3':
+                                dataPoints1 = [];
+                                dataPoints2 = [];
+                                dataPoints4 = [];
+                                dataPoints5 = [];
+                                dataPoints6 = [];
+                                break; 
+                            case '4':
+                                dataPoints1 = [];
+                                dataPoints2 = [];
+                                dataPoints3 = [];
+                                dataPoints5 = [];
+                                dataPoints6 = [];
+                                break; 
+                            case '5':
+                                dataPoints1 = [];
+                                dataPoints2 = [];
+                                dataPoints3 = [];
+                                dataPoints4 = [];
+                                dataPoints6 = [];
+                                break;
+                            case '6':
+                                dataPoints1 = [];
+                                dataPoints2 = [];
+                                dataPoints3 = [];
+                                dataPoints4 = [];
+                                dataPoints5 = [];
+                                break;
+                            }
+                            this.plotLevel(dataPoints1, dataPoints2, dataPoints3, dataPoints4, dataPoints5, dataPoints6);
+                        }
+                        
+                });
 
         },
-        filteredDots() {
-
-        this.selectedLevel = ""
-
-        if (this.searchText == "" || !this.searchText) {
-            this.selectCluster()
-        }
-
-        else if (this.selectedCluster == 2) {
-
-        let filteredDataPoints = [];
-        let filteredDataPoints2 = [];
-
-        axios.get(this.$store.state.serverUrl + '/cases/findAllActiveCasesClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
-            .then((res1) => {
-            for (let i = 0; i < res1.data.length; i++) {
-                if (res1.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
-                    res1.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
-                let obj = {
-                    x: res1.data[i].point_x,
-                    y: res1.data[i].point_y,
-                    id: res1.data[i].id,
-                    case_no: res1.data[i].case_no,
-                    case_title: res1.data[i].case_title,
-                    level: res1.data[i].level
-                };
-                filteredDataPoints.push(obj);
-                }
-                }
-            
-
-            axios.get(this.$store.state.serverUrl + '/cases/findAllDocketCasesClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
-            .then((res2) => {
-                for (let i = 0; i < res2.data.length; i++) {
-                    if (res2.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
-                        res2.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
-                    let obj = {
-                        x: res2.data[i].point_x,
-                        y: res2.data[i].point_y,
-                        id: res2.data[i].id,
-                        case_no: res2.data[i].case_no,
-                        case_title: res2.data[i].case_title,
-                        level: res2.data[i].level
-                    };
-                    filteredDataPoints2.push(obj);
-                    }
-                }
-                this.plotDBSCAN(filteredDataPoints, filteredDataPoints2);
-              });
-           });
-        }
-
-        else if (this.selectedCluster == 1) {
-            let filteredDataPoints1 = [];
-            let filteredDataPoints2 = [];
-            let filteredDataPoints3 = [];
-            let filteredDataPoints4 = [];
-            let filteredDataPoints5 = [];
-            let filteredDataPoints6 = [];
-
-            axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
-                .then((res) => {
-                    for (let i = 0; i < res.data.length; i++) {
-                        if (res.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
-                            res.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+        setDataPointsBySetClusters(){
+            let dataPoints = []
+            axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                        for (let i = 0; i < res.data.length; i++) {
                         let obj = {
-                            x: res.data[i].point_x,
-                            y: res.data[i].point_y,
-                            id: res.data[i].id,
-                            case_no: res.data[i].case_no,
-                            case_title: res.data[i].case_title,
-                            level: res.data[i].level
+                            x: null,
+                            y: null,
+                            id: null,
+                            case_no: null,
+                            case_title: null,
+                            level: null,
+                        }
+                        obj.x=res.data[i].point_x
+                        obj.y=res.data[i].point_y
+                        obj.id = res.data[i].id
+                        obj.case_no = res.data[i].case_no
+                        obj.case_title = res.data[i].case_title
+                        obj.level = res.data[i].level
+
+                        dataPoints.push(obj)
+                    }
+
+                    const data = this.performClustering(this.kgroups, dataPoints)
+4
+
+                });
+        },
+
+        filteredDots() {
+            this.selectedLevel = ""
+
+            if (this.searchText == "" || !this.searchText) {
+                this.selectCluster()
+            }
+
+            else if (this.selectedCluster == 2) {
+
+            let filteredDataPoints = [];
+            let filteredDataPoints2 = [];
+
+            axios.get(this.$store.state.serverUrl + '/cases/findAllActiveCasesClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
+                .then((res1) => {
+                for (let i = 0; i < res1.data.length; i++) {
+                    if (res1.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                        res1.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+                    let obj = {
+                        x: res1.data[i].point_x,
+                        y: res1.data[i].point_y,
+                        id: res1.data[i].id,
+                        case_no: res1.data[i].case_no,
+                        case_title: res1.data[i].case_title,
+                        level: res1.data[i].level
+                    };
+                    filteredDataPoints.push(obj);
+                    }
+                    }
+                
+
+                axios.get(this.$store.state.serverUrl + '/cases/findAllDocketCasesClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
+                .then((res2) => {
+                    for (let i = 0; i < res2.data.length; i++) {
+                        if (res2.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                            res2.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+                        let obj = {
+                            x: res2.data[i].point_x,
+                            y: res2.data[i].point_y,
+                            id: res2.data[i].id,
+                            case_no: res2.data[i].case_no,
+                            case_title: res2.data[i].case_title,
+                            level: res2.data[i].level
                         };
-                        switch (obj.level) {
-                            case 1:
-                                filteredDataPoints1.push(obj)
-                                break;
-                            case 2:
-                                filteredDataPoints2.push(obj)
-                                break; 
-                            case 3:
-                                filteredDataPoints3.push(obj)
-                                break; 
-                            case 4:
-                                filteredDataPoints4.push(obj)
-                                break; 
-                            case 5:
-                                filteredDataPoints5.push(obj)
-                                break;
-                            case 6:
-                                filteredDataPoints6.push(obj)
-                                break;
-                          }
+                        filteredDataPoints2.push(obj);
                         }
                     }
-                    this.plotDBSCANLevel(filteredDataPoints1, filteredDataPoints2, filteredDataPoints3, filteredDataPoints4, filteredDataPoints5, filteredDataPoints6)
+                    this.plotStatus(filteredDataPoints, filteredDataPoints2);
                 });
+            });
             }
+
+            else if (this.selectedCluster == 1) {
+                let filteredDataPoints1 = [];
+                let filteredDataPoints2 = [];
+                let filteredDataPoints3 = [];
+                let filteredDataPoints4 = [];
+                let filteredDataPoints5 = [];
+                let filteredDataPoints6 = [];
+
+                axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', { headers: { Authorization: `Bearer  ${this.token}` } })
+                    .then((res) => {
+                        for (let i = 0; i < res.data.length; i++) {
+                            if (res.data[i].case_no.toLowerCase().includes(this.searchText.toLowerCase()) ||
+                                res.data[i].case_title.toLowerCase().includes(this.searchText.toLowerCase())) {
+                            let obj = {
+                                x: res.data[i].point_x,
+                                y: res.data[i].point_y,
+                                id: res.data[i].id,
+                                case_no: res.data[i].case_no,
+                                case_title: res.data[i].case_title,
+                                level: res.data[i].level
+                            };
+                            switch (obj.level) {
+                                case 1:
+                                    filteredDataPoints1.push(obj)
+                                    break;
+                                case 2:
+                                    filteredDataPoints2.push(obj)
+                                    break; 
+                                case 3:
+                                    filteredDataPoints3.push(obj)
+                                    break; 
+                                case 4:
+                                    filteredDataPoints4.push(obj)
+                                    break; 
+                                case 5:
+                                    filteredDataPoints5.push(obj)
+                                    break;
+                                case 6:
+                                    filteredDataPoints6.push(obj)
+                                    break;
+                            }
+                            }
+                        }
+                        this.plotLevel(filteredDataPoints1, filteredDataPoints2, filteredDataPoints3, filteredDataPoints4, filteredDataPoints5, filteredDataPoints6)
+                    });
+                }
         },
         selectCluster(){
             if(this.selectedCluster == 1){
                 this.setDataPointByLevel()
             }
-            else{
+            else if(this.selectedCluster == 2){
                 this.setDataPointByCaseStatus()
             }
+            else if(this.selectedCluster == 3){
+                this.setDataPointsBySetClusters()
+            }
+        },
+
+        //For Clustering
+        //K - number of clusters
+        //datapoints - raw data needed to cluster
+        performClustering(k, datapoints) {
+            let cluster = null
+            
+            let clusterCenters = this.getRandomCenters(k, datapoints);
+            cluster = this.clusterDatapoints(k, datapoints)
+            
+            while (true) {
+            this.assignPointsToClusters(clusterCenters, datapoints);
+            
+            const newClusterCenters = this.calculateNewCenters(datapoints);
+
+            if (this.isConverged(clusterCenters, newClusterCenters)) {
+                break;
+            }
+            
+            clusterCenters = newClusterCenters;
+            }
+            return cluster
+        },
+
+        //assigned random center at the start of clustering
+        getRandomCenters(k, datapoints) {
+            const minX = Math.min(...datapoints.map(p => p.x));
+            const maxX = Math.max(...datapoints.map(p => p.x));
+            const minY = Math.min(...datapoints.map(p => p.y));
+            const maxY = Math.max(...datapoints.map(p => p.y));
+            
+            const clusterCenters = [];
+            for (let i = 0; i < k; i++) {
+            const center = {
+                x: Math.random() * (maxX - minX) + minX,
+                y: Math.random() * (maxY - minY) + minY,
+            };
+            clusterCenters.push(center);
+            }
+            
+            return clusterCenters;
+        },
+        
+        //assign cluster or plotted points in the nearest random center
+        assignPointsToClusters(clusterCenters, datapoints) {
+            let clusterpoints = []
+
+            for (const point of datapoints) {
+            let minDistance = Infinity;
+            let nearestCluster = null;
+
+            for (const center of clusterCenters) {
+                const distance = this.calculateDistance(point, center);
+                
+                if (distance < minDistance) {
+                minDistance = distance;
+                nearestCluster = center;
+                }
+            }
+            
+            clusterpoints.push({ point, center: nearestCluster });
+            }
+
+            return clusterpoints
+        },
+        
+        calculateNewCenters(datapoints) {
+            const newClusterCenters = [];
+            
+            for (const clusterCenter of this.getUniqueClusterCenters(datapoints)) {
+            const clusterPoints = datapoints
+                .filter(c => c.center === clusterCenter)
+                .map(c => c.point);
+            
+            if (clusterPoints.length > 0) {
+
+                const sumX = clusterPoints.reduce((acc) => acc, 0);
+                const sumY = clusterPoints.reduce((acc) => acc, 0);
+                const averageX = sumX / clusterPoints.length;
+                const averageY = sumY / clusterPoints.length;
+                
+                newClusterCenters.push({ x: averageX, y: averageY });
+            }
+            }
+            
+            return newClusterCenters;
+        },
+        
+        getUniqueClusterCenters(datapoints) {
+            return [...new Set(datapoints.map(c => c.center))];
+        },
+        
+        isConverged(clusterCenters, newClusterCenters) {
+            for (let i = 0; i < clusterCenters.length; i++) {
+            const distance = this.calculateDistance(clusterCenters[i], newClusterCenters[i]);
+            if (distance > 0.0001) {
+                return false;
+            }
+            }
+            
+            return true;
+        },
+
+        // Assigned cluster group in each datapoints
+        clusterDatapoints(K, datapoints){
+            const dataPoints = datapoints
+
+            const k = K
+
+            let centroids = [];
+            for (let i = 0; i < k; i++) {
+            const randomIndex = Math.floor(Math.random() * dataPoints.length);
+            centroids.push({...dataPoints[randomIndex]});
+            }
+
+            for (let i = 0; i < dataPoints.length; i++) {
+            let minDistance = Infinity;
+            let assignedCluster = null;
+            
+            for (let j = 0; j < centroids.length; j++) {
+                const distance = this.calculateDistance(dataPoints[i], centroids[j]);
+                
+                if (distance < minDistance) {
+                minDistance = distance;
+                assignedCluster = j;
+                }
+            }
+                dataPoints[i].cluster = assignedCluster;
+            }
+            let converged = false;
+            while (!converged) {
+            const clusterSums = new Array(k).fill(0);
+            const clusterCounts = new Array(k).fill(0);
+            
+            for (let i = 0; i < dataPoints.length; i++) {
+                const cluster = dataPoints[i].cluster;
+                clusterSums[cluster] += dataPoints[i].x;
+                clusterCounts[cluster]++;
+            }
+            
+            for (let i = 0; i < k; i++) {
+                if (clusterCounts[i] > 0) {
+                const meanX = clusterSums[i] / clusterCounts[i];
+                centroids[i].x = meanX;
+                }
+            }
+            
+            let convergedCount = 0;
+            for (let i = 0; i < dataPoints.length; i++) {
+                const prevCluster = dataPoints[i].cluster;
+                let minDistance = Infinity;
+                let assignedCluster = null;
+                
+                for (let j = 0; j < centroids.length; j++) {
+                const distance = this.calculateDistance(dataPoints[i], centroids[j]);
+                
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    assignedCluster = j;
+                }
+                }
+                
+                dataPoints[i].cluster = assignedCluster;
+                
+                if (assignedCluster === prevCluster) {
+                convergedCount++;
+                }
+            }
+            
+            if (convergedCount === dataPoints.length) {
+                converged = true;
+            }
+            }
+
+            console.log("Clustered Data Points:");
+            console.log(dataPoints);
+            console.log("Cluster Centers:");
+            console.log(centroids);
+
+            return dataPoints
+        },
+
+        calculateDistance(point1, point2) {
+            const dx = point2.x - point1.x;
+            const dy = point2.y - point1.y;
+            return Math.sqrt(dx * dx + dy * dy);
         }
+
     },
     mounted() {
         this.selectCluster()
