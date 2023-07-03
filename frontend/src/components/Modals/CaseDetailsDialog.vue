@@ -154,9 +154,10 @@ export default {
         },
         initializeView(data){
             let parseChecklist = JSON.parse(data.case_tag)
-
+            this.checklistData = []
+            
             if( parseChecklist.length > 0){
-                this.checklistData = []
+                
                 for (let i = 0; i < parseChecklist.length; i++) {
                     axios.get(this.$store.state.serverUrl + '/case-checklist/findAllActiveChecklistByCaseTag/' + parseChecklist[i], {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                         let obj = {
