@@ -64,6 +64,8 @@
 <script lang="js">
 import axios from 'axios';
 import Chart from 'chart.js';
+import * as tf from '@tensorflow/tfjs';
+import * as tfvis from '@tensorflow/tfjs-vis';
 import CaseDetails from '../Modals/CaseDetailsDialog.vue';
 
 export default {
@@ -653,7 +655,7 @@ export default {
             let cluster = null
             
             let clusterCenters = this.getRandomCenters(k, datapoints);
-            cluster = this.clusterDatapoints(k, datapoints, datapoints)
+            cluster = this.clusterDatapoints(k, datapoints)
             
             while (true) {
             this.assignPointsToClusters(clusterCenters, datapoints);
@@ -749,7 +751,7 @@ export default {
         },
 
         // Assigned cluster group in each datapoints
-        clusterDatapoints(K, datapoints, newDataPoints){
+        clusterDatapoints(K, datapoints){
             const dataPoints = datapoints
 
             const k = K
@@ -819,33 +821,45 @@ export default {
             }
         }
 
-            const predictedClusters = [];
-    
-            for (let i = 0; i < newDataPoints.length; i++) {
-                let minDistance = Infinity;
-                let assignedCluster = null;
+            const features = datapoints.map(item => [parseInt(item.x.toFixed(0)), parseInt(item.y.toFixed(0))]);
+            const labels = datapoints.map(item => item.case_no);
+            const splitIndex = Math.floor(features.length * 0.8);
+            const trainingFeatures = features.slice(0, splitIndex);
+            const trainingLabels = labels.slice(0, splitIndex);
+            const predictionFeatures = features.slice(splitIndex);
 
-                for (let j = 0; j < centroids.length; j++) {
-                const distance = this.calculateDistance(newDataPoints[i], centroids[j]);
+            const predictionFeaturesTensor = tf.tensor2d(trainingFeatures);
 
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    assignedCluster = j;
-                }
-                }
+            const model = tf.sequential();
+            model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [2] }));
+            model.add(tf.layers.dense({ units: 1 }));
 
-                newDataPoints[i].cluster = assignedCluster;
-                predictedClusters.push(assignedCluster + 1);
+            model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
+            const epochs = 50;
 
-            }
+            model.fit(tf.tensor2d(trainingFeatures, predictionFeaturesTensor.shape), {
+            epochs,
+            batchSize: 32,
+            shuffle: true,
+            callbacks: tfvis.show.fitCallbacks(
+                { name: 'Training Performance' },
+                ['loss'],
+                { height: 200, callbacks: ['onEpochEnd'] }
+            )
+            }).then(() => {
+                console.log('Model training completed.');
+            });
+
+            const Predictions = model.predict(tf.tensor2d(predictionFeatures));
+            const PredictionsArray = Array.from(Predictions.dataSync());
 
             console.log("Clustered Data Points:");
             console.log(dataPoints);
             console.log("Cluster Centers:");
             console.log(centroids);
 
-            console.log("Predicted Clusters for New Data Points:");
-            console.log(predictedClusters);
+            console.log("Predictions:");
+            console.log(PredictionsArray);
 
             return dataPoints
         },
