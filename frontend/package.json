@@ -10,6 +10,8 @@
     "@bachdgvn/vue-otp-input": "^1.0.8",
     "@chenfengyuan/vue-qrcode": "^2.0.0",
     "@nestjs/mapped-types": "*",
+    "@tensorflow/tfjs": "^4.8.0",
+    "@tensorflow/tfjs-vis": "^1.5.1",
     "@vueform/multiselect": "^2.6.2",
     "autoprefixer": "^10",
     "axios": "^0.27.2",
