@@ -16,6 +16,11 @@ export class CaseDecision {
     })
     status: boolean
 
+    @Column({
+        default: true
+    })
+    inputs: boolean
+
     @ManyToOne(type => CaseType) 
     @JoinColumn({referencedColumnName: "id"}) 
     caseType: number;

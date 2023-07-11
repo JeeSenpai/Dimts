@@ -46,6 +46,8 @@ import { CitizenModule } from './citizen/citizen.module';
 import { CitizenMonitorsModule } from './citizen_monitors/citizen_monitors.module';
 import { Citizen } from './citizen/entities/citizen.entity';
 import { CitizenMonitor } from './citizen_monitors/entities/citizen_monitor.entity';
+import { SystemLogsModule } from './system-logs/system-logs.module';
+import { SystemLog } from './system-logs/entities/system-log.entity';
 
 @Module({
   imports: [UsersModule,ConfigModule.forRoot(), TypeOrmModule.forRoot({
@@ -55,10 +57,10 @@ import { CitizenMonitor } from './citizen_monitors/entities/citizen_monitor.enti
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist, Citizen, CitizenMonitor],
+    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist, Citizen, CitizenMonitor, SystemLog],
     synchronize: true,
   }),
-   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule, CitizenModule, CitizenMonitorsModule,
+   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule, CitizenModule, CitizenMonitorsModule, SystemLogsModule,
 ],
   controllers: [AppController],
   providers: [AppService],

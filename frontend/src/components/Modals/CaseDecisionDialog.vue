@@ -33,6 +33,13 @@
                              <option v-for="casetype in caseTypeData" :key="casetype" :value="casetype.id">{{ casetype.description }}</option>
                         </select>
                     </div>
+                    <div class="text-left ml-6 mt-5">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input v-model="inputs" type="checkbox" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-0 peer-focus:ring-[#BF40BF] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#BF40BF]"></div>
+                            <span class="ml-3 text-[13px] text-gray-800 font-bold">Enable Inputs ?</span>
+                        </label>
+                    </div>
                 </div>
                 <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 mt-6 border-t border-gray-200 rounded-b-md">
                     <button v-if="action == 'update'" @click="checkForm()" type="button" class="inline-block px-5 py-2.5 mr-3 bg-[#BF40BF] text-white font-semibold text-xs leading-tight uppercase rounded-md border border-[#BF40BF] hover:bg-[#BF40BF] hover:text-white hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out ml-1">Update</button>
@@ -63,6 +70,7 @@ export default {
             description: "",
             caseType: 1,
             status: true,
+            inputs: true,
 
             //query datas
             caseTypeData: []
@@ -81,15 +89,18 @@ export default {
             this.decisionId = null
             this.caseType = 1
             this.description = "",
+            this.inputs = true
             this.status = true
         },
         initializeUpdate(data){
+            console.log(data)
             this.isSubmitting = false
             this.action = "update"
             this.title = "Update Case Decision"
             this.decisionId = data.id
             this.caseType = data.caseType.id
             this.description = data.description
+            this.inputs = data.inputs
             this.status = data.status
         },
         checkForm(){
@@ -103,6 +114,7 @@ export default {
                     decisionId: this.decisionId,
                     caseType: this.caseType,
                     description: this.description,
+                    inputs: this.inputs,
                     status: this.status
                 } 
                 if(this.action == "add"){

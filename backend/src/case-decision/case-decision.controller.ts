@@ -22,6 +22,11 @@ export class CaseDecisionController {
     return this.caseDecisionService.findAll();
   }
 
+  @Get('findCaseDecisionById/:id')
+  findCaseDecisionById(@Param('id') data: number) {
+    return this.caseDecisionService.findCaseDecisionById(data);
+  }
+
   @Post('update')
   update(@Body() data: any) {
     return this.caseDecisionService.update(data);

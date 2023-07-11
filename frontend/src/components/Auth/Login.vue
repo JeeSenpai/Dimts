@@ -128,14 +128,22 @@ export default {
                   }
 
                   else{
-                      localStorage.setItem('dimts_token', result.data.dimts_token);
+                    let formData = {
+                       user: result.data.user.id
+                    }
 
-                      this.$store.commit('UPDATE_USER', result.data.user)
-                      this.$store.commit('UPDATE_SERVERURL', process.env.VUE_APP_BASE_URL)
+                    axios.post(process.env.VUE_APP_BASE_URL + '/system-logs', formData ).then((res)=>{
+                        if(res){
+                          localStorage.setItem('dimts_token', result.data.dimts_token);
 
-                      window.location.reload()
-                      
+                          this.$store.commit('UPDATE_USER', result.data.user)
+                          this.$store.commit('UPDATE_SERVERURL', process.env.VUE_APP_BASE_URL)
+
+                          window.location.reload()
+                        }
+                    }) 
                   }
+                
                 }).catch((error) => {
                         const toast = useToast();
                         toast.error("Error has occured", {

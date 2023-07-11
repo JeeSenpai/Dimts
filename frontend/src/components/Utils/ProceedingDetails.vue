@@ -43,6 +43,9 @@
                         <div v-if="caseStatus == 1 && reOpenedCount == proceedingData.length" class="mt-3.5 ml-5">
                             <button @click="showTransferDialog = true" type="button" class="inline-block px-5 py-2.5 mr-3 bg-white text-gray-500 font-semibold text-xs leading-tight uppercase border border-gray-400 rounded-md hover:shadow-lg hover:text-white hover:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0">Transfer Case to Docket</button>
                         </div>
+                        <div v-if="reOpenedCount == proceedingData.length" class="mt-3.5 ml-3.5">
+                            <button @click="showTransferDialog = true" type="button" class="inline-block px-5 py-2.5 mr-3 bg-white text-[#BF40BF] font-semibold text-xs leading-tight uppercase border border-[#BF40BF] rounded-md hover:shadow-lg hover:text-white hover:bg-[#BF40BF] focus:shadow-lg focus:outline-none focus:ring-0">Print Report</button>
+                        </div>
                     </div>
                     </div>
                 </div>
