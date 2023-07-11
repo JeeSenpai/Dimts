@@ -21,9 +21,9 @@
                     </div>
                     <div class="flex justify-between">
                         <div>
-                            <select v-model="caseDecision" :class="{ invalid: isSubmitting && caseDecision == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                            <select v-model="caseDecision" @change="checkInputs(caseDecision)" :class="{ invalid: isSubmitting && caseDecision == '' }" class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select case decision</option>
-                              <option v-for="cd in caseDecisionData" :key="cd" :value="cd.id"> {{ cd.description }}</option>
+                              <option v-for="cd in caseDecisionData" :key="cd.id" :value="cd.id"> {{ cd.description }}</option>
                             </select>
                         </div>
                         <div><input 
@@ -39,14 +39,15 @@
                     </div>
                     <div class="flex justify-between">
                         <div>
-                            <input 
+                            <input
+                            :disabled="inputs == false"
                             v-model="minimum_sentence"
                             @keyup="minimum_sentence == '' ? minimum_duration = '': ''"
                             type="number"
                             class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
                         </div>
                         <div>
-                            <select v-model="minimum_duration" ref="min_dur" class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                            <select :disabled="inputs == false" v-model="minimum_duration" ref="min_dur" class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select minimum duration</option>
                               <option value="1">Days</option>
                               <option value="2">Months</option>
@@ -60,14 +61,15 @@
                     </div>
                     <div class="flex justify-between">
                         <div>
-                            <input 
+                            <input
+                            :disabled="inputs == false"
                             v-model="maximum_sentence"
                             @keyup="maximum_sentence == '' ? maximum_duration = '': ''"
                             type="number"
                             class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
                         </div>
                         <div>
-                            <select v-model="maximum_duration" ref="max_dur" class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
+                            <select :disabled="inputs == false" v-model="maximum_duration" ref="max_dur" class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
                               <option disabled value="">Select maximum duration</option>
                               <option value="1">Days</option>
                               <option value="2">Months</option>
@@ -81,13 +83,15 @@
                     </div>
                     <div class="flex justify-between">
                         <div>
-                            <input 
+                            <input
+                            :disabled="inputs == false"
                             v-model="minimum_fines" 
                             type="text"
                             class="ml-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
                         </div>
                         <div>
-                            <input 
+                            <input
+                            :disabled="inputs == false"
                             v-model="maximum_fines" 
                             type="text"
                             class="mr-5 px-2 py-2.5 w-[13rem] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border- focus:ring-[#BF40BF]"/>
@@ -124,6 +128,7 @@ export default {
             action: null,
             title: null,
             subTitle: null,
+            inputs: null,
 
             valid1: null,
             valid2: null,
@@ -157,7 +162,7 @@ export default {
             this.isSubmitting = false
             this.action = "add"
             this.title = "Add Court Decision"
-            this.subTitle = "Case No. " + data.case_no + " - " + data.case_title
+            this.subTitle = "Case No. " + data.case_no + " - " + data.casse_title
             this.proceedingId = null,
             this.caseId = data.id,
             this.caseDecision = "",
@@ -169,6 +174,8 @@ export default {
             this.maximum_fines = "",
             this.last_court_action = moment(new Date()).format('YYYY-MM-DD'),
             this.remarks= ""
+
+            this.inputs = false
         },
         initializeUpdate(data){
 
@@ -191,7 +198,15 @@ export default {
             this.maximum_fines = data.maximum_fines,
             this.last_court_action = data.last_court_action,
             this.remarks= data.remarks
-            
+
+            this.checkInputs(data.caseDecision.id)
+        },
+        checkInputs(inputs){
+            axios.get(this.$store.state.serverUrl + '/case-decision/findCaseDecisionById/' + inputs, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                if(res){
+                    this.inputs = res.data.inputs
+                }
+            });
         },
         checkForm(){
             this.isSubmitting = true

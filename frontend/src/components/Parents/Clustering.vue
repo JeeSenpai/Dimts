@@ -483,34 +483,40 @@ export default {
                 });
 
         },
-        setDataPointsBySetClusters(){
-            let dataPoints = []
+
+               
+        setDataPointsBySetClusters(){ // First na function na e call pag dropdown sa ML Clustering
+         let dataPoints = []
             axios.get(this.$store.state.serverUrl + '/cases/findAllLevelClusters', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
-                        for (let i = 0; i < res.data.length; i++) {
-                        let obj = {
-                            x: null,
-                            y: null,
-                            id: null,
-                            case_no: null,
-                            case_title: null,
-                            level: null,
-                        }
-                        obj.x=res.data[i].point_x
-                        obj.y=res.data[i].point_y
-                        obj.id = res.data[i].id
-                        obj.case_no = res.data[i].case_no
-                        obj.case_title = res.data[i].case_title
-                        obj.level = res.data[i].level
-                        if(obj.level > 0){
-                            dataPoints.push(obj)            
-                        }
-                        
-                    }
+                for (let i = 0; i < res.data.length; i++) {
+                let obj = {
+                    x: null,
+                    y: null,
+                    id: null,
+                    case_no: null,
+                    case_title: null,
+                    level: null,
+                }
+                obj.x=res.data[i].point_x
+                obj.y=res.data[i].point_y
+                obj.id = res.data[i].id
+                obj.case_no = res.data[i].case_no
+                obj.case_title = res.data[i].case_title
+                obj.level = res.data[i].level
+                if(obj.level > 0){
+                    dataPoints.push(obj) // Ang gi call nga data sa axios or query gi push ang tanan dataPoints variable        
+                }
+                
+            }
 
-                    const data = this.performClustering(this.kgroups, dataPoints)
-                    this.plotClustering(data)
+            const data = this.performClustering(this.kgroups, dataPoints) // Diri gi call ang performClustering() para pag cluster sa dataPoints
+                                                                          // naay parameters na kgroups - number of clusters
+                                                                          // datapoints - mga data nga gi store gikan sa database
+                                                                          // Human ana kay naay e return si performClustering() gi store sa 'data' variable
+            
+            this.plotClustering(data) // Kuhaon niya tong gi store sa 'data' varialble sa taas unya kani na function ang mu plot sa graph
 
-                });
+           });
         },
 
         filteredDots() {
@@ -651,24 +657,32 @@ export default {
         //For Clustering
         //K - number of clusters
         //datapoints - raw data needed to cluster
+
         performClustering(k, datapoints) {
             let cluster = null
             
-            let clusterCenters = this.getRandomCenters(k, datapoints);
-            cluster = this.clusterDatapoints(k, datapoints)
-            
-            while (true) {
-            this.assignPointsToClusters(clusterCenters, datapoints);
-            
-            const newClusterCenters = this.calculateNewCenters(datapoints);
+            let clusterCenters = this.getRandomCenters(k, datapoints); // Aron mag sugod ang clustering magkuha ug mga center points 
+                                                                       // mag based ang pila kabuok pilion na centerpoints 
+                                                                       // sa pila kabuok ang number of cluster(k)
 
-            if (this.isConverged(clusterCenters, newClusterCenters)) {
-                break;
-            }
+            cluster = this.clusterDatapoints(k, datapoints) // Diri na function kay diri mag cluster sa datapoints naa npud dri tong function sa ML
+                                                            // na ang gamit kay 'Tensorflow.js' for accuracy and prediction sa data
             
-            clusterCenters = newClusterCenters;
+            while (true) { // Stay true ni siya if wla pa nabutngan ug points tana clusters 
+            
+            this.assignPointsToClusters(clusterCenters, datapoints); // Kani na function dri mag sige ug assign ug points sa matag cluster 
+            
+            const newClusterCenters = this.calculateNewCenters(datapoints); // If naa nay na assign na point dri na function mu kuha npud ug 
+                                                                            // bag o na center point
+
+            if (this.isConverged(clusterCenters, newClusterCenters)) { // Kani nga if statement dri gi check if tanan ba nga point na 
+                break;                                                 // assignan na ug cluster mag return ug true if tanan na cluster na
+            }                                                          // mag break ang loop if true
+            
+                clusterCenters = newClusterCenters;
             }
-            return cluster
+
+            return cluster  // Pagkahuman sa loop kay e return na tong clustered data
         },
 
         //assigned random center at the start of clustering
@@ -729,7 +743,7 @@ export default {
                 const averageY = sumY / clusterPoints.length;
                 
                 newClusterCenters.push({ x: averageX, y: averageY });
-            }
+              }
             }
             
             return newClusterCenters;
@@ -820,24 +834,27 @@ export default {
                 converged = true;
             }
         }
-
+            
+            // Tensorflow.js data training, test and prediction
             const features = datapoints.map(item => [parseInt(item.x.toFixed(0)), parseInt(item.y.toFixed(0))]);
             const labels = datapoints.map(item => item.case_no);
             const splitIndex = Math.floor(features.length * 0.8);
-            const trainingFeatures = features.slice(0, splitIndex);
+            const trainingFeaturesX = features.slice(0, splitIndex);
+            const trainingFeaturesY = features.slice(0, splitIndex);
             const trainingLabels = labels.slice(0, splitIndex);
             const predictionFeatures = features.slice(splitIndex);
 
-            const predictionFeaturesTensor = tf.tensor2d(trainingFeatures);
+            const predictionFeaturesXTensor = tf.tensor2d(trainingFeaturesX);
+            const predictionFeaturesYTensor = tf.tensor2d(trainingFeaturesY);
 
             const model = tf.sequential();
-            model.add(tf.layers.dense({ units: 64, activation: 'relu', inputShape: [2] }));
-            model.add(tf.layers.dense({ units: 1 }));
+            model.add(tf.layers.dense({ units: 1, activation: 'relu', inputShape: [2] }));
+            model.add(tf.layers.dense({ units: 1, activation: 'relu', inputShape: [2] }));
 
             model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
             const epochs = 50;
 
-            model.fit(tf.tensor2d(trainingFeatures, predictionFeaturesTensor.shape), {
+            model.fit(tf.tensor2d(trainingFeaturesX, predictionFeaturesXTensor.shape), tf.tensor2d(trainingFeaturesY, predictionFeaturesYTensor.shape), {
             epochs,
             batchSize: 32,
             shuffle: true,
@@ -851,6 +868,7 @@ export default {
             });
 
             const Predictions = model.predict(tf.tensor2d(predictionFeatures));
+            
             const PredictionsArray = Array.from(Predictions.dataSync());
 
             console.log("Clustered Data Points:");

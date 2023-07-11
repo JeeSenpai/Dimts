@@ -13,7 +13,8 @@ export class CaseDecisionService {
      const toSave = this.caseDecisionRepository.create({
           description: data.description,
           caseType: data.caseType,
-          status: data.status
+          status: data.status,
+          inputs: data.inputs
      })
 
      return await this.caseDecisionRepository.save(toSave)
@@ -31,6 +32,18 @@ export class CaseDecisionService {
     .getMany();
   }
 
+  async findCaseDecisionById(data: number) {
+    return await this.caseDecisionRepository.createQueryBuilder('case_decision')
+    .select([
+        'case_decision',
+        'case_type'
+    ])
+    .leftJoin('case_decision.caseType', 'case_type' )
+    .where('case_decision.id =:id', { id: data})
+    .andWhere('case_decision.status = true')
+    .getOne();
+  }
+
   async findAll() {
     return await this.caseDecisionRepository.createQueryBuilder('case_decision')
     .select([
@@ -45,7 +58,8 @@ export class CaseDecisionService {
     return await this.caseDecisionRepository.update( data.decisionId ,{ 
         description: data.description,
         caseType: data.caseType,
-        status: data.status
+        status: data.status,
+        inputs: data.inputs
     })
   }
 
