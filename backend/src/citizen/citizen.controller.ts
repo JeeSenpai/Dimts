@@ -49,8 +49,8 @@ export class CitizenController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.citizenService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.citizenService.findOne(id);
   }
 
 }

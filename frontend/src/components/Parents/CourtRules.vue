@@ -80,7 +80,7 @@
     <div class="pl-2 pr-2 pt-2 pb-2">
             <div class="bg-white shadow-md rounded-lg">
                 <div @click="toggle3 == false ? toggle3 = true : toggle3 = false" class="flex justify-between pt-3 pb-3 pr-3 pl-3 text-lg font-semibold flex-row">
-                    <div>Witnisses</div>
+                    <div>Witnesses</div>
                     <div v-if="toggle3 == false" class="mt-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

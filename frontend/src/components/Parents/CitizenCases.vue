@@ -166,7 +166,7 @@
                 <div v-if="tab.id == 4">
                     <div class="pl-2 pr-2 pt-2 pb-2">
                         <div v-if="proceedingData.length == 0" class="bg-white shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Case Proceedings or Decision Yet</div>
-                        <div v-for="proceeding in proceedingDatas" :key="proceeding" class="bg-white shadow-lg rounded-lg w-full">
+                        <div v-for="proceeding in proceedingData" :key="proceeding" class="bg-white shadow-lg rounded-lg w-full">
                             <div class="space-y-5">
                                 <div class="flex text-left font-semibold space-x-14 ml-4">
                                     <div>
@@ -205,7 +205,7 @@
                                     </div>
                                 </div>
                                 <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
-                                    <div>
+                                    <div class="mb-3">
                                         <p class="font-thin text-sm text-gray-800 text-left">Remarks</p>
                                         <p class="text-sm">{{ proceeding.remarks }}</p>
                                     </div>
@@ -267,7 +267,7 @@
         <div>
             <CitizenRequestMonitorDialog
              ref="CitizenRequestMonitorDialog"
-             v-on:refresh="init()"
+             v-on:refresh="init(); reloadWindow()"
             />
         </div>
     </div>
@@ -308,6 +308,9 @@ export default {
             axios.get(this.$store.state.serverUrl + '/citizen-monitors/findAllMonitorByCitizen/' + this.citizenId, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.citizenMonitorData = res.data
             });
+        },
+        reloadWindow(){
+            window.location.reload()
         },
         showAddDialog(){
             this.$refs.CitizenRequestMonitorDialog.initializeAdd()

@@ -18,6 +18,7 @@ import SystemInfo from '@/components/Parents/SystemInfo.vue'
 import ManageAccounts from '@/components/Parents/ManageAccounts.vue'
 import CourtRules from '@/components/Parents/CourtRules.vue'
 import CitizenCases from '@/components/Parents/CitizenCases.vue'
+import CitizenProfile from '@/components/Parents/CitizenProfile.vue'
 
 const routes = [
 
@@ -144,6 +145,11 @@ const routes = [
         path: '/citizen/cases',
         component: CitizenCases,
         meta: { title: 'Case Monitor'} 
+      },
+      {
+        path: '/citizen/profile',
+        component: CitizenProfile,
+        meta: { title: 'Profile'} 
       },
     ],
   },

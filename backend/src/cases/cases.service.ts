@@ -47,7 +47,7 @@ export class CasesService {
     .leftJoin('case.caseType', 'case_type')
     .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
     .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
-    .orderBy('case.updated_at', 'DESC')
+    .orderBy('case.id', 'DESC')
     .getMany();
   }
 
@@ -61,7 +61,7 @@ export class CasesService {
     .leftJoinAndMapMany('case.courtHearings', CourtHearing, 'court_hearing', 'case.id = court_hearing.case' )
     .leftJoinAndMapOne('court_hearing.hearingType', HearingType , 'hearing_type', 'court_hearing.hearingType = hearing_type.id' )
     .where('case.caseStatus = true')
-    .orderBy('case.updated_at', 'DESC')
+    .orderBy('case.id', 'DESC')
     .getMany();
   }
 
@@ -77,7 +77,7 @@ export class CasesService {
     .leftJoinAndMapMany('case.proceedings', Proceeding, 'proceedings', 'case.id = proceedings.case' )
     .leftJoinAndMapOne('proceedings.caseDecision', CaseDecision, 'case_decision', 'proceedings.caseDecision = case_decision.id')
     .where('case.caseStatus = false')
-    .orderBy('case.updated_at', 'DESC')
+    .orderBy('case.id', 'DESC')
     .getMany();
   }
 
