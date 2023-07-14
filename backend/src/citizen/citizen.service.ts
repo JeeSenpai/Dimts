@@ -95,8 +95,10 @@ export class CitizenService {
     .getMany()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} citizen`;
+  async findOne(id: number) {
+    return await this.citizenRepository.createQueryBuilder('citizen')
+    .where('citizen.id =:id', { id })
+    .getOne()
   }
 
   async updateCitizenByAdmin(data: any) {
