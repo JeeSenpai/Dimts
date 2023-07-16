@@ -108,6 +108,7 @@ import axios from 'axios';
 
                 if(formValid){
                     let formData = {
+                        citizenId: this.$store.state.user.id,
                         fname: this.fname,
                         mname: this.mname,
                         lname: this.lname,
@@ -116,6 +117,11 @@ import axios from 'axios';
                         address: this.address,
                         email: this.email
                     }
+                    axios.post( this.$store.state.serverUrl + '/citizen/updateCitizenByCitizen', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((result)=>{
+                      if(result){
+                        window.location.reload()
+                      }
+                    });
                 }
             },
             logout(){

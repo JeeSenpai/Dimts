@@ -80,7 +80,7 @@
      </div>
      <div v-if="userPosition == 1" class="mb-2">
       <ul class="space-y-2">
-          <div class="text-[#BF40BF] text-xs font-sans text-left ml-5 mb-2 font-semibold">Utilities</div>
+          <div class="text-[#BF40BF] text-xs font-sans text-left ml-5 mb-2 font-semibold">Others</div>
       </ul>
       <ul class="space-y-2.5">   
          <li>
@@ -92,11 +92,11 @@
             </router-link>
          </li>
          <li>
-            <router-link :to=" userType + '/systeminfo'" class="flex items-center p-2 ml-8 -mr-4 text-base font-sans text-gray-800 rounded-lg routerButton">
+            <router-link :to=" userType + '/utilities'" class="flex items-center p-2 ml-8 -mr-4 text-base font-sans text-gray-800 rounded-lg routerButton">
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25V18a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 18V8.25m-18 0V6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v2.25m-18 0h18M5.25 6h.008v.008H5.25V6zM7.5 6h.008v.008H7.5V6zm2.25 0h.008v.008H9.75V6z" />
                </svg>
-               <span class="ml-3 text-xs font-semibold">System Informations</span>
+               <span class="ml-3 text-xs font-semibold">Utilities</span>
             </router-link>
          </li>  
       </ul>

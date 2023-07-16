@@ -74,9 +74,9 @@ const routes = [
         meta: { title: 'Manage Accounts'} 
       },
       {
-        path: '/admin/systeminfo',
+        path: '/admin/utilities',
         component: SystemInfo,
-        meta: { title: 'System Informations'} 
+        meta: { title: 'Utilities'} 
       }
     ]
   },

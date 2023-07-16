@@ -28,6 +28,11 @@ export class CitizenController {
     return this.citizenService.updateCitizenByAdmin(data)
   }
 
+  @Post('updateCitizenByCitizen')
+  updateCitizenByCitizen(@Body() data: any){
+    return this.citizenService.updateCitizenByCitizen(data)
+  }
+
   @Post('citizenSignup')
   @UseInterceptors(
   FilesInterceptor('files',1,{
