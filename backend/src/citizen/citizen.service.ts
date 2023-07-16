@@ -114,4 +114,16 @@ export class CitizenService {
     })
   }
 
+  async updateCitizenByCitizen(data: any) {
+    return await this.citizenRepository.update(data.citizenId, {
+      fname: data.fname,
+      mname: data.mname,
+      lname: data.lname,
+      age: data.age,
+      contact_no: data.contact_no,
+      address: data.address,
+      email: data.email,
+    })
+  }
+
 }
