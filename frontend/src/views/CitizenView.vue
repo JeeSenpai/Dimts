@@ -26,9 +26,13 @@
                             <span class="text-sm">Cases</span>
                         </router-link>
                         <router-link :to="'/citizen/notification'" class="items-center mx-auto p-2 text-base font-sans text-gray-800 rounded-lg routerButton">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 mx-auto">
+                            <div  class="flex">
+                                <div :class="notifData.every(value => value.isClicked === true) == true ? 'invisible': 'visible'" class="inline-flex relative -top-0.5 left-1 w-3.5 h-3.5 bg-[#BF40BF] rounded-full border-2 border-white"></div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 -mt-[12.5px] mx-auto">
                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                             </svg>
+                           
                             <span class="text-sm">Notifs</span>
                         </router-link>
                         <router-link :to="'/citizen/profile'" class="items-center mx-auto p-2 text-base font-sans text-gray-800 rounded-lg routerButton">
@@ -43,7 +47,35 @@
     </div>
 </template>
 <script>
+import axios from 'axios';
 
+export default {
+    watch:{
+      $route (to, from){
+         this.init()
+      }
+    },
+    data(){
+        return {
+            token: localStorage.getItem("dimts_token"),
+            notifData: [],
+            citizenId: this.$store.state.user.id,
+        }
+    },
+    methods: {
+        init(){
+            axios.get(this.$store.state.serverUrl + '/citizen-notification/findNotifByCaseId/' + this.citizenId, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                if(res.data){
+                    this.notifData = res.data
+                }
+            });
+        }
+    },
+    mounted(){
+        this.init()
+    }
+
+}
 </script>
 
 <style scoped>

@@ -4,12 +4,41 @@ import { UpdateCustodyDto } from './dto/update-custody.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Custody } from './entities/custody.entity';
+import { CitizenNotification } from '../citizen_notification/entities/citizen_notification.entity';
+import { CitizenMonitor } from '../citizen_monitors/entities/citizen_monitor.entity';
 
 @Injectable()
 export class CustodiesService {
-  constructor(@InjectRepository(Custody) private readonly custodyRepository: Repository<Custody>){}
+  constructor(@InjectRepository(Custody) private readonly custodyRepository: Repository<Custody>,
+              @InjectRepository(CitizenNotification) private readonly citizenNotifRepository: Repository<CitizenNotification>,
+              @InjectRepository(CitizenMonitor) private readonly citizenMonitorRepository: Repository<CitizenMonitor>,
+              ){}
   
   async create(data: any) {
+
+    const monitor = await this.citizenMonitorRepository.createQueryBuilder('citizen_monitor')
+    .select([
+       'citizen_monitor',
+       'citizen',
+       'case'
+    ])
+    .leftJoin('citizen_monitor.citizen', 'citizen')
+    .leftJoin('citizen_monitor.case', 'case')
+    .where('citizen_monitor.case =:id', { id: data.caseId })
+    .andWhere('citizen_monitor.is_verified = true')
+    .getMany()
+
+    for (let i = 0; i < monitor.length; i++) {
+      const notif = this.citizenNotifRepository.create({
+        case: data.caseId,
+        citizen: monitor[i].citizen.id,
+        description: 'There is a new custodies on your verified monitored case',
+        isViewed: false,
+        isClicked: false
+      })
+      await this.citizenNotifRepository.save(notif)
+    }
+
      const save = this.custodyRepository.create({
          case: data.caseId,
          fname: data.fname,
