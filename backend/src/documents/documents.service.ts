@@ -8,16 +8,44 @@ import { Notification } from '../notifications/entities/notification.entity';
 import { Office } from '../offices/entities/office.entity';
 import { User } from '../users/entities/user.entity';
 import { MailService } from '../mail/mail.service';
+import { CitizenNotification } from '../citizen_notification/entities/citizen_notification.entity';
+import { CitizenMonitor } from '../citizen_monitors/entities/citizen_monitor.entity';
 
 @Injectable()
 export class DocumentsService {
   constructor(@InjectRepository(Document) private readonly documentRepository: Repository<Document>,
               @InjectRepository(Notification) private readonly notifRepository: Repository<Notification>,
               @InjectRepository(User) private readonly userRepository: Repository<User>,
+              @InjectRepository(CitizenNotification) private readonly citizenNotifRepository: Repository<CitizenNotification>,
+              @InjectRepository(CitizenMonitor) private readonly citizenMonitorRepository: Repository<CitizenMonitor>,
               private mailService: MailService){}
 
 
   async create(data: any) {
+
+    const monitor = await this.citizenMonitorRepository.createQueryBuilder('citizen_monitor')
+    .select([
+       'citizen_monitor',
+       'citizen',
+       'case'
+    ])
+    .leftJoin('citizen_monitor.citizen', 'citizen')
+    .leftJoin('citizen_monitor.case', 'case')
+    .where('citizen_monitor.case =:id', { id: data.caseId })
+    .andWhere('citizen_monitor.is_verified = true')
+    .getMany()
+
+    for (let i = 0; i < monitor.length; i++) {
+      const notif = this.citizenNotifRepository.create({
+        case: data.caseId,
+        citizen: monitor[i].citizen.id,
+        description: 'There is a new document served on your verified monitored case',
+        isViewed: false,
+        isClicked: false
+      })
+      await this.citizenNotifRepository.save(notif)
+    }
+
     const save = this.documentRepository.create({
        case: data.caseId,
        documentType: data.documentType,

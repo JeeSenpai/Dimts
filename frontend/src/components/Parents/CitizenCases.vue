@@ -267,7 +267,7 @@
         <div>
             <CitizenRequestMonitorDialog
              ref="CitizenRequestMonitorDialog"
-             v-on:refresh="init(); reloadWindow()"
+             v-on:refresh="init()"
             />
         </div>
     </div>
@@ -309,9 +309,9 @@ export default {
                 this.citizenMonitorData = res.data
             });
         },
-        reloadWindow(){
-            window.location.reload()
-        },
+        // reloadWindow(){
+        //     window.location.reload()
+        // },
         showAddDialog(){
             this.$refs.CitizenRequestMonitorDialog.initializeAdd()
         },

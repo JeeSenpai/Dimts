@@ -7,10 +7,12 @@ import { CourtHearing } from './entities/court-hearing.entity';
 import { CitizenMonitor } from '../citizen_monitors/entities/citizen_monitor.entity';
 import { MailService } from '../mail/mail.service';
 import * as moment from 'moment';
+import { CitizenNotification } from '../citizen_notification/entities/citizen_notification.entity';
 @Injectable()
 export class CourtHearingsService {
   constructor(@InjectRepository(CourtHearing) private readonly courtHearingRepository: Repository<CourtHearing>,
               @InjectRepository(CitizenMonitor) private readonly citizenMonitorRepository: Repository<CitizenMonitor>,
+              @InjectRepository(CitizenNotification) private readonly citizenNotifRepository: Repository<CitizenNotification>,
               private mailService: MailService){}
   
   async create(data: any) {
@@ -41,8 +43,17 @@ export class CourtHearingsService {
             end_time: moment(data.end_time, 'HH:mm:ss').format('hh:mm A') 
         }
       await this.mailService.sendCourtHearing(formData)
+
+      const notif = this.citizenNotifRepository.create({
+        case: data.case_id,
+        citizen: monitor[i].citizen.id,
+        description: 'There is a new court hearing schedule on your verified monitored case',
+        isViewed: false,
+        isClicked: false
+      })
+      await this.citizenNotifRepository.save(notif)
     }
-    
+
     const save = this.courtHearingRepository.create({
         case: data.case_id,
         hearingType: data.hearing_type.id,

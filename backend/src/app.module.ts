@@ -48,6 +48,8 @@ import { Citizen } from './citizen/entities/citizen.entity';
 import { CitizenMonitor } from './citizen_monitors/entities/citizen_monitor.entity';
 import { SystemLogsModule } from './system-logs/system-logs.module';
 import { SystemLog } from './system-logs/entities/system-log.entity';
+import { CitizenNotificationModule } from './citizen_notification/citizen_notification.module';
+import { CitizenNotification } from './citizen_notification/entities/citizen_notification.entity';
 
 @Module({
   imports: [UsersModule,ConfigModule.forRoot(), TypeOrmModule.forRoot({
@@ -57,10 +59,10 @@ import { SystemLog } from './system-logs/entities/system-log.entity';
     username: process.env.DATABASE_USERNAME,
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
-    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist, Citizen, CitizenMonitor, SystemLog],
+    entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist, Citizen, CitizenMonitor, SystemLog, CitizenNotification],
     synchronize: true,
   }),
-   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule, CitizenModule, CitizenMonitorsModule, SystemLogsModule,
+   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule, CitizenModule, CitizenMonitorsModule, SystemLogsModule, CitizenNotificationModule,
 ],
   controllers: [AppController],
   providers: [AppService],
