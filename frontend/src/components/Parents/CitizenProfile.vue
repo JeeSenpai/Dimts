@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div v-show="showLogoutDialog" tabindex="-1" aria-hidden="false" class="checkFade animated  modal overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+        <div v-show="showLogoutDialog" tabindex="-1" aria-hidden="false" class="checkFade animated  modal overflow-y-auto overflow-x-hidden fixed top-0 right-0 bottom-0 left-0 z-50 w-full md:inset-0 h-screen">
                 <div class="relative p-4 w-full max-w-md mx-auto top-48 h-full md:h-auto">
                 <div class="relative bg-white rounded-lg shadow">
                     <div class="pb-6 text-center">

@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCitizenMonitorDto } from './dto/create-citizen_monitor.dto';
 import { UpdateCitizenMonitorDto } from './dto/update-citizen_monitor.dto';
+import { Notification } from '../notifications/entities/notification.entity';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { CitizenMonitor } from './entities/citizen_monitor.entity';
 import { Repository } from 'typeorm';
@@ -9,7 +11,9 @@ import { Case } from '../cases/entities/case.entity';
 @Injectable()
 export class CitizenMonitorsService {
   constructor(@InjectRepository(CitizenMonitor) private readonly citizenMonitorRepository: Repository<CitizenMonitor>,
-              @InjectRepository(Case) private readonly caseRepository: Repository<Case>){}
+              @InjectRepository(Case) private readonly caseRepository: Repository<Case>,
+              @InjectRepository(Notification) private readonly notifRepository: Repository<Notification>
+              ){}
 
   async create(citizenId: number, case_no: string, relationship: string) {
      const cases = await this.caseRepository.createQueryBuilder('case')
@@ -40,7 +44,13 @@ export class CitizenMonitorsService {
          is_verified: data.is_verified
      })
 
-     return await this.citizenMonitorRepository.save(save)
+     const monitor = await this.citizenMonitorRepository.save(save)
+      const saveNotif = this.notifRepository.create({
+         notif_type: 3,
+         monitor: monitor.id,
+         is_clicked: false,
+      })
+     return await this.notifRepository.save(saveNotif)
   }
 
   async updateCitizenMonitorByAdmin(data: any){

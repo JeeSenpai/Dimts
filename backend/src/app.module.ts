@@ -50,6 +50,7 @@ import { SystemLogsModule } from './system-logs/system-logs.module';
 import { SystemLog } from './system-logs/entities/system-log.entity';
 import { CitizenNotificationModule } from './citizen_notification/citizen_notification.module';
 import { CitizenNotification } from './citizen_notification/entities/citizen_notification.entity';
+import { PdfGeneratorModule } from './pdf-generator/pdf-generator.module';
 
 @Module({
   imports: [UsersModule,ConfigModule.forRoot(), TypeOrmModule.forRoot({
@@ -62,7 +63,7 @@ import { CitizenNotification } from './citizen_notification/entities/citizen_not
     entities: [User, UserDetails, UserType, Case, CaseType, CaseDecision, CaseStatus, RaffledCourt, Judge, DocumentType, CourtHearing, HearingType, Proceeding, Document, Office, Custody, Notification, CaseTag, CaseChecklist, Citizen, CitizenMonitor, SystemLog, CitizenNotification],
     synchronize: true,
   }),
-   AuthModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule, CitizenModule, CitizenMonitorsModule, SystemLogsModule, CitizenNotificationModule,
+   AuthModule, PdfGeneratorModule, MailModule, UserTypeModule, CasesModule, CaseTypeModule, CaseStatusModule, RaffledCourtModule, JudgesModule, CaseDecisionModule, DocumentTypeModule, CourtHearingsModule, HearingTypesModule, ProceedingsModule, DocumentsModule, OfficesModule, CustodiesModule, NotificationsModule, CaseTagsModule, CaseChecklistModule, CitizenModule, CitizenMonitorsModule, SystemLogsModule, CitizenNotificationModule,
 ],
   controllers: [AppController],
   providers: [AppService],

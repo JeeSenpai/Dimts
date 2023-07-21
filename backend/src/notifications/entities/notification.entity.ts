@@ -1,3 +1,4 @@
+import { CitizenMonitor } from "../../citizen_monitors/entities/citizen_monitor.entity";
 import { Document } from "../../documents/entities/document.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -9,6 +10,10 @@ export class Notification {
     @ManyToOne(type => Document) 
     @JoinColumn({referencedColumnName: "id"}) 
     document: number;
+
+    @ManyToOne(type => CitizenMonitor) 
+    @JoinColumn({referencedColumnName: "id"}) 
+    monitor: number;
 
     @Column({
         nullable: true
