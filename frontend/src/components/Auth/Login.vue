@@ -1,7 +1,7 @@
 <template>
 <div class="flex">
     <!-- Form div -->
-  <div class="min-h-full w-[500px] m-auto flex flex-col justify-center md:mt-16 py-10 sm:px-6">
+  <div class="min-h-full w-[500px] m-auto flex flex-col justify-center md:mt-6 py-10 sm:px-6">
     <div class="mx-auto w-full max-w-sm flex flex-col">
       <div class="bg-white py-8 shadow rounded-lg px-10">
             <label class="mb-1 flex text-left"><p class="font-sans text-lg font-bold mr-2">DIMTS</p><p class="font-sans text-lg">| Welcome Back !</p></label>
@@ -36,9 +36,13 @@
               <a href="#" class="font-medium text-xs text-blue-600 hover:text-blue-500"> Forgot your password? </a>
             </div>
           </div>
+          <div>
+            <label class="block text-xs text-gray-900 -mt-2"> For Citizen Account ? </label>
+            <img src="./../../assets/App.png" class="ml-6 mb-2">
+          </div>
         </div>
         <div>
-          <div class="mt-28">
+          <div>
             <button @click="userLogin()" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white button-submit focus:outline-none focus:ring-2 focus:ring-offset-2 ">Sign in</button>
           </div>
         </div>

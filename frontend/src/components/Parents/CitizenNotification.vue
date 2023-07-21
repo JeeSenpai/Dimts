@@ -4,11 +4,12 @@
             <div v-if="notifData.length == 0" class="bg-white shadow-lg rounded-lg w-full mb-3.5 p-2 text-sm font-semibold"> No Notifications</div>
             <div v-for="notif in notifData" :key="document" class="bg-white shadow-lg rounded-lg w-full">
                 <div class="space-y-5">
-                    <button @click="isClicked(notif)" :class="notif.isClicked == false ? 'bg-purple-300 rounded-lg': 'bg-slate-100 rounded-lg' " class="flex text-left p-4">
+                    <button @click="isClicked(notif)" :class="notif.isClicked == false ? 'bg-purple-300 rounded-lg': 'bg-slate-100 rounded-lg' " class="flex text-left p-4 mt-2">
                     <div>
                         <p class="font-semibold text-sm">{{ notif.description }}</p>
                         <p class="mt-2 text-sm">{{ notif.case.case_no }} - {{ notif.case.case_title}}</p>
-                        <p class="mt-4 text-xs">Click to mark as read</p>
+                        <p v-if="notif.isClicked == false" class="mt-4 text-xs">Click to mark as read</p>
+                        <p v-if="notif.isClicked == true" class="mt-4 text-xs">Read ✓</p>
                     </div>
                     </button>
                 </div>
