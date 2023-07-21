@@ -139,7 +139,7 @@ export default {
             comply: 1,
             tabs: [
                 { id: 1, description: 'Admin & Staff Accounts'},
-                { id: 2, description: 'Citizen Accounts' },
+                { id: 2, description: 'Citizen Accounts'},
             ],
             tab: { id: 1, description: 'Admin & Staff Accounts' }
         }
@@ -222,6 +222,9 @@ export default {
     },
     mounted(){
         this.init()
+        if(this.$route.query.notif_type == 3){
+            this.changeTab({ id: 2, description: 'Citizen Accounts'})
+        }
     }
 }
 

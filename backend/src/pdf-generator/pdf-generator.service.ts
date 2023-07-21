@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import puppeteer from 'puppeteer';
 const hbs = require('handlebars');
 const path = require('path');
-const puppeteer = require('puppeteer');
-const fs = require('fs-extra')
-const moment = require('moment');
+const fs = require('fs-extra');
+import moment from 'moment';
 
 hbs.registerHelper("dateFormat", function (value) {
   if(value == 'N/A'){
@@ -18,83 +18,50 @@ hbs.registerHelper("inc", function(value, options)
     return parseInt(value) + 1;
 });
 
+hbs.registerHelper("mname", function(value, options)
+{
+    return value[0];
+});
+
 @Injectable()
 export class PdfGeneratorService {
 
-    async compile(templatename, data) {
+    async compile(templatename: any, data: any) {
         const filepath = path.join(process.cwd(), 'src/pdf-generator/template', `${templatename}.hbs`);
+        //const filepath = path.join(process.cwd(), 'dist/pdf-generator/template', `${templatename}.hbs`);
         const html = await fs.readFile(filepath, 'utf-8');
-        return hbs.compile(html)(data);
+        const compile = hbs.compile(html)(data);
+        return compile
     }
 
-    async printReport(data: any){
+    async printReport(data: any): Promise<Buffer>{
 
         const datas = [{
-            institute: data[0].institute,
-            report: data[0].generatedData
+            institute: 'qwrwqr',
         }]
         
         try {
-            
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-      
-            const content = await this.compile("pdf-file", datas)
-            // console.log(data)
-            await page.setContent(content);
-            // await page.emulateMedia('screen');
-            const buffer = await page.pdf({ 
-              format: 'A4',
-              margin: {
-                top: '0.39in',
-                left: '0.39in',
-                bottom: '0.38in',
-                right: '0.38in',
-              },
-              printBackground: true
-            });
-            await browser.close()
-            return buffer;
-      
-          } catch (e) {
-            console.log(e)
-          }
-    }
-
-    async printConsolidatedReport(data: any){
-
-      const datas = [{
-          report: data,
-          institute: data[0].instituteReport,
-          size: data[0].instituteReport.length * 2
-      }]
-
-      try {
-          
-          const browser = await puppeteer.launch();
+          const browser = await puppeteer.launch({ headless: true });
           const page = await browser.newPage();
-    
-          const content = await this.compile("pdf-file-consolidated", datas)
-          // console.log(data)
+          const content = await this.compile("pdf-file", data); // Use 'datas' instead of 'data'
           await page.setContent(content);
-          // await page.emulateMedia('screen');
-          const buffer = await page.pdf({ 
-            format: 'Legal',
-            landscape: true,
+          const buffer = await page.pdf({
+            format: 'A4',
             margin: {
-              top: '0.05in',
-              left: '0.25in',
-              bottom: '0.10in',
-              right: '0.25in',
+              top: '0.39in',
+              left: '0.39in',
+              bottom: '0.38in',
+              right: '0.38in',
             },
-            printBackground: true
+            printBackground: true,
           });
-          await browser.close()
+          await browser.close();
           return buffer;
-    
         } catch (e) {
-          console.log(e)
+          console.log(e);
         }
-  }
+    }
     
 }
+
+

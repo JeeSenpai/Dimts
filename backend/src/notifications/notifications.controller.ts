@@ -17,6 +17,11 @@ export class NotificationsController {
     return this.notificationsService.findAll();
   }
 
+  @Get('findAllNotficationForAdmin')
+  findAllNotficationForAdmin(){
+    return this.notificationsService.findAllNotficationForAdmin()
+  }
+  
   @Get('findAllNotficationForOffice/:id')
   findAllNotficationForOffice(@Param('id') officeId: number){
     return this.notificationsService.findAllNotficationForOffice(officeId)

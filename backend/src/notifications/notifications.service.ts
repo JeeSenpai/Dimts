@@ -16,6 +16,22 @@ export class NotificationsService {
     return 'This action adds a new notification';
   }
 
+  async findAllNotficationForAdmin(){
+    return await this.notifRepository.createQueryBuilder('notification')
+    .select([
+        'notification',
+        'citizen_monitor',
+        'citizen',
+        'case'
+    ])
+    .leftJoin('notification.monitor', 'citizen_monitor')
+    .leftJoin('citizen_monitor.citizen', 'citizen')
+    .leftJoin('citizen_monitor.case', 'case')
+    .where('notification.notif_type = 3')
+    .orderBy('notification.created_at', 'DESC')
+    .getMany()
+  }
+
   async findAllNotficationForOffice(officeId: number){
       return await this.notifRepository.createQueryBuilder('notification')
       .select([

@@ -24,11 +24,11 @@
                 </div>
             </div>
             <div>
-                <!-- <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
+                <button @click="showDialog = true" class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5 mr-1 mb-0.5">
-                     <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-                    </svg>Filter
-                </button> -->
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+                    </svg>CSV Report
+                </button>
                 <button v-if="comply == 1" @click="showAddDialog()" class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCase">
                     <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 mr-1 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
@@ -124,6 +124,21 @@
             v-on:refresh="init()"
             />
         </div>
+        <div v-show="showDialog" tabindex="-1" aria-hidden="false" class="checkFade animated modal overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+                <div class="relative p-4 w-full max-w-md mx-auto top-48 h-full md:h-auto">
+                <div class="relative bg-white rounded-lg shadow">
+                    <div class="pb-6 text-center">
+                            <div class="p-6 mb-2 font-semibold">Do you really want to download the csv report ?</div>
+                        <div>
+                            <button @click="showDialog = false" type="button" class="inline-block px-6 py-2.5 bg-white text-gray-500 font-semibold text-xs leading-tight uppercase rounded hover:shadow-lg hover:text-white hover:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out">Cancel</button>
+                            <download-csv :data="json_data" name="court_hearing_report.csv" @click="showDialog = false" type="button" class="inline-block px-6 py-2.5 bg-white text-[#BF40BF] font-semibold text-xs leading-tight uppercase rounded hover:bg-[#BF40BF] hover:text-white hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out ml-1"> 
+                            Confirm 
+                            </download-csv>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -140,9 +155,11 @@ export default {
         return{
             token: localStorage.getItem("dimts_token"),
             searchText: null,
+            showDialog: false,
             action: null,
             selectedCaseType: 1,
             data: [],
+            json_data: [],
             savedData: [],
             page: 1,
             perPage: 10,
@@ -168,6 +185,7 @@ export default {
         init(){
             axios.get(this.$store.state.serverUrl + '/court-hearings', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.data = res.data
+                this.json_data = []
                 if(this.comply == 1){
                     this.data = this.data.filter(
                     (data) => data.case.caseStatus == 1 && data.hearing_schedule > moment(new Date()).format('YYYY-MM-DD')
@@ -179,6 +197,20 @@ export default {
                             this.pages.push(index);
                     }
                     this.savedData = this.data
+                    for (let i = 0; i < this.data.length; i++) {
+                            var hearingdata = {
+                            Case_No: this.data[i].case.case_no,
+                            Case_Title: this.data[i].case.case_title,
+                            Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                            Start_Time: this.formatTime(this.data[i].start_time),
+                            End_Time: this.formatTime(this.data[i].end_time),
+                            Raffled_Court: this.data[i].raffledCourt.description,
+                            JudgeAssigned: this.data[i].judgeAssigned.name,
+                            Status: this.returnStatus(this.data[i].status),
+                            Remarks: this.data[i].remarks
+                        };
+                        this.json_data.push(hearingdata);
+                    }
                     this.action = 1
                 }
                 else if (this.comply == 2){
@@ -192,6 +224,20 @@ export default {
                             this.pages.push(index);
                     }
                     this.savedData = this.data
+                    for (let i = 0; i < this.data.length; i++) {
+                            var hearingdata = {
+                            Case_No: this.data[i].case.case_no,
+                            Case_Title: this.data[i].case.case_title,
+                            Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                            Start_Time: this.formatTime(this.data[i].start_time),
+                            End_Time: this.formatTime(this.data[i].end_time),
+                            Raffled_Court: this.data[i].raffledCourt.description,
+                            JudgeAssigned: this.data[i].judgeAssigned.name,
+                            Status: this.returnStatus(this.data[i].status),
+                            Remarks: this.data[i].remarks
+                        };
+                        this.json_data.push(hearingdata);
+                    }
                     this.action = 2
                 }
                 else if (this.comply == 3){
@@ -205,6 +251,20 @@ export default {
                             this.pages.push(index);
                     }
                     this.savedData = this.data
+                    for (let i = 0; i < this.data.length; i++) {
+                            var hearingdata = {
+                            Case_No: this.data[i].case.case_no,
+                            Case_Title: this.data[i].case.case_title,
+                            Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                            Start_Time: this.formatTime(this.data[i].start_time),
+                            End_Time: this.formatTime(this.data[i].end_time),
+                            Raffled_Court: this.data[i].raffledCourt.description,
+                            JudgeAssigned: this.data[i].judgeAssigned.name,
+                            Status: this.returnStatus(this.data[i].status),
+                            Remarks: this.data[i].remarks
+                        };
+                        this.json_data.push(hearingdata);
+                    }
                     this.action = 3
                 }
                 else if (this.comply == 4){
@@ -218,6 +278,20 @@ export default {
                             this.pages.push(index);
                     }
                     this.savedData = this.data
+                    for (let i = 0; i < this.data.length; i++) {
+                            var hearingdata = {
+                            Case_No: this.data[i].case.case_no,
+                            Case_Title: this.data[i].case.case_title,
+                            Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                            Start_Time: this.formatTime(this.data[i].start_time),
+                            End_Time: this.formatTime(this.data[i].end_time),
+                            Raffled_Court: this.data[i].raffledCourt.description,
+                            JudgeAssigned: this.data[i].judgeAssigned.name,
+                            Status: this.returnStatus(this.data[i].status),
+                            Remarks: this.data[i].remarks
+                        };
+                        this.json_data.push(hearingdata);
+                    }
                     this.action = 4
                 }
             });
@@ -232,9 +306,25 @@ export default {
                 );
                 this.page = 1
                 this.pages = []
+                this.json_data = []
                 let numberOfPages = Math.ceil(this.data.length / this.perPage);
                 for (let index = 1; index <= numberOfPages; index++) {
                         this.pages.push(index);
+                }
+
+                for (let i = 0; i < this.data.length; i++) {
+                        var hearingdata = {
+                        Case_No: this.data[i].case.case_no,
+                        Case_Title: this.data[i].case.case_title,
+                        Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                        Start_Time: this.formatTime(this.data[i].start_time),
+                        End_Time: this.formatTime(this.data[i].end_time),
+                        Raffled_Court: this.data[i].raffledCourt.description,
+                        JudgeAssigned: this.data[i].judgeAssigned.name,
+                        Status: this.returnStatus(this.data[i].status),
+                        Remarks: this.data[i].remarks
+                    };
+                    this.json_data.push(hearingdata);
                 }
             }
             else if (this.selectedCaseType == 3){
@@ -243,9 +333,25 @@ export default {
                 );
                 this.page = 1
                 this.pages = []
+                this.json_data = []
                 let numberOfPages = Math.ceil(this.data.length / this.perPage);
                 for (let index = 1; index <= numberOfPages; index++) {
                         this.pages.push(index);
+                }
+
+                for (let i = 0; i < this.data.length; i++) {
+                        var hearingdata = {
+                        Case_No: this.data[i].case.case_no,
+                        Case_Title: this.data[i].case.case_title,
+                        Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                        Start_Time: this.formatTime(this.data[i].start_time),
+                        End_Time: this.formatTime(this.data[i].end_time),
+                        Raffled_Court: this.data[i].raffledCourt.description,
+                        JudgeAssigned: this.data[i].judgeAssigned.name,
+                        Status: this.returnStatus(this.data[i].status),
+                        Remarks: this.data[i].remarks
+                    };
+                    this.json_data.push(hearingdata);
                 }
             }
             else if (this.selectedCaseType == 4){
@@ -254,10 +360,26 @@ export default {
                 );
                 this.page = 1
                 this.pages = []
+                this.json_data = []
                 let numberOfPages = Math.ceil(this.data.length / this.perPage);
                 for (let index = 1; index <= numberOfPages; index++) {
                         this.pages.push(index);
                 }
+                
+                for (let i = 0; i < this.data.length; i++) {
+                            var hearingdata = {
+                            Case_No: this.data[i].case.case_no,
+                            Case_Title: this.data[i].case.case_title,
+                            Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                            Start_Time: this.formatTime(this.data[i].start_time),
+                            End_Time: this.formatTime(this.data[i].end_time),
+                            Raffled_Court: this.data[i].raffledCourt.description,
+                            JudgeAssigned: this.data[i].judgeAssigned.name,
+                            Status: this.returnStatus(this.data[i].status),
+                            Remarks: this.data[i].remarks
+                        };
+                        this.json_data.push(hearingdata);
+                    }
             }
         },
         handleSearching() {
@@ -288,10 +410,25 @@ export default {
             );
             this.page = 1
             this.pages = []
+            this.json_data = []
             let numberOfPages = Math.ceil(this.data.length / this.perPage);
                             for (let index = 1; index <= numberOfPages; index++) {
                                     this.pages.push(index);
                             }
+            for (let i = 0; i < this.data.length; i++) {
+                    var hearingdata = {
+                    Case_No: this.data[i].case.case_no,
+                    Case_Title: this.data[i].case.case_title,
+                    Hearing_Schedule: this.formatDate(this.data[i].hearing_schedule),
+                    Start_Time: this.formatTime(this.data[i].start_time),
+                    End_Time: this.formatTime(this.data[i].end_time),
+                    Raffled_Court: this.data[i].raffledCourt.description,
+                    JudgeAssigned: this.data[i].judgeAssigned.name,
+                    Status: this.returnStatus(this.data[i].status),
+                    Remarks: this.data[i].remarks
+                };
+                this.json_data.push(hearingdata);
+            }
           }
         },
         showAddDialog(){
@@ -316,6 +453,19 @@ export default {
             const options = { year: 'numeric', month: 'long', day: 'numeric' }
             return new Date(date).toLocaleDateString('en', options)
         },
+        returnStatus(status){
+            switch (status) {
+                case 0:
+                return 'Pending'
+                case 1:
+                return 'Cancelled'
+                case 2:
+                return 'Completed'
+            }
+        },
+        formatTime(time){
+            return moment(time,'h:mm a').format('h:mm a');
+        }
     },
     mounted(){
         this.init()
@@ -323,3 +473,9 @@ export default {
 }
 
 </script>
+
+<style scoped>
+    .modal{
+        background-color: rgba(0,0,0,0.5);
+    }
+</style>
