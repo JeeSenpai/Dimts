@@ -118,16 +118,17 @@
                       <div class="inline-flex relative -top-2 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></div>
                   </div>
             </button>
-            <div id="dropdownNotification" class="hidden z-20 w-full rounded-b-md max-w-sm bg-white divide-y divide-gray-100 shadow" aria-labelledby="dropdownNotificationButton">
+            <div id="dropdownNotification" class="hidden z-20 w-full rounded-b-md max-w-sm bg-white divide-y divide-gray-100 shadow overflow-y-auto" aria-labelledby="dropdownNotificationButton">
                   <div class="block py-2 px-4 font-medium text-center text-gray-700 bg-gray-50">
                         Notifications
                   </div>
                   <div v-if="notificationData.length == 0" class="text-center text-sm p-2">No Notification Found</div>
-                  <div v-for="notif in latestData(notificationData)" :key="notif" class="divide-y-2 divide-gray-100">
+                  <div v-if="notificationData.length > 0" class="overflow-y-auto max-h-[350px]">
+                  <div v-for="notif in latestData(notificationData)" :key="notif" class="divide-y-2 divide-gray-100 max">
                      <button v-if="notif.notif_type == 1 && notif.document.office.id == $store.state.user.userDetails.office.id" type="button" @click="clickedNotif(notif)" class="flex py-3 px-4 text-left" :class="notif.is_clicked == false ? 'bg-purple-100 hover:bg-purple-200': 'hover:bg-purple-200'">
                         <div class="flex-shrink-0">
                         <img class="w-11 h-11 rounded-full" src="../assets/Profile.png">
-                           <div class="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-purple-500 rounded-full border border-white">
+                           <div class="flex relative justify-center items-center ml-6 -mt-5 w-5 h-5 bg-purple-500 rounded-full border border-white">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-3 h-3">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                            </svg>
@@ -141,7 +142,7 @@
                      <button v-if="notif.notif_type == 2 && notif.document.fromOffice.id == $store.state.user.userDetails.office.id" type="button" @click="clickedNotif(notif)" class="flex py-3 px-4 text-left" :class="notif.is_clicked == false ? 'bg-purple-100 hover:bg-purple-200': 'hover:bg-purple-200'">
                         <div class="flex-shrink-0">
                         <img class="w-11 h-11 rounded-full" src="../assets/Profile.png">
-                           <div class="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-green-400 rounded-full border border-white">
+                           <div class="flex relative justify-center items-center ml-6 -mt-5 w-5 h-5 bg-green-400 rounded-full border border-white">
                               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-3 h-3">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                               </svg>
@@ -167,6 +168,7 @@
                         </div>
                      </button>
                   </div>
+               </div>
             <div class="block py-2 text-sm font-medium text-center rounded-b-lg text-gray-900 bg-gray-50 hover:bg-gray-100">
                <div class="inline-flex items-center ">
                   Thats  all
