@@ -153,11 +153,11 @@ export default {
             });
         },
         initializeView(data){
-            let parseChecklist = JSON.parse(data.case_tag)
             this.checklistData = []
             
+            let parseChecklist = JSON.parse(data.case_tag)
+
             if( parseChecklist.length > 0){
-                
                 for (let i = 0; i < parseChecklist.length; i++) {
                     axios.get(this.$store.state.serverUrl + '/case-checklist/findAllActiveChecklistByCaseTag/' + parseChecklist[i], {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                         let obj = {
@@ -166,8 +166,16 @@ export default {
                         }
                         obj.label = res.data[0].caseTag.isForLife == true ? res.data[0].caseTag.description + ' (Life Imprisonment)'  : res.data[0].caseTag.description,
                         obj.checklist = res.data
-                        this.checklistData.push(obj)
-                        
+                        if(this.checklistData.length == 0){
+                            this.checklistData.push(obj)
+                        }
+                        else{
+                            for (let i = 0; i < this.checklistData.length; i++) {
+                                if(JSON.stringify(this.checklistData[i]) != JSON.stringify(obj)){
+                                    this.checklistData.push(obj)
+                                }
+                            }
+                        }
                     });
                 }
             }

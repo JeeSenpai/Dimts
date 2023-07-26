@@ -425,7 +425,6 @@ export default {
                     });
                     this.showTransferDialog = false,
                     this.initView(this.caseId)
-                    this.init()
                 }
             });
         },

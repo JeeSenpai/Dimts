@@ -152,7 +152,7 @@
                            <div class="text-gray-500 text-sm mb-1.5"><span class="font-semibold text-gray-900">{{ notif.document.office.description }} Office</span> acknowledge your sended documents with <span class="font-medium text-black"> Case No. {{ notif.document.case.case_no }} - {{ notif.document.case.case_title }}</span></div>
                            <div class="text-xs text-blue-600">{{ formatDateTime(notif.datecreated) }}</div>
                         </div>
-                     </button>
+                     </button>                                                                                                                                                                                                                                                                                                                                                                                       
                      <button v-if="notif.notif_type == 3" @click="clickedNotifCitizen(notif)" type="button" class="flex py-3 px-4 text-left" :class="notif.is_clicked == false ? 'bg-purple-100 hover:bg-purple-200': 'hover:bg-purple-200'">
                         <div class="flex-shrink-0">
                         <img class="w-11 h-11 rounded-full" src="../assets/Profile.png">
@@ -262,7 +262,6 @@ export default {
                      axios.get(this.$store.state.serverUrl + '/notifications/findAllNotficationForAdmin/', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                            for (let i = 0; i< res.data.length; i++) {
                               this.notificationData.push(res.data[i])
-                              console.log(this.notificationData)
                            }
                      });
                   }
@@ -298,7 +297,7 @@ export default {
       },
       clickedNotifCitizen(data){
          axios.patch(this.$store.state.serverUrl + '/notifications/updateIsClicked/' + data.id, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
-            const routeData = this.$router.resolve({path: this.userType +'/account', query: { notif_type: data.notif_type } });
+            const routeData = this.$router.resolve({path: this.userType +'/account', query: { notif_type: data.notif_type, user: data.monitor.citizen.lname } });
             window.open(routeData.href, '_self');
          });
       }

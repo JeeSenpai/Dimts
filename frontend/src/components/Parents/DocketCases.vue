@@ -1,8 +1,16 @@
 <template>
     <div class="checkFade animated">
         <div class="flex flex-row justify-between">
-            <div>
-                <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+            <div class="flex">
+                <div>
+                    <input v-model="searchText" @keyup="handleSearching()" id="searchText" type="text" class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 px-2 py-2.5 w-80" placeholder="Search">
+                </div>
+                <div>
+                    <select v-model="selectedDecisionType" @change="selectCaseDecision()"  class="text-xs bg-gray-100 border border-gray-500 focus:border-[#BF40BF] focus:ring-[#BF40BF] rounded-lg mb-2 ml-2 px-2 py-2.5 w-[13rem]">
+                        <option value="">All Case Decision</option>
+                        <option v-for="data in decisionTypeData" :key="data" :value="data.id">{{ data.description }} - {{ data.caseType.description }}</option>
+                    </select> 
+                </div>
             </div>
             <div>
                 <!-- <button class="mr-3 rounded-xl px-2 mb-2 py-1.5 text-sm border-2 font-semibold bg-transparent border-[#BF40BF] text-[#BF40BF]" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdropUploadCSV">
@@ -153,6 +161,7 @@ export default {
         return{
             token: localStorage.getItem("dimts_token"),
             searchText: null,
+            selectedDecisionType: "",
             showReopenDialog: false,
             reopenCaseId: null,
             data: [],
@@ -161,6 +170,8 @@ export default {
             perPage: 10,
             pages: [],
             changePerPage: 10,
+
+            decisionTypeData: []
         }
     },
     computed: {
@@ -170,6 +181,9 @@ export default {
     },
     methods: {
         init(){
+            axios.get(this.$store.state.serverUrl + '/case-decision', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                this.decisionTypeData = res.data 
+            });
             axios.get(this.$store.state.serverUrl + '/cases/findAllDocket', {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.data = res.data
                 this.savedData = res.data
@@ -200,6 +214,23 @@ export default {
                 this.formatDate(data.date_recieved)
                 .toLowerCase()
                 .indexOf(this.searchText.toLowerCase()) !== -1
+            );
+            this.page = 1
+            this.pages = []
+            let numberOfPages = Math.ceil(this.data.length / this.perPage);
+                            for (let index = 1; index <= numberOfPages; index++) {
+                                    this.pages.push(index);
+                            }
+          }
+        },
+        selectCaseDecision() {
+        if (this.selectedDecisionType == "" || !this.selectedDecisionType) {
+            this.init();
+        }
+        else {
+            this.data = this.savedData.filter(
+            (data) =>
+                data.proceedings[data.reopenCount].caseDecision.id == this.selectedDecisionType
             );
             this.page = 1
             this.pages = []

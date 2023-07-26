@@ -138,8 +138,8 @@ export default {
 
                     axios.post(process.env.VUE_APP_BASE_URL + '/system-logs', formData ).then((res)=>{
                         if(res){
+                          
                           localStorage.setItem('dimts_token', result.data.dimts_token);
-
                           this.$store.commit('UPDATE_USER', result.data.user)
                           this.$store.commit('UPDATE_SERVERURL', process.env.VUE_APP_BASE_URL)
 
