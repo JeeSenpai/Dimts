@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Request, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Request, Delete,Response, UseInterceptors, UploadedFiles, StreamableFile } from '@nestjs/common';
 import { CitizenService } from './citizen.service';
 import { CreateCitizenDto } from './dto/create-citizen.dto';
 import { UpdateCitizenDto } from './dto/update-citizen.dto';
@@ -6,6 +6,8 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { FilesHelper } from 'src/shared/helper';
 import { ApiTags } from '@nestjs/swagger';
+import { createReadStream } from 'fs-extra';
+import { join } from 'path';
 
 @ApiTags('Citizen')
 @Controller('citizen')
@@ -56,6 +58,20 @@ export class CitizenController {
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.citizenService.findOne(id);
+  }
+
+  @Get('stream-image/:imageName')
+  getImage(@Param('imageName') imageName: string, @Response({passthrough: true}) res): StreamableFile{
+
+   //  const file = createReadStream(join(process.cwd(), '../dist/compliances/' + imageName));
+    const file = createReadStream(join(process.cwd(), './images/' + imageName));
+    res.set({
+       'Content-Type' : 'image/webp',
+       'Content-Disposition': 'inline: filename=test.pdf'
+    })
+    file.on('error', (err) => {console.log(err)});
+
+    return new StreamableFile(file);
   }
 
 }

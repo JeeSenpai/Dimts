@@ -52,16 +52,24 @@
                                     <p class="font-thin text-xs text-gray-600 text-left">Address</p>
                                     <p class="text-sm text-left break-word">{{ address }}</p>
                                 </div>
-                                
                             </div>
                         </div>
-                        <!-- <div>
-                            <button @click="showAddDialog()" class="mr-4 rounded-xl px-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button">
+                        <div>
+                            <!-- <button @click="showAddDialog()" class="mr-4 rounded-xl px-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 mr-1 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                                 </svg> Add Citizen Monitor
-                            </button>
-                        </div> -->
+                            </button> -->
+                            <a :href="this.$store.state.serverUrl + '/citizen/stream-image/' + valid_id" target="_blank" class="ml-2 float-right" type="button">
+                                <button class="mr-4 rounded-xl px-2 py-1.5 text-sm border-[1.5px] font-semibold bg-[#BF40BF] border-[#BF40BF] text-white" type="button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 mr-1 mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                    </svg> View Attached Valid ID
+                                </button>
+                            </a>
+                            
+                        </div>
+                        
                     </div>
                     <div class="mt-4 mb-4 ml-4 max-w-[80rem]">
                         <div class="relative overflow-x-auto shadow-md -ml-1 rounded-lg">
@@ -220,6 +228,7 @@ export default {
             address: null,
             email: null,
             username: null,
+            valid_id: null,
 
             //query datas
             caseData: [],
@@ -249,6 +258,8 @@ export default {
             this.address = data.address
             this.email = data.email
             this.username = data.username
+            let validId = JSON.parse(data.valid_id)
+            this.valid_id = validId[0]
             this.updateTable()
         },
         updateTable(){

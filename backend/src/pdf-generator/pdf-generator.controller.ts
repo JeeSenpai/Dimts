@@ -22,8 +22,6 @@ export class PdfGeneratorController {
       'Expires': 0,
     })
 
-    console.log(buffer)
-
     res.end(buffer)
   }
 }

@@ -5,8 +5,8 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="purple" class="inline w-6 h-5 mr-1 mt-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 8.25V18a2.25 2.25 0 002.25 2.25h13.5A2.25 2.25 0 0021 18V8.25m-18 0V6a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 6v2.25m-18 0h18M5.25 6h.008v.008H5.25V6zM7.5 6h.008v.008H7.5V6zm2.25 0h.008v.008H9.75V6z" />
               </svg>
-              <div class="mt-6">
-                Predicted Years of Imprisonment Per Case
+              <div class="mt-6 text-[15px]">
+                Predicted Years of Imprisonment of Different Cases
               </div>
               <div class="mt-4">
                 <select v-model="selectedCluster" @change="selectCluster()" class="ml-3.5 px-2 py-2.5 w-[10rem] text-xs rounded-lg bg-gray-100 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]">
@@ -49,8 +49,14 @@
             </div>
             </div>
             
-            <canvas
-                ref="myChart">
+            <canvas v-if="selectedCluster == 1" class="checkFade animated"
+                ref="myChart1">
+            </canvas>
+            <canvas v-if="selectedCluster == 2" class="checkFade animated"
+                ref="myChart2">
+            </canvas>
+            <canvas v-if="selectedCluster == 3" class="checkFade animated"
+                ref="myChart3">
             </canvas>
         </div>
         <button type="button" id="button" data-bs-toggle="modal" data-bs-target="#staticBackdropCaseDetails" class="hidden bg-transparent mr-2.5 py-1.5"></button>
@@ -84,6 +90,10 @@ export default {
             chartData: null,
             chartOptions: null,
             backendUrl: this.$store.state.serverUrl,
+
+            myChart1: null,
+            myChart2: null,
+            myChart3: null
         }
     },
     methods: {
@@ -309,23 +319,52 @@ export default {
                         var ref = this.$refs.CaseDetails;
                         var datasetIndex = elements[0]._datasetIndex;
                         var index = elements[0]._index;
-                        var dataset = myChart.data.datasets[datasetIndex];
+                        if(this.selectedCluster == 1){
+                            var dataset = this.myChart1.data.datasets[datasetIndex];
+                        }
+                        else if(this.selectedCluster == 2){
+                            var dataset = this.myChart2.data.datasets[datasetIndex];
+                        }
+                        else if(this.selectedCluster == 3){
+                            var dataset = this.myChart3.data.datasets[datasetIndex];
+                        }
                         var data = dataset.data[index].id;
                         // Add your onclick code here
                         axios.get( this.backendUrl + '/cases/' + data, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                             ref.initializeView(res.data)
                             document.getElementById('button').click()
+
                         })
                     }
                 }.bind(this)
             };
 
-            const ctx = this.$refs.myChart.getContext('2d');
-                const myChart = new Chart(ctx, {
-                type: 'scatter',
-                data: this.chartData,
-                options: this.chartOptions,
-            });
+            if(this.selectedCluster == 1){
+                    const ctx = this.$refs.myChart1.getContext('2d');
+                    this.myChart1 = new Chart(ctx, {
+                    type: 'scatter',
+                    data: this.chartData,
+                    options: this.chartOptions,
+                });
+            }
+            else if(this.selectedCluster == 2){
+                const ctx = this.$refs.myChart2.getContext('2d');
+                    this.myChart2 = new Chart(ctx, {
+                    type: 'scatter',
+                    data: this.chartData,
+                    options: this.chartOptions,
+                });
+            }
+            else if(this.selectedCluster == 3){
+                const ctx = this.$refs.myChart3.getContext('2d');
+                    this.myChart3 = new Chart(ctx, {
+                    type: 'scatter',
+                    data: this.chartData,
+                    options: this.chartOptions,
+                });
+            }
+
+            
         },
         
         setDataPointByCaseStatus(){
