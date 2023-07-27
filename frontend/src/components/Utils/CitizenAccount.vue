@@ -203,7 +203,7 @@ export default {
             return new Date(date).toLocaleDateString('en', options)
         },
     },
-    mounted(){
+    beforeMount(){
         this.init()
         if(this.$route.query.notif_type == 3){
             this.searchText = this.$route.query.user
