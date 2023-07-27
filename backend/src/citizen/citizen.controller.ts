@@ -64,7 +64,7 @@ export class CitizenController {
   getImage(@Param('imageName') imageName: string, @Response({passthrough: true}) res): StreamableFile{
 
    //  const file = createReadStream(join(process.cwd(), '../dist/compliances/' + imageName));
-    const file = createReadStream('backend/images/' + imageName);
+    const file = createReadStream(join(process.cwd(),'./images/' + imageName));
     res.set({
        'Content-Type' : 'image/webp',
        'Content-Disposition': 'inline: filename=test.pdf'
