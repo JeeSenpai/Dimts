@@ -63,7 +63,7 @@ export class CitizenController {
   @Get('stream-image/:imageName')
   getImage(@Param('imageName') imageName: string, @Response({passthrough: true}) res): StreamableFile{
 
-    const file = createReadStream(join(process.cwd(), '../dist/compliances/' + imageName));
+    const file = createReadStream(join(process.cwd(), '../dist/images/' + imageName));
     // const file = createReadStream('images/' + imageName);
     res.set({
        'Content-Type' : 'image/webp',
