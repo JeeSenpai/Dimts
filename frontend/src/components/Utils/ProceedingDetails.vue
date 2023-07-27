@@ -43,7 +43,7 @@
                         <div v-if="caseStatus == 1 && reOpenedCount == proceedingData.length" class="mt-3.5 ml-5">
                             <button @click="showTransferDialog = true" type="button" class="inline-block px-5 py-2.5 mr-3 bg-white text-gray-500 font-semibold text-xs leading-tight uppercase border border-gray-400 rounded-md hover:shadow-lg hover:text-white hover:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0">Transfer Case to Docket</button>
                         </div>
-                        <div v-if="reOpenedCount == proceedingData.length" class="mt-3.5 ml-3.5">
+                        <!-- <div v-if="reOpenedCount == proceedingData.length" class="mt-3.5 ml-3.5">
                             <button v-show="generatingReport == false" @click="printReport()" type="button" class="inline-block px-5 py-2.5 mr-3 bg-white text-[#BF40BF] font-semibold text-xs leading-tight uppercase border border-[#BF40BF] rounded-md hover:shadow-lg hover:text-white hover:bg-[#BF40BF] focus:shadow-lg focus:outline-none focus:ring-0">
                                 Print Report
                             </button>
@@ -54,13 +54,22 @@
                                 </svg>
                                 Print Report
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                     </div>
                 </div>
         </div>    
     </div>
-    <div class="-ml-2 mt-2 relative w-full bg-white overflow-x-auto shadow-md sm:rounded-md">
+    <div class="text-left">
+            <div class="text-sm font-semibold text-center text-gray-500 border-gray-200">
+                <ul class="flex flex-wrap mb-2 mt-2">
+                    <li v-for="tab in tabs" :key="tab.id">
+                        <button @click="changeTab(tab)" :class="tab.id == comply ? 'text-[#BF40BF] border-[#BF40BF] ': 'hover:text-gray-700 hover:border-gray-400'" class="inline-block p-4 rounded-t-lg border-b-4">{{ tab.description }}</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    <div v-if="comply == 4" class="-ml-2 mt-2 relative w-full bg-white overflow-x-auto shadow-md sm:rounded-md">
         <div class="w-full">
             <div class="flex flex-shrink-0 justify-between mt-4 ml-3 text-sm font-semibold">
                 <div :class="reOpenedCount == proceedingData.length ? '' : 'mt-2'">
@@ -79,52 +88,66 @@
                 </div>
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
-            <div class="p-3 flex flex-wrap">
-                <div v-if="proceedingData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Case Proceedings or Decision Yet</div>
-                  <div v-for="proceeding in proceedingData" :key="proceeding" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5">
-                    <div class="space-y-5 mb-3">
-                            <div class="flex text-left font-semibold space-x-32 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Case Decision</p>
-                                    <p class="text-xs">{{ proceeding.caseDecision.description }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Minimum Sentence</p>
-                                    <p class="text-xs">{{ !proceeding.minimum_sentence ? 'N/A' : proceeding.minimum_sentence }} {{ getSentenceDuration(proceeding.minimum_duration)}}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Maximum Sentence</p>
-                                    <p class="text-xs">{{ !proceeding.maximum_sentence ? 'N/A' : proceeding.maximum_sentence }} {{ getSentenceDuration(proceeding.maximum_duration)}}</p>
-                                </div>
-                            </div>
-                            <div class="flex text-left font-semibold space-x-32 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Minimum Fines</p>
-                                    <p class="text-xs">{{ !proceeding.minimum_fines ? 'N/A' : proceeding.minimum_fines }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Maximum Fines</p>
-                                    <p class="text-xs">{{ !proceeding.maximum_fines ? 'N/A' : proceeding.maximum_fines }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Last Court Action</p>
-                                    <p class="text-xs">{{ formatDate(proceeding.last_court_action) }}</p>
-                                </div>
-                            </div>
-                            <div class="ml-4 font-semibold mt-3.5">
-                                    <div>
-                                        <p class="font-thin text-xs text-gray-600 text-left">Remarks</p>
-                                        <p class="text-xs text-left">{{ proceeding.remarks }}</p>
-                                    </div>
-                                </div>
-                        </div>
-                  </div>
+            <div class="relative overflow-x-auto shadow-md my-3 mx-3 rounded-lg">
+                <table class="w-full text-xs text-left text-gray-700 ">
+                    <thead class="text-xs bg-[#BF40BF] text-white uppercase text-center">
+                        <tr>
+                            <th scope="col" class="px-5 py-4 text-left">
+                                Case Decision
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Minimum Sentence
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Maximum Sentence
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Minimum Fines
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Maximum Fines
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Last Court Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="proceedingData.length > 0">
+                        <tr v-for="proceeding in proceedingData" :key="proceeding" class="bg-white border-b text-xs text-center">
+                            <td class="px-5 py-4 text-black text-left">
+                                {{ proceeding.caseDecision.description }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ !proceeding.minimum_sentence ? 'N/A' : proceeding.minimum_sentence }} {{ getSentenceDuration(proceeding.minimum_duration)}}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ !proceeding.maximum_sentence ? 'N/A' : proceeding.maximum_sentence }} {{ getSentenceDuration(proceeding.maximum_duration)}}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ !proceeding.minimum_fines ? 'N/A' : proceeding.minimum_fines }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ !proceeding.maximum_fines ? 'N/A' : proceeding.maximum_fines }}
+                            </td>
+                            <td class="px-5 py-3 whitespace-nowrap text-center">
+                                {{ formatDate(proceeding.last_court_action) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody v-if="proceedingData.length == 0">
+                        <tr class="bg-white border-b ">
+                            <td class="px-6 py-4 text-black text-center" colspan="6" >
+                                No court hearing schedule
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
             </div>
         </div>
       </div>
-      <div class="flex">
-    <div class="-ml-2 mr-2 mt-2 relative w-1/2 bg-white overflow-x-auto shadow-md sm:rounded-md">
+    <div v-if="comply == 1" class="-ml-2 mr-2 mt-2 relative bg-white overflow-x-auto shadow-md sm:rounded-md">
         <div class="w-full">
+            
             <div class="flex mt-4 ml-3 text-sm font-semibold flex-row">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="purple" class="inline w-6 h-5 mr-1">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10.34 15.84c-.688-.06-1.386-.09-2.09-.09H7.5a4.5 4.5 0 110-9h.75c.704 0 1.402-.03 2.09-.09m0 9.18c.253.962.584 1.892.985 2.783.247.55.06 1.21-.463 1.511l-.657.38c-.551.318-1.26.117-1.527-.461a20.845 20.845 0 01-1.44-4.282m3.102.069a18.03 18.03 0 01-.59-4.59c0-1.586.205-3.124.59-4.59m0 9.18a23.848 23.848 0 018.835 2.535M10.34 6.66a23.847 23.847 0 008.835-2.535m0 0A23.74 23.74 0 0018.795 3m.38 1.125a23.91 23.91 0 011.014 5.395m-1.014 8.855c-.118.38-.245.754-.38 1.125m.38-1.125a23.91 23.91 0 001.014-5.395m0-3.46c.495.413.811 1.035.811 1.73 0 .695-.316 1.317-.811 1.73m0-3.46a24.347 24.347 0 010 3.46" />
@@ -132,51 +155,66 @@
                Court Hearings
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
-            <div class="p-3 flex flex-wrap">
-                  <div v-for="hearing in courtHearings" :key="hearing" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5">
-                    <div class="space-y-8 mb-3">
-                            <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Type of Hearing</p>
-                                    <p class="text-xs">{{ hearing.hearingType.description }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Hearing Schedule</p>
-                                    <p class="text-xs">{{ formatDate(hearing.hearing_schedule) }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Time Start & End</p>
-                                    <p class="text-xs">{{ formatTime(hearing.start_time) + " - " + formatTime(hearing.end_time) }}</p>
-                                </div>
-                            </div>
-                            <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Raffled Court</p>
-                                    <p class="text-xs">{{ hearing.raffledCourt.description }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Judge Assigned</p>
-                                    <p class="text-xs">{{ hearing.judgeAssigned.name }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Status</p>
-                                    <span v-if="hearing.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
-                                    <span v-if="hearing.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
-                                    <span v-if="hearing.status == 2" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>
-                                </div>
-                            </div>
-                            <div class="ml-4 font-semibold mt-3.5">
-                                    <div>
-                                        <p class="font-thin text-xs text-gray-600 text-left">Remarks</p>
-                                        <p class="text-xs text-left">{{ hearing.remarks == "" ? 'No remarks as of now': hearing.remarks }}</p>
-                                    </div>
-                                </div>
-                        </div>
-                  </div>
+            <div class="relative overflow-x-auto shadow-md my-3 mx-3 rounded-lg">
+                <table class="w-full text-xs text-left text-gray-700 ">
+                    <thead class="text-xs bg-[#BF40BF] text-white uppercase text-center">
+                        <tr>
+                            <th scope="col" class="px-5 py-4 text-left">
+                                Type of Hearing
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Hearing Schedule
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Start and End Time
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Judge Assigned
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Raffle Court
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="courtHearings.length > 0">
+                        <tr v-for="data in courtHearings" :key="data" class="bg-white border-b text-xs text-center">
+                            <td class="px-5 py-4 text-black text-left">
+                                {{ data.hearingType.description }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ formatDate(data.hearing_schedule) }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ formatTime(data.start_time) }} - {{ formatTime(data.end_time) }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ data.judgeAssigned.name }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ data.raffledCourt.description }}
+                            </td>
+                            <td class="px-5 py-3 whitespace-nowrap text-center">
+                                <span v-if="data.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
+                                <span v-if="data.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
+                                <span v-if="data.status == 2" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody v-if="courtHearings.length == 0">
+                        <tr class="bg-white border-b ">
+                            <td class="px-6 py-4 text-black text-center" colspan="6" >
+                                No court hearing schedule
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
             </div>
         </div>
       </div>
-      <div class="mt-2 mr-2 relative w-1/2 bg-white overflow-x-auto shadow-md sm:rounded-md">
+      <div v-if="comply == 2" class="-ml-2 mt-2 mr-2 relative bg-white overflow-x-auto shadow-md sm:rounded-md">
         <div class="w-full">
             <div class="flex mt-4 ml-3 text-sm font-semibold flex-row">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="purple" class="inline w-6 h-5 mr-1">
@@ -185,55 +223,66 @@
                Document Emailed & Served
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
-            <div class="p-3 flex flex-wrap">
-                <div v-if="documentServedData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Documents Found</div>
-                  <div v-for="document in documentServedData" :key="document" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5">
-                    <div class="space-y-8 mb-3">
-                            <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Document Type</p>
-                                    <p class="text-xs">{{ document.documentType.description }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Proccessing Office</p>
-                                    <p class="text-xs">{{ document.office.description }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Status</p>
-                                    <p class="text-xs">
-                                        <span v-if="document.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Acknowledge - {{ formatDate(document.acknowledge_date) }}</span>
-                                        <span v-if="document.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-600 rounded-md">Pending</span>
-                                        <span v-if="document.status == null" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-600 rounded-md">Waiting to Send</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="flex text-left font-semibold space-x-14 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Date Recieved</p>
-                                    <p class="text-xs">{{ document.sended_date == null ? 'N/A' : formatDate(document.sended_date) }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Sender</p>
-                                    <p class="text-xs">{{ document.sender }}</p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Receiver</p>
-                                    <p class="text-xs">{{ document.reciever }}</p>
-                                </div>
-                            </div>
-                            <div class="ml-4 font-semibold mt-3.5">
-                                    <div>
-                                        <p class="font-thin text-xs text-gray-600 text-left">Remarks</p>
-                                        <p class="text-xs text-left">{{ document.remarks }}</p>
-                                    </div>
-                                </div>
-                        </div>
-                  </div>
+            <div class="relative overflow-x-auto shadow-md my-3 mx-3 rounded-lg">
+                <table class="w-full text-xs text-left text-gray-700 ">
+                    <thead class="text-xs bg-[#BF40BF] text-white uppercase text-center">
+                        <tr>
+                            <th scope="col" class="px-5 py-4 text-left">
+                                Type of Document
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Proccesing Office
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Date Recieved
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Sender
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Reciever
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="documentServedData.length > 0">
+                        <tr v-for="data in documentServedData" :key="data" class="bg-white border-b text-xs text-center">
+                            <td class="px-5 py-4 text-black text-left">
+                                {{ data.documentType.description }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ data.office.description }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ !data.sended_date ? '-- --' : formatDate(data.sended_date) }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ data.sender }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ data.reciever }}
+                            </td>
+                            <td class="px-5 py-3 whitespace-nowrap text-center">
+                                <span v-if="data.status == null" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-600 rounded-md">Waiting to Send</span>
+                                <span v-if="data.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Pending</span>
+                                <span v-if="data.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Acknowledge</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody v-if="documentServedData.length == 0">
+                        <tr class="bg-white border-b ">
+                            <td class="px-6 py-4 text-black text-center" colspan="6" >
+                                No documents served
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
             </div>
         </div>
       </div>
-     </div>
-     <div class="-ml-2 mt-2 relative w-full bg-white overflow-x-auto shadow-md sm:rounded-md">
+     <div v-if="comply == 3" class="-ml-2 mt-2 relative w-full bg-white overflow-x-auto shadow-md sm:rounded-md">
         <div class="w-full">
             <div class="flex mt-4 ml-3 text-sm font-semibold flex-row">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="purple" class="inline w-6 h-5 mr-1">
@@ -242,61 +291,63 @@
                Custodies
             </div>
             <div class="mt-3 flex flex-wrap mx-2 border-t"/>
-            <div class="p-3 flex flex-wrap">
-                <div v-if="custodiesData.length == 0" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 p-2 text-xs font-semibold"> No Custodies Found</div>
-                  <div v-for="custodies in custodiesData" :key="custodies" class="bg-gray-100 shadow-lg rounded-lg w-full mb-3.5 hover:bg-gray-200">
-                    <div class="space-y-5 mb-3">
-                            <div class="flex text-left font-semibold space-x-32 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Detainee Name</p>
-                                    <p class="text-xs">
-                                        {{ custodies.lname }}, {{ custodies.fname }} {{ !custodies.mname ? '' : custodies.mname[0] }} {{ custodies.suffix }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Height</p>
-                                    <p class="text-xs">
-                                        {{ custodies.height }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Weight</p>
-                                    <p class="text-xs">
-                                        {{ custodies.weight }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Birthdate</p>
-                                    <p class="text-xs">
-                                        {{ formatDate(custodies.birth_date) }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Blood Type</p>
-                                    <p class="text-xs">
-                                        {{ custodies.blood_type }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="flex text-left font-semibold space-x-32 mt-3 ml-4">
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Address</p>
-                                    <p class="text-xs text-left">
-                                        {{ custodies.address }}
-                                    </p>
-                                </div>
-                                <div>
-                                    <p class="font-thin text-xs text-gray-600 text-left">Latest Transfer Status</p>
-                                    <p class="text-xs">
-                                        <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 0 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">PNP - {{ formatDate(custodies.pnp_status_date) }}</span>
-                                        <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 1 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-blue-200 text-blue-600 rounded-md">BJMP - {{ formatDate(custodies.bjmp_status_date) }}</span>
-                                        <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 1 && custodies.bucor_status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">BuCor - {{ formatDate(custodies.bucor_status_date) }}</span>
-                                        <span v-if="custodies.pnp_status == 0 && custodies.bjmp_status == 0 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-600 rounded-md">No Transfer History</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                  </div>
+            <div class="relative overflow-x-auto shadow-md my-3 mx-3 rounded-lg">
+                <table class="w-full text-xs text-left text-gray-700 ">
+                    <thead class="text-xs bg-[#BF40BF] text-white uppercase text-center">
+                        <tr>
+                            <th scope="col" class="px-5 py-4 text-left">
+                                Detainee Name
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Height
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Weight
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Birthdate
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Address
+                            </th>
+                            <th scope="col" class="px-5 py-3">
+                                Latest Transfer Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="custodiesData.length > 0">
+                        <tr v-for="custodies in custodiesData" :key="custodies" class="bg-white border-b text-xs text-center">
+                            <td class="px-5 py-4 text-black text-left">
+                                {{ custodies.lname }}, {{ custodies.fname }} {{ !custodies.mname ? '' : custodies.mname[0] }} {{ custodies.suffix }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ custodies.height }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ custodies.weight }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ formatDate(custodies.birth_date) }}
+                            </td>
+                            <td class="px-5 py-3 ">
+                                {{ custodies.address }}
+                            </td>
+                            <td class="px-5 py-3 whitespace-nowrap text-center">
+                                <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 0 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">PNP - {{ formatDate(custodies.pnp_status_date) }}</span>
+                                <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 1 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-blue-200 text-blue-600 rounded-md">BJMP - {{ formatDate(custodies.bjmp_status_date) }}</span>
+                                <span v-if="custodies.pnp_status == 1 && custodies.bjmp_status == 1 && custodies.bucor_status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">BuCor - {{ formatDate(custodies.bucor_status_date) }}</span>
+                                <span v-if="custodies.pnp_status == 0 && custodies.bjmp_status == 0 && custodies.bucor_status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-600 rounded-md">No Transfer History</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody v-if="custodiesData.length == 0">
+                        <tr class="bg-white border-b ">
+                            <td class="px-6 py-4 text-black text-center" colspan="6" >
+                                No custodies added
+                            </td>
+                        </tr>
+                    </tbody>
+                </table> 
             </div>
         </div>
       </div>
@@ -356,6 +407,15 @@ export default {
             proceedingData: [],
             documentServedData: [],
             custodiesData: [],
+
+            comply: 1,
+            tabs: [
+                { id: 1, description: 'Court Hearings'},
+                { id: 2, description: 'Documents' },
+                { id: 3, description: 'Custodies' },
+                { id: 4, description: 'Court Decision' },
+            ],
+            tab: { id: 1, description: 'Court Hearing'}
         }
     },
     methods: {
@@ -409,6 +469,10 @@ export default {
             else{
                 return ""
             }
+        },
+        changeTab(data){
+            this.tab = data;
+            this.comply = data.id
         },
         AddDocketCase(){
             let formData = {
