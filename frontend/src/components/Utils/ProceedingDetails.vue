@@ -137,7 +137,7 @@
                     <tbody v-if="proceedingData.length == 0">
                         <tr class="bg-white border-b ">
                             <td class="px-6 py-4 text-black text-center" colspan="6" >
-                                No court hearing schedule
+                                No court decision yet
                             </td>
                         </tr>
                     </tbody>
@@ -206,7 +206,7 @@
                     <tbody v-if="courtHearings.length == 0">
                         <tr class="bg-white border-b ">
                             <td class="px-6 py-4 text-black text-center" colspan="6" >
-                                No court decision
+                                No court hearing schedule
                             </td>
                         </tr>
                     </tbody>
