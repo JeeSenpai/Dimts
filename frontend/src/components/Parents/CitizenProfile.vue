@@ -40,6 +40,19 @@
                 </div>
             </div>
         </div>
+        <div class="pl-2 pr-2 pb-2">
+            <div class="bg-white shadow-lg rounded-lg w-full mt-2">
+                <div class="px-4 py-4">
+                    <div class="relative">
+                        <div class="text-sm text-left ml-1 text-gray-800 font-semibold">Upload New Valid ID</div>
+                        <input type="file" @change="onUploadChange()" ref="file" accept=".png,.jpeg,.jpg,.webp" id="floating_outlined" class="block w-full text-xs text-gray-900 bg-transparent rounded-lg border border-gray-400 appearance-none focus:outline-none focus:ring-0 focus:border-purple-600 peer" placeholder=" " />
+                    </div>
+                    <div v-if="file.length > 0" class="mt-4">
+                        <button @click="uploadValidID()" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white button-submit focus:outline-none focus:ring-2 focus:ring-offset-2 ">Update Valid ID</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="mb-4 w-full border-t-2 mt-2 border-gray-500"/>
 
         <div class="pl-2 pr-2 pb-2">
@@ -69,6 +82,8 @@
 
 <script>
 import axios from 'axios';
+import { useToast } from "vue-toastification"
+
     export default {
         data(){
             return {
@@ -83,6 +98,8 @@ import axios from 'axios';
                 contact_no: "",
                 address: "",
                 email: "",
+
+                file: [],
             }
         },
         methods: {
@@ -119,7 +136,15 @@ import axios from 'axios';
                     }
                     axios.post( this.$store.state.serverUrl + '/citizen/updateCitizenByCitizen', formData, {headers: {Authorization: `Bearer  ${this.token}`}}).then((result)=>{
                       if(result){
-                        window.location.reload()
+                        this.initialize()
+                        const toast = useToast();
+                            toast.success("Basic Info Update Successfully", {
+                            position: "top-left",
+                            timeout: 2000,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            showCloseButtonOnHover: true,
+                        });
                       }
                     });
                 }
@@ -128,6 +153,30 @@ import axios from 'axios';
                 localStorage.removeItem("vuex");
                 localStorage.removeItem("dimts_token");
                 window.location.reload()
+            },
+            onUploadChange() {
+                this.file = [...this.$refs.file.files];
+            },
+            uploadValidID(){
+                let citizenID = this.$store.state.user.id
+                let formData = new FormData();
+                for( var i = 0; i < this.file.length; i++ ){
+                    let file = this.file[i];
+                    formData.append('files', file);
+                }
+                axios.patch( this.$store.state.serverUrl  + '/citizen/updateCitizenID/' + citizenID, formData, {headers: {"Content-Type": "multipart/form-data" , Authorization: `Bearer  ${this.token}`}}).then((res)=>{
+                    if(res){
+                        this.file = []
+                        const toast = useToast();
+                            toast.success("Valid ID Update Successfully", {
+                            position: "top-left",
+                            timeout: 2000,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            showCloseButtonOnHover: true,
+                        });
+                    }   
+                });
             }
         },
         mounted(){

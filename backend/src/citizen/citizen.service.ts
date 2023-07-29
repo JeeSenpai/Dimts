@@ -126,4 +126,16 @@ export class CitizenService {
     })
   }
 
+  async updateCitizenID(citizenID: number, files: any){
+    const fileArray = []
+    for(var i = 0; i < files.length; i++ ){
+      var obj = ""
+      obj = files[i].filename
+      fileArray.push(obj)
+    } 
+     return await this.citizenRepository.update(citizenID, {
+          valid_id: JSON.stringify(fileArray)
+     })
+  }
+
 }
