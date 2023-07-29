@@ -421,6 +421,7 @@ export default {
     methods: {
         initView(id){
             this.isSubmitting = false
+            this.comply = 1
             axios.get(this.$store.state.serverUrl + '/cases/getProceedings/' + id, {headers: {Authorization: `Bearer  ${this.token}`}}).then((res)=>{
                 this.caseId = res.data.id
                 this.caseData = res.data

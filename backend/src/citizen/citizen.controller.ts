@@ -35,7 +35,7 @@ export class CitizenController {
     return this.citizenService.updateCitizenByCitizen(data)
   }
 
-  @Post('citizenSignup')
+  @Patch('updateCitizenID/:citizenID')
   @UseInterceptors(
   FilesInterceptor('files',1,{
       storage: diskStorage({
@@ -44,11 +44,24 @@ export class CitizenController {
       }),
   })
   )
-  uploadFile(@UploadedFiles() files: Array<Express.Multer.File> , @Request() req) {
+  updateCitizenID(@Param('citizenID') citizenID: number, @UploadedFiles() files: Array<Express.Multer.File>) {
     const filesArray = files
-    const data = JSON.parse(req.body.data)
-    return this.citizenService.create(filesArray,data)
+    return this.citizenService.updateCitizenID(citizenID,filesArray)
   }
+
+  @UseInterceptors(
+    FilesInterceptor('files',1,{
+        storage: diskStorage({
+          destination: FilesHelper.destinationPath,
+          filename: FilesHelper.customFileName,
+        }),
+    })
+    )
+    uploadFile(@UploadedFiles() files: Array<Express.Multer.File> , @Request() req) {
+      const filesArray = files
+      const data = JSON.parse(req.body.data)
+      return this.citizenService.create(filesArray,data)
+    }
 
   @Get()
   findAll() {
