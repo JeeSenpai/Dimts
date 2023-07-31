@@ -49,6 +49,8 @@ export class CitizenController {
     return this.citizenService.updateCitizenID(citizenID,filesArray)
   }
 
+
+  @Post('citizenSignup')
   @UseInterceptors(
     FilesInterceptor('files',1,{
         storage: diskStorage({
