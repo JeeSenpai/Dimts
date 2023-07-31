@@ -177,6 +177,9 @@
                             <th scope="col" class="px-5 py-3">
                                 Status
                             </th>
+                            <th scope="col" class="px-5 py-3 text-right">
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody v-if="courtHearings.length > 0">
@@ -200,6 +203,14 @@
                                 <span v-if="data.status == 0" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-amber-200 text-amber-600 rounded-md">Pending</span>
                                 <span v-if="data.status == 1" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-red-200 text-red-700 rounded-md">Cancelled</span>
                                 <span v-if="data.status == 2" class="text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap align-baseline font-bold bg-green-200 text-green-600 rounded-md">Completed</span>
+                            </td>
+                            <td class="px-5 py-3 text-right">
+                                <button @click="showRemarks(data.remarks)" type="button" class="bg-transparent mr-4 py-1.5" title="View Remarks">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
                             </td>
                         </tr>
                     </tbody>
@@ -370,6 +381,35 @@
                 </div>
             </div>
         </div>
+        <div v-show="showRemarksDialog" tabindex="-1" aria-hidden="false" class="checkFade animated  modal overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+                <div class="relative p-4 w-full max-w-md mx-auto top-32 h-full md:h-auto">
+                <div class="relative bg-white rounded-lg shadow">
+                    <div class="modal-header flex flex-shrink-0 items-center justify-between bg-white p-4 border-b border-gray-200 rounded-t-md">
+                         <div class="text-sm font-semibold leading-normal text-gray-800" id="exampleModalLabel">
+                              <h5 class="text-left">View Remarks</h5>
+                         </div>
+                          <button @click="showRemarksDialog = false" type="button" class="p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="gray" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                         </button>
+                    </div>
+                    <div class="modal-body rounded-md relative">
+                        <div class="text-left ml-5 mt-2 text-[13px] text-gray-800 font-bold">Remarks</div>
+                        <div><textarea
+                            disabled
+                            v-model="remarks"
+                            rows="10"
+                            type="text"
+                            class=" ml-4 mr-5 px-2 py-2.5 w-[92%] text-xs rounded-lg bg-gray-200 border-0 shadow-lg focus:border-[#BF40BF] focus:ring-[#BF40BF]"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 mt-4 border-t border-gray-200 rounded-b-md">
+                        <button @click="showRemarksDialog = false" type="button" class="inline-block px-5 py-2.5 bg-white text-gray-500 font-semibold text-xs leading-tight uppercase border border-gray-400 rounded-md hover:shadow-lg hover:text-white hover:bg-gray-500 focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -388,7 +428,9 @@ export default {
             token: localStorage.getItem("dimts_token"),
             isSubmitting: false,
             showTransferDialog: false,
+            showRemarksDialog: false,
             generatingReport: false,
+            remarks: null,
 
             //Case Details
             caseData: [],
@@ -456,6 +498,10 @@ export default {
         },
         showUpdateProceedingDialog(data){
             this.$refs.CourtProceedingDialog.initializeUpdate(data)
+        },
+        showRemarks(data){
+            this.showRemarksDialog = true
+            this.remarks = data
         },
         getSentenceDuration(data){
             if(data == 1){
